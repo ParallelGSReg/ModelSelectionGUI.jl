@@ -1,0 +1,18 @@
+name = "ModelSelectionGUI"
+uuid = "fc7f2143-4cff-44cd-9014-ffdc84d34bc1"
+authors = ["Adán Mauri Ungaro <adan.mauri@gmail.com>"]
+version = "1.0.0"
+
+[deps]
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+Chain = "8be319e6-bccf-4806-a6f7-6fae938471bc"
+ConfigEnv = "01234589-554d-41b7-ae5c-7b6ee2db6796"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
+DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
+Distributed = "8ba89e20-285c-5b6f-9357-94700520ee1b"
+Genie = "c43c736e-a2d1-11e8-161f-af95117fbd1e"
+JuliaFormatter = "98e50ef6-434e-11e9-1051-2b60c6c9e899"
+ModelSelection = "51b78214-913b-40cf-9250-c64eb33811f7"
+Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
+UUIDs = "cf7118a7-6976-5b1a-9a39-7adc72f591a4"
