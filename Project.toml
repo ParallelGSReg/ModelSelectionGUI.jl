@@ -1,6 +1,6 @@
 name = "ModelSelectionGUI"
 uuid = "fc7f2143-4cff-44cd-9014-ffdc84d34bc1"
-authors = ["Demian Panigo <panigo@gmail.com>", "Adán Mauri Ungaro <adan.mauri@gmail.com>", "Nicolás Monzón <nicomzn4@gmail.com>", "Valentin Mari <valentinmari@hotmail.com>", "Nahuel Panigo <nahpanigo99@gmail.com>"]
+authors = ["Demian Panigo <panigo@gmail.com>", "Adán Mauri Ungaro <adan.mauri@gmail.com>", "Valentin Mari <valentinmari@hotmail.com>", "Nahuel Panigo <nahpanigo99@gmail.com>"]
 version = "1.0.0"
 
 [deps]
