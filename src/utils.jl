@@ -1,11 +1,12 @@
-using Chain, CSV, DataFrames, DelimitedFiles, Pkg
+using Chain, CSV, DataFrames, DelimitedFiles, Pkg, JSON
+using Genie
 
 function get_pkg_version(name::AbstractString)
     @chain Pkg.dependencies() begin
         values
-            [x for x in _ if x.name == name]
-            only
-            _.version
+        [x for x in _ if x.name == name]
+        only
+        _.version
     end
 end
 
@@ -30,9 +31,7 @@ function get_csv_filename(
     return replace(filename, ".csv" => "") * "_crossvalidation.csv"
 end
 
-function get_txt_filename(
-    filename::String
-)
+function get_txt_filename(filename::String)
     return replace(filename, ".csv" => "") * "_summary.txt"
 end
 
@@ -46,10 +45,7 @@ function get_csv_from_result(filename::String, result::ModelSelectionResult)
     io = IOBuffer()
     writedlm(io, rows, ',')
     data = String(take!(io))
-    return Dict(
-        FILENAME => get_csv_filename(filename, result),
-        DATA => data,
-    )
+    return Dict(FILENAME => get_csv_filename(filename, result), DATA => data)
 end
 
 
@@ -79,4 +75,22 @@ function to_dict(job::ModelSelectionJob)
         :equation => job.equation,
         :msg => job.msg,
     )
+end
+
+
+function get_request_job_id(params::Any)
+    try
+        return string(params(:id))
+    catch e
+        return nothing
+    end
+end
+
+
+function get_request_filehash(params::Any)
+    try
+        return string(params(:filehash))
+    catch e
+        return nothing
+    end
 end

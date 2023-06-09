@@ -1,0 +1,6 @@
+ - [] Frontend in VueJS
+ - [] Dockerize application using PackageCompiler
+ - [] Develop Docker Compose
+ - [] A prebuild for each main platform
+ - [] A script to run everything with one command
+

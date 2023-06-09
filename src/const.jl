@@ -7,15 +7,26 @@ const MODEL_SELECTION_VER = get_pkg_version(MODEL_SELECTION_NAME)
 
 const SERVER_PORT_DEFAULT = 8000
 const OPEN_BROWSER_DEFAULT = true
-const SERVER_PORT = ("SERVER_PORT" in keys(ENV)) ? parse(Int64, ENV["SERVER_PORT"]) : SERVER_PORT_DEFAULT
-const CLIENT_PORT = ("CLIENT_PORT" in keys(ENV)) ? parse(Int64, ENV["CLIENT_PORT"]) : SERVER_PORT + 1
-const OPEN_BROWSER = ("OPEN_BROWSER" in keys(ENV)) ? parse(Bool, ENV["OPEN_BROWSER"]) : OPEN_BROWSER_DEFAULT
+const OPEN_CLIENT_DEFAULT = false
+const SERVER_URL_DEFAULT = "http://127.0.0.1"
+const SERVER_PORT =
+    ("SERVER_PORT" in keys(ENV)) ? parse(Int64, ENV["SERVER_PORT"]) : SERVER_PORT_DEFAULT
+const CLIENT_PORT =
+    ("CLIENT_PORT" in keys(ENV)) ? parse(Int64, ENV["CLIENT_PORT"]) : SERVER_PORT + 1
+const OPEN_BROWSER =
+    ("OPEN_BROWSER" in keys(ENV)) ? parse(Bool, ENV["OPEN_BROWSER"]) : OPEN_BROWSER_DEFAULT
+const OPEN_CLIENT =
+    ("OPEN_CLIENT" in keys(ENV)) ? parse(Bool, ENV["OPEN_CLIENT"]) : OPEN_CLIENT_DEFAULT
+const SERVER_URL = 
+    ("SERVER_URL" in keys(ENV)) ? parse(Bool, ENV["SERVER_URL"]) : SERVER_URL_DEFAULT
 
-const TEMPFILE = :tempfile
+const TEMP_FILENAME = :temp_filename
 const FILENAME = :filename
 const FILEHASH = :filehash
 const PARAMETERS = :parameters
 const DATA = :data
+const MESSAGE = :message
+const ID = :id
 
 const NCORES = :ncores
 const NWORKERS = :nworkers
@@ -39,3 +50,7 @@ const ALLSUBSETREGRESSION = :allsubsetregression
 const CROSSVALIDATION = :crossvalidation
 const SUMMARY = :summary
 const AVAILABLE_RESULTS_TYPES = [ALLSUBSETREGRESSION, CROSSVALIDATION, SUMMARY]
+const DEFAULT_WS_CHANNEL = :sync
+const RESULTS = :results
+
+const CSV_MIME = "text/csv"

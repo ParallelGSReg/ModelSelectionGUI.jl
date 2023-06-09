@@ -1,0 +1,309 @@
+openapi: 3.0.3
+info:
+  title: ModelSelectionGUI
+  version: 1.0.0
+  description: |-
+    The ModelSelectionGUI is a web server package designed to provide a user-friendly interface for utilizing the ModelSelection package. It consists of a backend and an optional frontend that offers a graphical user interface (GUI) for seamless interaction with the underlying ModelSelection functionality.
+
+    This documentation is for the Rest API. In order to see the WebSockets documentation, please go to [the following link](https://github.com/ParallelGSReg/ModelSelectionGUI.jl/blob/main/docs/websockets.md).
+
+    ## Features
+    - Web server backend: The package includes a web server backend that handles requests and responses between the user and the **ModelSelection** package.
+    - Graphical User Interface (GUI): The optional frontend provides a GUI that allows users to interact with the **ModelSelection** package using a visual interface, making it easier to explore and utilize the various functionalities.
+    - Easy Integration: The **ModelSelectionGUI** is designed to seamlessly integrate with the **ModelSelection** package, providing a user-friendly interface to access and utilize its capabilities without requiring in-depth knowledge of the underlying Julia code.
+    ## Links
+    - [ModelSelectionGUI repository](https://github.com/ParallelGSReg/ModelSelectionGUI.jl)
+    - [ModelSelection repository](https://github.com/ParallelGSReg/ModelSelection.jl)
+    
+    
+  license:
+    name: MIT Licence
+    url: https://github.com/ParallelGSReg/ModelSelectionGUI.jl/blob/main/LICENSE
+
+paths:
+  /server-info:
+    get:
+      tags:
+        - server
+      summary: Retrieves information about the server
+      description: Retrieves information about the server.
+      responses:
+        '200':
+          description: Server information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerInfo'
+
+  /upload-file:
+    post:
+      tags:
+        - files
+      summary: Uploads a CSV file
+      description: Uploads a CSV file to the server. Upon successful upload, the server will process the uploaded file for further operations.
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: The information about the file.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerInfo'
+  
+  /job-enqueue/{filehash}:
+    post:
+      tags:
+        - jobs
+      parameters:
+        - name: filehash
+          in: path
+          description: The unique identifier (UUID) of the uploaded file to perform model selection on
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: 6c48451b-af17-43cb-a251-e847abc94472
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobRequest'
+      summary: Enqueues a model selection job for the specified file
+      description: Enqueues a model selection job for the specified file. The task will be executed after the previously queued tasks have finished.
+      responses:
+        '200':
+          description: The job information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicJobInfo'
+
+  /job/{id}:
+    get:
+      tags:
+        - jobs
+      parameters:
+        - name: id
+          in: path
+          description: The unique identifier (UUID) of the model selection job
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: adbc7420-1597-4b1b-a798-fafd9ee5f671
+      summary: Retrieves the info of a model selection job
+      description: Retrieves the info of a model selection job. If the job is finished, it also includes the summary of a model selection job.
+      responses:
+        '200':
+          description: The job information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobInfo'
+
+  /job/{id}/results/{type}:
+    get:
+      tags:
+        - jobs
+      parameters:
+        - name: id
+          in: path
+          description: The unique identifier (UUID) of the model selection job
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: adbc7420-1597-4b1b-a798-fafd9ee5f671
+        - name: type
+          in: path
+          description: The type of result file to retrieve
+          required: true
+          schema:
+            type: string
+            example: summary
+            enum: [summary, allsubsetregression, crossvalidation]
+      summary: Retrieves the info of a model selection job
+      description: Retrieves the info of a model selection job. If the job is finished, it also includes the summary of a model selection job.
+      responses:
+        '200':
+          description: The results file
+          content:
+            text/csv:
+              schema:
+                type: string
+                example: |-
+                  "index,x1_b,x1_bstd,x1_t,x2_b,x2_bstd,x2_t,x3_b,x3_bstd,x3_t,x4_b,x4_bstd,x4_t,_cons_b,_cons_bstd,_cons_t,nobs,ncoef,sse,r2,F,rmse,r2adj,order,weight"
+                  "1.0,-0.06596809,0.09519608,-0.69297063,NaN,NaN,NaN,NaN,NaN,NaN,-0.12448774,0.096759774,-1.2865651,0.60631454,0.07059073,8.589152,100.0,3.0,7.77717,0.020683467,1.0243349,0.27887577,0.0004913807,0.0,0.14285715"
+                  "2.0,NaN,NaN,NaN,0.10084493,0.09870059,1.0217257,NaN,NaN,NaN,-0.120618455,0.09635271,-1.2518429,0.52230924,0.07161235,7.293564,100.0,3.0,7.732454,0.026314199,1.3107295,0.2780729,0.006238222,0.0,0.14285715"
+                  "3.0,-0.094890684,0.097841345,-0.9698424,0.12464962,0.101736076,1.2252253,NaN,NaN,NaN,-0.12551564,0.096514374,-1.3004864,0.5581902,0.08062407,6.92337,100.0,4.0,7.6574297,0.035761297,1.1868032,0.2767206,0.0056288242,0.0,0.14285715"
+                  "4.0,NaN,NaN,NaN,NaN,NaN,NaN,-0.04464624,0.108168595,-0.4127468,-0.12738438,0.09800552,-1.2997674,0.60181415,0.08686241,6.9283614,100.0,3.0,7.80197,0.017560422,0.8669037,0.27932006,-0.0026960373,0.0,0.14285715"
+                  "5.0,-0.07864766,0.09798801,-0.8026253,NaN,NaN,NaN,-0.06453428,0.111163944,-0.58053243,-0.1343569,0.09856928,-1.3630707,0.6542947,0.10884873,6.011046,100.0,4.0,7.749966,0.024108827,0.79054147,0.2783876,-0.00638783,0.0,0.14285715"
+                  "6.0,NaN,NaN,NaN,0.10093782,0.099124715,1.0182911,-0.044896472,0.10814851,-0.41513723,-0.12702051,0.097987495,-1.296293,0.5511937,0.10006789,5.508198,100.0,4.0,7.7185993,0.028058767,0.92380124,0.2778237,-0.0023144484,0.0,0.14285715"
+                  "7.0,-0.110115774,0.10084198,-1.0919636,0.1286192,0.10221883,1.258273,-0.07280783,0.111022726,-0.6557922,-0.13668434,0.09828877,-1.3906405,0.61078924,0.113895155,5.3627324,100.0,5.0,7.6229258,0.040106177,0.9923198,0.27609646,-0.000310421,0.0,0.14285715"
+
+            text/plain:
+              schema:
+                type: string
+                example: |-
+                  "════════════════════════════════════════════════════════════════════════════════"
+                  "                               Best model results                               "
+                  "════════════════════════════════════════════════════════════════════════════════"
+                  "                                                                                "
+                  "                                        Dependent variable: y                   "
+                  "                                        ────────────────────────────────────────"
+                  "Selected covariates                     Coef.        Std.         t-test        "
+                  "────────────────────────────────────────────────────────────────────────────────"
+                  "x1                                      -0.065968    0.095196     -0.692971     "
+                  "x4                                      -0.124488    0.096760     -1.286565     "
+                  "_cons                                   0.606315     0.070591     8.589152      "
+                  "                                                                                "
+                  "────────────────────────────────────────────────────────────────────────────────"
+                  "Observations                            100                                     "
+                  "F-statistic                             1.024335                                "
+                  "Adjusted R²                             0.000491                                "
+
+components:
+  schemas:
+    JobRequest:
+      type: object
+      properties:
+        estimator:
+          type: string
+          enum: [ols, logit]
+          example: ols
+          description: The estimator used for model selection.
+        equation:
+          type: string
+          description: The equation or formula used for model selection
+          example: "y x1 x2 x3 x4"
+    ServerInfo:
+      type: object
+      properties:
+        julia_version:
+          type: string
+          example: "1.6.7"
+          description: The name that needs to be fetched. Use user1 for testing
+        model_selection_version:
+          type: string
+          example: "2.0.0"
+          description: The version of the ModelSelection package being used
+        ncores:
+          type: integer
+          format: int64
+          example: 8
+          description: The number of CPU cores available on the server
+        nworkers:
+          type: integer
+          format: int64
+          example: 8
+          description: The number of workers available for parallel processing
+        jobs_queue_size:
+          type: integer
+          format: int64
+          example: 0
+          description: The number of jobs currently in the queue
+    FileInfo:
+      type: object
+      properties:
+        filename:
+          type: string
+          example: "data.csv"
+          description: The name of the uploaded file
+        datanames: 
+          type: array
+          items:
+            type: string
+          example: ["y", "x1", "x2", "x3", "x4", "x5"]
+          description: The names of the columns in the CSV file
+        nobs:
+          type: integer
+          example: 100
+          description: The number of observations (rows) in the CSV file
+        filehash:
+          type: string
+          format: uuid
+          example: 6c48451b-af17-43cb-a251-e847abc94472
+          description: The unique identifier (UUID) for the uploaded file
+    BasicJobInfo:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier (UUID) of the model selection job
+          example: adbc7420-1597-4b1b-a798-fafd9ee5f671
+        filehash:
+          type: string
+          format: uuid
+          description: The unique identifier (UUID) of the file used for model selection
+          example: 6c48451b-af17-43cb-a251-e847abc94472
+        filename:
+          type: string
+          description: The name of the file used for model selection
+          example: data.csv
+        status:
+          type: string
+          example: completed
+          enum: [pending, running, finished, failed]
+          description: The status of the model selection job
+        msg:
+          type: string
+          nullable: true
+          description: A message associated with the status, if any
+          example: There was an error
+        time_enqueued:
+          type: string
+          format: date-time
+          example: "2023-06-07T16:38:11.18"
+          description: The timestamp when the model selection job was enqueued
+        time_started:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2023-06-07T16:38:11.18"
+          description: The timestamp when the model selection job started, if applicable
+        time_finished:
+          type: string
+          format: date-time
+          nullable: true
+          description: The timestamp when the model selection job finished, if applicable
+          example: "2023-06-07T16:39:23.15"
+        estimator:
+          type: string
+          enum: [ols, logit]
+          example: ols
+          description: The estimator used for model selection.
+        equation:
+          type: string
+          description: The equation or formula used for model selection
+          example: "y x1 x2 x3 x4"
+        parameters:
+          type: object
+          description: The parameters used for model selection, including any additional parameters specified in the request
+          example: {"ttest": "true"}
+    JobInfo:
+      allOf:
+        - $ref: '#/components/schemas/BasicJobInfo'
+        - type: object
+          properties:
+            results:
+              type: object
+              description: The results of the model selection job, including different types of analysis, if finished
+              nullable: true
+              example: {
+                "crossvalidation": {
+                    "average": {},
+                    "median": {}
+                },
+                "allsubsetregression": {
+                    "modelavg": {}
+                }
+              }
