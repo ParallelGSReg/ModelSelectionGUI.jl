@@ -1,5 +1,8 @@
 # ModelSelectionGUI
 
+[![Build](https://github.com/ParallelGSReg/ModelSelectionGUI.jl/actions/workflows/build.yaml/badge.svg?branch=main)](https://github.com/ParallelGSReg/ModelSelectionGUI.jl/actions/workflows/build.yaml)
+[![Test](https://github.com/ParallelGSReg/ModelSelectionGUI.jl/actions/workflows/test.yaml/badge.svg?branch=main)](https://github.com/ParallelGSReg/ModelSelectionGUI.jl/actions/workflows/test.yaml)
+
 The ModelSelectionGUI is a web server package designed to provide a user-friendly interface for utilizing the ModelSelection package. It consists of a backend and an optional frontend that offers a graphical user interface (GUI) for seamless interaction with the underlying ModelSelection functionality.
 
 ## Features
