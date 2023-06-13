@@ -3,14 +3,14 @@ using ModelSelection
 function server_info_response(
     ncores::Int64,
     nworkers::Int64,
-    model_selecion_version::String,
+    model_selection_version::String,
     julia_version::String,
     jobs_queue_size::Int64,
 )
     data = Dict(
         NCORES => ncores,
         NWORKERS => nworkers,
-        MODEL_SELECTION_VERSION => model_selecion_version,
+        MODEL_SELECTION_VERSION => String,
         JULIA_VERSION => julia_version,
         JOBS_QUEUE_SIZE => jobs_queue_size,
     )

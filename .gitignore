@@ -23,7 +23,9 @@ docs/site/
 # environment.
 Manifest.toml
 
-.env
+.env*
+!.env.template
 *.csv
 *.json
 !docs/swagger/*.json
+!test/*.csv

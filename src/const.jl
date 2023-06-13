@@ -1,24 +1,12 @@
-using ConfigEnv
-dotenv()
-
 const SERVER_BASE_DIR = "../front/dist"
 const MODEL_SELECTION_NAME = "ModelSelection"
 const MODEL_SELECTION_VER = get_pkg_version(MODEL_SELECTION_NAME)
 
+const ENV_FILE_DEFAULT = ".env"
 const SERVER_PORT_DEFAULT = 8000
-const OPEN_BROWSER_DEFAULT = true
+const OPEN_BROWSER_DEFAULT = false
 const OPEN_CLIENT_DEFAULT = false
 const SERVER_URL_DEFAULT = "http://127.0.0.1"
-const SERVER_PORT =
-    ("SERVER_PORT" in keys(ENV)) ? parse(Int64, ENV["SERVER_PORT"]) : SERVER_PORT_DEFAULT
-const CLIENT_PORT =
-    ("CLIENT_PORT" in keys(ENV)) ? parse(Int64, ENV["CLIENT_PORT"]) : SERVER_PORT + 1
-const OPEN_BROWSER =
-    ("OPEN_BROWSER" in keys(ENV)) ? parse(Bool, ENV["OPEN_BROWSER"]) : OPEN_BROWSER_DEFAULT
-const OPEN_CLIENT =
-    ("OPEN_CLIENT" in keys(ENV)) ? parse(Bool, ENV["OPEN_CLIENT"]) : OPEN_CLIENT_DEFAULT
-const SERVER_URL = 
-    ("SERVER_URL" in keys(ENV)) ? parse(Bool, ENV["SERVER_URL"]) : SERVER_URL_DEFAULT
 
 const TEMP_FILENAME = :temp_filename
 const FILENAME = :filename
@@ -30,7 +18,7 @@ const ID = :id
 
 const NCORES = :ncores
 const NWORKERS = :nworkers
-const MODEL_SELECTION_VERSION = :model_selecion_version
+const MODEL_SELECTION_VERSION = :model_selection_version
 const JULIA_VERSION = :julia_version
 const JOBS_QUEUE_SIZE = :jobs_queue_size
 const STATUS = :status
