@@ -14,15 +14,16 @@
 
 
 <script>
-  import axios from 'axios'
+import axios from 'axios'
+
 export default {
   data(){
-    return {
+    return{
       julia_version : 0,
       cores : 0,
       model_selecion_version : 0,
       jobs_queue_size : 0,
-      nworkers :0 ,
+      nworkers :0 
     }
   },
   created(){

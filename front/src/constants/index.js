@@ -61,6 +61,8 @@ export default {
       'fast',
       'precise'
     ],
+    //proximamente deberiamos agregar estas opciones y sacar fast y precise
+    //"qr_64", "cho_64", "svd_64", "qr_32", "cho_32", "svd_32", "qr_16", "cho_16", "svd_16"
     'PRELIMINARY_SELECTION':[
       'lasso'
     ],
@@ -98,7 +100,5 @@ export default {
         'numfolds' : 'numfolds:'
       }
     }
-    //proximamente deberiamos agregar estas opciones y sacar fast y precise
-    //"qr_64", "cho_64", "svd_64", "qr_32", "cho_32", "svd_32", "qr_16", "cho_16", "svd_16"
   }
   

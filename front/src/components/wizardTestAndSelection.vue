@@ -49,7 +49,6 @@ data(){
 setup(){
   const modelSelectionStore = useModelSelectionStore();
   const instance = getCurrentInstance();
-  console.log(modelSelectionStore.job)
    /*watch(
       () => modelSelectionStore.job.estimator,
       (newValue) => {
