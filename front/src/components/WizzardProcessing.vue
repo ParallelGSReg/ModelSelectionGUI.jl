@@ -1,41 +1,49 @@
 <template>
-  <div class="wizard-Variables">
+  <div class="wizard-Variables boxDiv" >
     <h2>Processing Data</h2>
-    <h3>{{this.steps[0].label}}</h3>
-    <h3>{{this.steps[1].label}}</h3>
-    <h3>{{this.steps[2].label}}</h3>
-    <h3>{{this.steps[3].label}}</h3>
+    <div v-for="(job, jobId) in modelSelectionStore.result_job" :key="jobId">
+      <h3>{{steps[jobId].label}}</h3>
+      <div class="contentListResult">
+      <ul v-for="(value, key) in job" :key="key">
+        <li><b>{{value[1]}}</b> {{value[0]}}</li>
+      </ul>
+      </div>
+    </div>
     <button type="button" class="btn btn-dark" @click="confirmVariables">ConfirmVariables</button>
   </div>
 </template>
 
 
-<script >
+<script setup>
 import {useModelSelectionStore} from '../stores/moldelSelection'
+import { ref } from 'vue'; 
+import constants from '../constants/index.js'
 
-export default {
-  data(){
-    return {
-      steps : this.$constants['STEPS'],
-      modelSelectionStore : useModelSelectionStore(),
-      //job: this.modelSelectionStore.toShow(), check how to do this
-    }
-  },
-  methods:{
-        nextButton(){
-        const modelSelectionStore = useModelSelectionStore();
-        modelSelectionStore.setDataCleaningAndFeatureExtrationData(this.seasonaladjustment,removeoutliers,this.feSqr,
-                                                                   this.feLog,this.feInv,this.feLag,this.interaction, 
-                                                                   this.preliminaryselection,modelavg,orderresults,
-                                                                   kfoldcrossvalidation,numfolds)
-        return true
-    }
-      }
-    }
+const modelSelectionStore = useModelSelectionStore();
+
+const steps= ref(constants.STEPS);
+
+function nextButton (){
+  console.log(modelSelectionStore.getJsonToSend())
+  return true;
+}
+
+defineExpose({nextButton})
+
 </script>
 
 
-<style scoped>
+
+
+<style >
+
+.contentListResult{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 0px;
+    grid-auto-rows: minmax(1rem, auto);
+    padding-bottom: 20px;
+}
 
 .btn{
   width: fit-content;

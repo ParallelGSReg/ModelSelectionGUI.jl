@@ -109,6 +109,7 @@ methods:{
                                                                    this.feLog,this.feInv,this.feLag,this.interaction, 
                                                                    this.preliminaryselection,modelavg,orderresults,
                                                                    kfoldcrossvalidation,numfolds)
+        modelSelectionStore.toShow(this.$constants['JOB'])
         return true
     }
     }

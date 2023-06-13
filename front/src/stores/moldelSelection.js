@@ -16,12 +16,12 @@ const default_job ={
   residualtest: false,
   criteria: null, 
   seasonaladjustment: [], 
-  removeoutliers: false, 
-  fe_sqr: [],     
-  fe_log: [],  
-  fe_inv: [],
-  fe_lag: [], 
-  interaction: [], 
+  removeoutliers: true, 
+  fe_sqr: null,     
+  fe_log: null,  
+  fe_inv: null,
+  fe_lag: null, 
+  interaction: null, 
   preliminaryselection: null, 
   modelavg: false, 
   orderresults: false, 
@@ -32,7 +32,8 @@ const default_job ={
 
 export const useModelSelectionStore = defineStore('moldelSelection',{
   state: () => ({datanames : [], filehash : null,
-  job:null,
+  job: default_job,
+  result_job: [],
   }),
   actions: { 
   initialize(data){
@@ -74,19 +75,27 @@ export const useModelSelectionStore = defineStore('moldelSelection',{
   getDatanames(){
     return toRaw(this.datanames)
   },
+  //correct this function wrong iterate has to iterata in this job and compare with defaultjob
   getJsonToSend(){
     for(var key in this.job) {
-      if(!this.job[key]) {
+      if(this.job[key] == default_job[key]) {
           delete this.job[key];
       }
     }
     return JSON.stringify(this.job)
   },
-  toshow(){
-    const job =this.$constants['job']
+  toShow(job){
     let jobWithDescription = {}
-    //TODO: iterate for constant job generatin new Dict with structure:
-    // {step1 :{jobVar: (description,value),jobVar: (description,value)...},step2:{jobVar: (description,value),jobVar: (description,value)...}...}
+    let myJob= toRaw(this.job)
+    for (let index in job) {
+      var internalDict = {}
+      for(let key in job[index]){
+        let actualValue = !myJob[key] ? "Not set":  myJob[key]
+        internalDict[key] = [actualValue,job[index][key]]
+      }
+      jobWithDescription[index] = internalDict
+    }
+  this.result_job = jobWithDescription
   }
 }
 })

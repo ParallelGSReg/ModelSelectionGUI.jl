@@ -1,11 +1,6 @@
 !   finish Processing page:
-    *   make method in store ModelSelection.js that make a dict with other dict 
-    inside for each step. The step dict have to contain key: (description,value)
-    *   check in wizzardProcessing.vue correct way to call ModelSelectionStore.toShow() => this get de dict to parse
-    *   in wizzardProcessing.vue must to get this dict and iterate to complete the HMLT summary
-    *   Make method in Store ModelSelection.js wo get dict with only the options seted to make request
-    *   Make post request with previous data to inizialite the job
-
+    *   make the post petition for run de job
+    
 !   Evaluate to make a page for spinner (waiting the job finish)
 
 !   make Result Page:
