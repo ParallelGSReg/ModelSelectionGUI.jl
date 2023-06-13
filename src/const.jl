@@ -1,4 +1,3 @@
-const SERVER_BASE_DIR = "../front/dist"
 const MODEL_SELECTION_NAME = "ModelSelection"
 const MODEL_SELECTION_VER = get_pkg_version(MODEL_SELECTION_NAME)
 
