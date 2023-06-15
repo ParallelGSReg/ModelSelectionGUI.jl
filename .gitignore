@@ -29,3 +29,8 @@ Manifest.toml
 *.json
 !docs/swagger/*.json
 !test/*.csv
+docs/dev/
+docs/build/
+docs/build-pdf/
+docs/site/
+docs/src/release-notes.md

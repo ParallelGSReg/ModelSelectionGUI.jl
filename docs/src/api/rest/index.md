@@ -1,7 +1,6 @@
-# Endpoints
+# Rest API
 
-[Return to main documentation](../README.md)
-
+The Rest API endpoints are the core communication to interact with the backend services. 
 
 ## API Endpoints List
 

@@ -1,6 +1,6 @@
-## Websockets
+# Websockets
 
-[Return to main documentation](../README.md)
+It is possible to have a continuous status on the execution of a job using web sockets.
 
 ## How to stablish a connection
 
