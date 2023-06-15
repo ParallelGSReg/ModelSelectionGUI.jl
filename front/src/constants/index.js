@@ -6,8 +6,9 @@ export default {
         'load_database': '/upload-file',
         'run': '/run',
         'status' : '/status',
-        'summary': '/summary',
-        'results': '/download-results'
+        'results_summary': '/results/summary',
+        'results_allsubsetregression': '/results/allsubsetregression',
+        'results_crossvalidation': '/results/crossvalidation'
       }
     },
     'INSAMPLE_MIN_SIZE': 20,

@@ -1,11 +1,8 @@
-!   finish Processing page:
-    *   make the post petition for run de job
-    
-!   Evaluate to make a page for spinner (waiting the job finish)
+!   Evaluate to make a page for spinner (waiting the job finish) CHECK HOWTO
 
 !   make Result Page:
     *   Show json jobresult
-    *   buttons that make petition to results/:id/format
+    *   buttons that make petition to /job/:id/results/:type
 
 -   check what happend when remove variables from multiselect expVars and fixedVariables.
 -   best way to set errors from each component

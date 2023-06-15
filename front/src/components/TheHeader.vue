@@ -12,9 +12,6 @@
   </nav>
 </template>
 
-<script>
-
-</script>
 <style>
 
 .navbar{

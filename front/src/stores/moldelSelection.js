@@ -2,7 +2,7 @@
 import { defineStore } from 'pinia'
 import { toRaw } from "vue";
 const default_job ={
-  estimator: 'ols', 
+  estimator: null, 
   depvar: null,
   fixedvariables: [], 
   expvars: [],
@@ -31,9 +31,9 @@ const default_job ={
 
 
 export const useModelSelectionStore = defineStore('moldelSelection',{
-  state: () => ({datanames : [], filehash : null,
+  state: () => ({datanames : [], filehash : null, uid:null,
   job: default_job,
-  result_job: [],
+  result_job: {},
   }),
   actions: { 
   initialize(data){
@@ -75,17 +75,20 @@ export const useModelSelectionStore = defineStore('moldelSelection',{
   getDatanames(){
     return toRaw(this.datanames)
   },
-  //correct this function wrong iterate has to iterata in this job and compare with defaultjob
   getJsonToSend(){
-    for(var key in this.job) {
-      if(this.job[key] == default_job[key]) {
-          delete this.job[key];
+    let jobRequest = {}
+    let myJob= toRaw(this.job)
+    let equation =  this.job["depvar"] + " "  
+    myJob["expvars"].forEach((exp) => equation=equation+ exp + " ")
+    jobRequest["equation"] = equation
+    for(var key in myJob) {
+      if((myJob[key] != default_job[key]) && (key != "expvars") && (key != "depvar") && (!this.checkEmptyArray(myJob[key]))){
+        jobRequest[key] = myJob[key]
       }
     }
-    return JSON.stringify(this.job)
+    return JSON.stringify(jobRequest)
   },
   toShow(job){
-    let jobWithDescription = {}
     let myJob= toRaw(this.job)
     for (let index in job) {
       var internalDict = {}
@@ -93,9 +96,14 @@ export const useModelSelectionStore = defineStore('moldelSelection',{
         let actualValue = !myJob[key] ? "Not set":  myJob[key]
         internalDict[key] = [actualValue,job[index][key]]
       }
-      jobWithDescription[index] = internalDict
+      this.result_job[index] = internalDict
     }
-  this.result_job = jobWithDescription
+  },
+  checkEmptyArray(array){
+    if(typeof(array) == 'object'){
+      return array && array.length ? false : true
+    }
+    return false
   }
 }
 })

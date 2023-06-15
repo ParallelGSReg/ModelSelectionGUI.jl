@@ -18,13 +18,21 @@
 import {useModelSelectionStore} from '../stores/moldelSelection'
 import { ref } from 'vue'; 
 import constants from '../constants/index.js'
+import axios from 'axios'
 
 const modelSelectionStore = useModelSelectionStore();
 
 const steps= ref(constants.STEPS);
 
 function nextButton (){
-  console.log(modelSelectionStore.getJsonToSend())
+  let data = modelSelectionStore.getJsonToSend()
+  console.log(data)
+  axios.post(constants.API.host + constants.API.paths.run + "/" + modelSelectionStore.filehash,
+  data, {headers: {"Content-Type": "application/json"}})
+  .then((response)=>{
+    modelSelectionStore.uid = response.data.id
+    console.log(response)
+})
   return true;
 }
 
