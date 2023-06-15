@@ -2,7 +2,6 @@ using Documenter, DocumenterTools
 using ModelSelectionGUI
 
 makedocs(
-    format = Documenter.HTML(prettyurls = false),
     source = "src",
     build   = "build",
     clean   = true,
