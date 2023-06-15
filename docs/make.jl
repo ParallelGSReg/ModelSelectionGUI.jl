@@ -6,7 +6,7 @@ makedocs(
     build   = "build",
     clean   = true,
     modules = [ModelSelectionGUI],
-    sitename = "ModelselectionGUI.jl",
+    sitename = "ModelSelectionGUI.jl",
     # expandfirst
     pages = [
         "Home" => "index.md",

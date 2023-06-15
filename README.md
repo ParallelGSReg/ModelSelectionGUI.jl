@@ -1,6 +1,6 @@
 # ModelSelectionGUI
 
-[![][build-main-img]][test-main-url] [![][test-main-img]][test-main-url] [![][codecov-img]][codecov-url]
+[![][documentation-main-img]][documentation-main-url] [![][build-main-img]][test-main-url] [![][test-main-img]][test-main-url] [![][codecov-img]][codecov-url]
 
 The ModelSelectionGUI is a web server package designed to provide a user-friendly interface for utilizing the ModelSelection package. It consists of a backend and an optional frontend that offers a graphical user interface (GUI) for seamless interaction with the underlying ModelSelection functionality.
 
@@ -53,3 +53,6 @@ This package functions as an interface with ModelSelection.jl. For more details 
 
 [codecov-img]: https://codecov.io/gh/ParallelGSReg/ModelSelectionGUI.jl/branch/main/graph/badge.svg
 [codecov-url]: https://codecov.io/gh/ParallelGSReg/ModelSelectionGUI.jl
+
+[documentation-main-img]: https://github.com/ParallelGSReg/ModelSelectionGUI.jl/actions/workflows/docs.yaml/badge.svg
+[documentation-main-url]: https://parallelgsreg.github.io/ModelSelectionGUI.jl/dev/
