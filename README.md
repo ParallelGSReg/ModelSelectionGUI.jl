@@ -28,7 +28,14 @@ using ModelSelectionGUI
 start()
 ```
 
-If the web client is enabled open your web browser and enter the following URL: [http://localhost:8000](http://localhost:8000).
+If the web client is enabled open your web browser and enter the following URL: [http://127.0.0.1:8000](http://127.0.0.1:8000).
+
+## Documentation
+
+For more detailed information about this package, its functionalities, and usage instructions, please refer to our [documentation page](https://parallelgsreg.github.io/ModelSelectionGUI.jl/dev/).
+
+## ModelSelection.jl package
+ModelSelectionGUI.jl package functions as an interface with ModelSelection.jl. For more details about the functionalities and features provided by ModelSelection.jl, please visit the [package repository](https://github.com/ParallelGSReg/ModelSelection.jl).
 
 ## Contributing
 
@@ -42,8 +49,6 @@ For an overview of pending tasks, improvements, and future plans for the ModelSe
 
 This package is licensed under the [MIT License](LICENSE).
 
-## ModelSelection.jl
-This package functions as an interface with ModelSelection.jl. For more details about the functionalities and features provided by ModelSelection.jl, please visit the [package repository](https://github.com/ParallelGSReg/ModelSelection.jl).
 
 [build-main-img]: https://github.com/ParallelGSReg/ModelSelectionGUI.jl/actions/workflows/build.yaml/badge.svg?branch=main
 [build-main-url]: https://github.com/ParallelGSReg/ModelSelectionGUI.jl/actions/workflows/build.yaml

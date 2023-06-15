@@ -10,11 +10,23 @@ using Genie.Renderer,
 using CSV, DataFrames, Distributed, UUIDs
 using HTTP
 
+"""
+    home_view()
+
+The function handles the home page view. Returns a simple HTML string "ModelSelectionGUI".
+"""
 function home_view()
     html("ModelSelectionGUI")
 end
 
+"""
+    server_info_view()
 
+Returns information about the server.
+
+# Returns
+- A JSON object with the server information.
+"""
 function server_info_view()
     return server_info_response(
         Sys.CPU_THREADS,
@@ -25,7 +37,14 @@ function server_info_view()
     )
 end
 
+"""
+    upload_file_view()
 
+Uploads a CSV file to the server. Upon successful upload, the server will process the uploaded file for further operations.
+
+# Returns
+- A JSON object with information about the saved file.
+"""
 function upload_file_view()
     if !infilespayload(:data)
         return bad_request_exception(FILE_NOT_SENT)
@@ -57,7 +76,14 @@ function upload_file_view()
     return upload_response(filename, filehash, names(data), size(data, 1))
 end
 
+"""
+    job_enqueue_view()
 
+Enqueues a model selection job for the specified file. The task will be executed after the previously queued tasks have finished.
+
+# Returns
+- A JSON object with information about the created job.
+"""
 function job_enqueue_view()
     filehash = get_request_filehash(params)
     file = get_job_file(filehash)
@@ -93,7 +119,14 @@ function job_enqueue_view()
     return job_info_response(job)
 end
 
+"""
+    job_info_view()
 
+Returns the info of a model selection job. If the job is finished, it also includes the summary of a model selection job.
+
+# Returns
+- A JSON object with information about the selected job.
+"""
 function job_info_view()
     global jobs_finished
     id = get_request_job_id(params)
@@ -104,7 +137,14 @@ function job_info_view()
     return job_info_response(job)
 end
 
+"""
+job_results_view()
 
+Returns the result file of a specific type for a model selection job.
+
+# Returns
+- A text file with the selected result.
+"""
 function job_results_view()
     global jobs_finished
     id = get_request_job_id(params)
@@ -129,71 +169,15 @@ function job_results_view()
         )  # FIXME: Move to constant INVALID_RESULT_TYPE
     end
 
-    if resulttype == SUMMARY
-        io_buffer = IOBuffer()
-        outputstr = ""
-        for result in job.modelselection_data.results
-            if typeof(result) == ModelSelection.CrossValidation.CrossValidationResult
-                outputstr =
-                    outputstr * ModelSelection.CrossValidation.to_string(
-                        job.modelselection_data,
-                        result,
-                    )
-            elseif typeof(result) ==
-                   ModelSelection.AllSubsetRegression.AllSubsetRegressionResult
-                outputstr =
-                    outputstr * ModelSelection.AllSubsetRegression.to_string(
-                        job.modelselection_data,
-                        result,
-                    )
-            end
-        end
-        println(io_buffer, outputstr)
-        body = String(take!(io_buffer))
-        filename = get_txt_filename(job.filename)
-        headers = Dict(
-            "Content-Type" => "text/plain",
-            "Content-Disposition" => "attachment; filename=$filename",
-        )
-        return HTTP.Response(200, headers, body = body)
-    end
-
-    data = nothing
-    if resulttype == ALLSUBSETREGRESSION
-        for result in job.modelselection_data.results
-            if typeof(result) ==
-               ModelSelection.AllSubsetRegression.AllSubsetRegressionResult
-                filename = get_csv_filename(job.filename, result)
-                data = get_csv_from_result(filename, result)
-                break
-            end
-        end
-    elseif resulttype == CROSSVALIDATION
-        for result in job.modelselection_data.results
-            if typeof(result) == ModelSelection.CrossValidation.CrossValidationResult
-                filename = get_csv_filename(job.filename, result)
-                data = get_csv_from_result(filename, result)
-                break
-            end
-        end
-    end
-
-    if data === nothing
-        return bad_request_exception(
-            @sprintf("The job does not have a result of type %s", resulttype)
-        )  # FIXME: Move to constant JOB_HAS_NOT_RESULTTYPE
-    end
-
-    body = data[DATA]
-    filename = data[FILENAME]
-    headers = Dict(
-        "Content-Type" => "text/csv",
-        "Content-Disposition" => "attachment; filename=$filename",
-    )
-    return HTTP.Response(200, headers, body = body)
+    return job_results_response(job, resulttype)
 end
 
+"""
+    websocket_channel_view()
 
+The function handles the view for WebSocket channel subscriptions. 
+It subscribes the client to the default WebSocket channel and returns a confirmation string.
+"""
 function websocket_channel_view()
     WebChannels.subscribe(Genie.Requests.wsclient(), string(DEFAULT_WS_CHANNEL))
     return "Subscription: OK"

@@ -1,7 +1,22 @@
 using Documenter, DocumenterTools
-using ModelSelectionGUI
+using DataFrames
+using ModelSelectionGUI, ModelSelection
+using ModelSelectionGUI: ModelSelectionJob
+
+# The DOCSARGS environment variable can be used to pass additional arguments to make.jl.
+# This is useful on CI, if you need to change the behavior of the build slightly but you
+# can not change the .travis.yml or make.jl scripts any more (e.g. for a tag build).
+if haskey(ENV, "DOCSARGS")
+    for arg in split(ENV["DOCSARGS"])
+        (arg in ARGS) || push!(ARGS, arg)
+    end
+end
 
 makedocs(
+    format = Documenter.HTML(
+        prettyurls = true,
+        assets = ["assets/favicon.ico"],
+    ),
     source = "src",
     build   = "build",
     clean   = true,
@@ -14,10 +29,25 @@ makedocs(
         "Configuration" => "configuration.md",
         "API" => Any[
             "Rest" => Any[
-                "api/rest/index.md",
-                "api/rest/swagger.md"
+                "Endpoints" => "api/rest/index.md",
+                "Swagger" => "api/rest/swagger.md",
             ],
             "Websockets" => "api/websockets/index.md",
+        ],
+        "Library" => Any[
+            "Public" => "library/public.md",
+            "Internals" => Any[
+                "library/internals/browser.md",
+                "library/internals/constants.md",
+                "library/internals/exceptions.md",
+                "library/internals/jobs.md",
+                "library/internals/responses.md",
+                "library/internals/strings.md",
+                "library/internals/types.md",
+                "library/internals/utils.md",
+                "library/internals/variables.md",
+                "library/internals/views.md",
+            ],
         ],
         "Contributing" => "contributing.md",
         "News" => "news.md",
@@ -26,4 +56,7 @@ makedocs(
     ],
 )
 
-deploydocs(repo = "github.com/ParallelGSReg/ModelSelectionGUI.jl.git")
+deploydocs(
+    repo = "github.com/ParallelGSReg/ModelSelectionGUI.jl.git",
+    versions = nothing,
+)

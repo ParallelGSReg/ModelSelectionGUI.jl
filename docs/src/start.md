@@ -2,11 +2,10 @@
 
 ## Installation
 
-You can install the package by running the following command in the Julia REPL:
+Documenter can be installed using the Julia package manager. From the Julia REPL, type ] to enter the Pkg REPL mode and run
 
-```julia
-using Pkg
-Pkg.add("ModelSelectionGUI")
+```
+pkg> add Documenter
 ```
 
 ## Usage
@@ -18,5 +17,5 @@ using ModelSelectionGUI
 start()
 ```
 
-If the web client is enabled open your web browser and enter the following URL: [http://localhost:8000]
-(http://localhost:8000) (please change the port for the one that is in your configuration)
+!!! note
+    If the web client is enabled open your web browser and enter the following URL: [http://127.0.0.1:8000](http://127.0.0.1:8000). Please change the host and port for the one that is [in your configuration](configuration.md).
