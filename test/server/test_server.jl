@@ -1,13 +1,14 @@
+const dotenv = "server/$(DOTENV_FILENAME)"
+
 @testset  "Server" begin
     @testset "Server start and stop" begin
-        start()
+        start(dotenv=dotenv)
         stop()
     end
 
     @testset "GET /server-info" begin
         using HTTP, JSON
         URL = "/server-info"
-        dotenv = "server/$(DOTENV_FILENAME)"
         url = "$(ModelSelectionGUI.SERVER_URL):$(ModelSelectionGUI.SERVER_PORT)$(URL)"
 
 		start(dotenv=dotenv)

@@ -1,7 +1,12 @@
 # ModelSelectionGUI
 
-[![Build](https://github.com/ParallelGSReg/ModelSelectionGUI.jl/actions/workflows/build.yaml/badge.svg?branch=main)](https://github.com/ParallelGSReg/ModelSelectionGUI.jl/actions/workflows/build.yaml)
-[![Test](https://github.com/ParallelGSReg/ModelSelectionGUI.jl/actions/workflows/test.yaml/badge.svg?branch=main)](https://github.com/ParallelGSReg/ModelSelectionGUI.jl/actions/workflows/test.yaml)
+| **Build Status**                                                                                |
+|:-----------------------------------------------------------------------------------------------:|
+| [![][build-main-img]][test-main-url] [![][test-main-img]][test-main-url] |
+
+
+
+
 
 The ModelSelectionGUI is a web server package designed to provide a user-friendly interface for utilizing the ModelSelection package. It consists of a backend and an optional frontend that offers a graphical user interface (GUI) for seamless interaction with the underlying ModelSelection functionality.
 
@@ -105,3 +110,9 @@ For an overview of pending tasks, improvements, and future plans for the Package
 ## License
 
 This package is licensed under the [MIT License](LICENSE). Include information about the license under which your package is released.
+
+[build-main-img]: https://github.com/ParallelGSReg/ModelSelectionGUI.jl/actions/workflows/build.yaml/badge.svg?branch=main
+[build-main-url]: https://github.com/ParallelGSReg/ModelSelectionGUI.jl/actions/workflows/build.yaml
+
+[test-main-img]: https://github.com/ParallelGSReg/ModelSelectionGUI.jl/actions/workflows/test.yaml/badge.svg?branch=main
+[test-main-url]: https://github.com/ParallelGSReg/ModelSelectionGUI.jl/actions/workflows/test.yaml
