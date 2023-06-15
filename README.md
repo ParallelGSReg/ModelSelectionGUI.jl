@@ -42,6 +42,9 @@ For an overview of pending tasks, improvements, and future plans for the ModelSe
 
 This package is licensed under the [MIT License](LICENSE).
 
+## ModelSelection.jl
+This package functions as an interface with ModelSelection.jl. For more details about the functionalities and features provided by ModelSelection.jl, please visit the [package repository](https://github.com/ParallelGSReg/ModelSelection.jl).
+
 [build-main-img]: https://github.com/ParallelGSReg/ModelSelectionGUI.jl/actions/workflows/build.yaml/badge.svg?branch=main
 [build-main-url]: https://github.com/ParallelGSReg/ModelSelectionGUI.jl/actions/workflows/build.yaml
 
