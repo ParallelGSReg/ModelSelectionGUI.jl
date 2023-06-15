@@ -135,7 +135,7 @@ function job_results_response(job::ModelSelectionJob, resulttype::String)
                         result,
                     )
             elseif typeof(result) ==
-                ModelSelection.AllSubsetRegression.AllSubsetRegressionResult
+                   ModelSelection.AllSubsetRegression.AllSubsetRegressionResult
                 outputstr =
                     outputstr * ModelSelection.AllSubsetRegression.to_string(
                         job.modelselection_data,
@@ -156,7 +156,7 @@ function job_results_response(job::ModelSelectionJob, resulttype::String)
     if resulttype == ALLSUBSETREGRESSION
         for result in job.modelselection_data.results
             if typeof(result) ==
-            ModelSelection.AllSubsetRegression.AllSubsetRegressionResult
+               ModelSelection.AllSubsetRegression.AllSubsetRegressionResult
                 filename = get_csv_filename(job.filename, result)
                 data = get_csv_from_result(filename, result)
                 break

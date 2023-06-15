@@ -26,10 +26,10 @@ start(server_port = 8080, open_browser = true)
 ```
 """
 function start(;
-    server_port::Union{Int, Nothing} = nothing,
-    client_port::Union{Int, Nothing} = nothing,
-    open_browser::Union{Bool, Nothing} = nothing,
-    open_client::Union{Bool, Nothing} = nothing,
+    server_port::Union{Int,Nothing} = nothing,
+    client_port::Union{Int,Nothing} = nothing,
+    open_browser::Union{Bool,Nothing} = nothing,
+    open_client::Union{Bool,Nothing} = nothing,
     dotenv::String = ENV_FILE_DEFAULT,
 )
     load_dotenv(dotenv)
@@ -52,8 +52,8 @@ function start(;
 
     Genie.config.websockets_server = true
     route("/", home_view)
-    route("/docs") do 
-        render_swagger(swagger_document, options=options)
+    route("/docs") do
+        render_swagger(swagger_document, options = options)
     end
 
     route("/server-info", server_info_view, method = GET)
@@ -70,7 +70,7 @@ function start(;
     if open_browser || open_client
         sleep(3)
         if open_browser
-            browser(path="/docs", port = server_port)
+            browser(path = "/docs", port = server_port)
         end
         if open_client
             browser(port = client_port)

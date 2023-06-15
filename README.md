@@ -60,4 +60,4 @@ This package is licensed under the [MIT License](LICENSE).
 [codecov-url]: https://codecov.io/gh/ParallelGSReg/ModelSelectionGUI.jl
 
 [documentation-main-img]: https://github.com/ParallelGSReg/ModelSelectionGUI.jl/actions/workflows/docs.yaml/badge.svg
-[documentation-main-url]: https://parallelgsreg.github.io/ModelSelectionGUI.jl/dev/
+[documentation-main-url]: https://parallelgsreg.github.io/ModelSelectionGUI.jl/
