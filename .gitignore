@@ -23,7 +23,8 @@ docs/site/
 # environment.
 Manifest.toml
 
-.env
+.env*
+!.env.template
 *.csv
 *.json
 !docs/swagger/*.json
@@ -57,3 +58,4 @@ coverage
 *.njsproj
 *.sln
 *.sw?
+!test/*.csv

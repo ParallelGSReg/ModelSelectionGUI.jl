@@ -3,4 +3,6 @@
  - [] Develop Docker Compose
  - [] A prebuild for each main platform
  - [] A script to run everything with one command
-
+ - [] Github Actions
+ - [] Tests (in progress)
+ - [] GitHub badges: Build, Test, Coverage

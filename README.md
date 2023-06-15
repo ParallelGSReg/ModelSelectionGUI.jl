@@ -31,7 +31,7 @@ If the web client is enabled open your web browser and enter the following URL: 
 
 ## Environment variables
 
-The Package Name package supports the following environment variables for configuration:
+The package supports the following environment variables for configuration:
 
 - `SERVER_PORT` (optional): The port number on which the web server will listen. Default value is 8000 if not specified.
 - `CLIENT_PORT` (optional): The port number for the client to communicate with the server. Default value is `SERVER_PORT + 1` if not specified.
@@ -53,6 +53,17 @@ For example, to set the `SERVER_PORT` environment variable to 9000, you can use:
 
 ```plaintext
 export SERVER_PORT=9000
+```
+
+### Load environment variables
+The dotenv file will `.env` as default. If a custom file is needed, you can use the command in the Julia REPL:
+```julia
+start(dotenv=".mycustomenv")
+
+# or
+
+load_dotenv(".mycustomenv")
+start()
 ```
 
 Please note that modifying environment variables may require restarting the web server for the changes to take effect.

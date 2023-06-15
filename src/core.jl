@@ -1,17 +1,37 @@
 using Genie, Genie.Router
 using JSON
 using SwagUI
+using ConfigEnv
 
 options = Options()
 options.show_explorer = false
 swagger_document = JSON.parsefile("./docs/swagger/swagger.json")
 
 function start(;
-    server_port::Int = SERVER_PORT,
-    client_port::Int = CLIENT_PORT,
-    open_browser::Bool = OPEN_BROWSER,
-    open_client::Bool = OPEN_CLIENT,
+    server_port::Union{Int, Nothing} = nothing,
+    client_port::Union{Int, Nothing} = nothing,
+    open_browser::Union{Bool, Nothing} = nothing,
+    open_client::Union{Bool, Nothing} = nothing,
+    dotenv::String = ENV_FILE_DEFAULT,
 )
+    load_dotenv(dotenv)
+
+    if server_port === nothing
+        server_port = SERVER_PORT
+    end
+
+    if client_port === nothing
+        client_port = CLIENT_PORT
+    end
+
+    if open_browser === nothing
+        open_browser = OPEN_BROWSER
+    end
+
+    if open_client === nothing
+        open_client = OPEN_CLIENT
+    end
+
     Genie.config.websockets_server = true
     route("/", home_view)
     route("/docs") do 
@@ -35,4 +55,8 @@ function start(;
     if open_client
         browser(port = client_port)
     end
+end
+
+function stop()
+    down()
 end

@@ -85,7 +85,6 @@ function job_notify(message::String, data::Union{Dict{Any,Any},Nothing} = nothin
 end
 
 
-
 function get_job(queue::Vector{ModelSelectionJob}, id::String)
     for job in queue
         if job.id == id
