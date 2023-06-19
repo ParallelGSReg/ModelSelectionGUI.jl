@@ -1,25 +1,25 @@
 const DATA_FILENAME = "data.csv"
+const DOTENV = "integration/.testenv"
 
-@testset  "Files" begin
+@testset "Files" begin
     @testset "Upload file" begin
         using HTTP, JSON
-        dotenv = "files/$(DOTENV_FILENAME)"
         URL = "/upload-file"
         url = "$(ModelSelectionGUI.SERVER_URL):$(ModelSelectionGUI.SERVER_PORT)$(URL)"
-
-		start(dotenv=dotenv)        
+        reset_envvars()
+        start(dotenv = DOTENV)
         file = open(DATA_FILENAME, "r")
         body = HTTP.Form(Dict(:data => HTTP.Multipart(DATA_FILENAME, file, "text/csv")))
         response = HTTP.post(url, [], body)
         msg = String(response.body)
         body = JSON.parse(msg)
 
-        FILENAME = "filename"
-        FILEHASH = "filehash"
-        DATANAMES = "datanames"
-        NOBS = "nobs"
+        FILENAME = String(ModelSelectionGUI.FILENAME)
+        FILEHASH = String(ModelSelectionGUI.FILEHASH)
+        DATANAMES = String(ModelSelectionGUI.DATANAMES)
+        NOBS = String(ModelSelectionGUI.NOBS)
 
-		@test response.status == 200
+        @test response.status == 200
         @test haskey(body, FILENAME)
         @test body[FILENAME] isa String
         @test haskey(body, FILEHASH)

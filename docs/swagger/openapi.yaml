@@ -288,7 +288,7 @@ components:
         parameters:
           type: object
           description: The parameters used for model selection, including any additional parameters specified in the request
-          example: {"ttest": "true"}
+          example: {"ttest": true}
     JobInfo:
       allOf:
         - $ref: '#/components/schemas/BasicJobInfo'

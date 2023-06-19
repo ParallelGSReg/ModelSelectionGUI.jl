@@ -1,18 +1,17 @@
-const dotenv = "server/$(DOTENV_FILENAME)"
+const DOTENV = "integration/.testenv"
 
-@testset  "Server" begin
+@testset "Server" begin
     @testset "Server start and stop" begin
-        start(dotenv=dotenv)
+        start(dotenv = DOTENV)
         stop()
     end
 
     @testset "GET /server-info" begin
         using HTTP, JSON
-        URL = "/server-info"
-        url = "$(ModelSelectionGUI.SERVER_URL):$(ModelSelectionGUI.SERVER_PORT)$(URL)"
-
-		start(dotenv=dotenv)
-		response = HTTP.get(url)
+        url = "$(ModelSelectionGUI.SERVER_URL):$(ModelSelectionGUI.SERVER_PORT)/server-info"
+        reset_envvars()
+        start(dotenv = DOTENV)
+        response = HTTP.get(url)
         msg = String(response.body)
         body = JSON.parse(msg)
 
@@ -22,8 +21,8 @@ const dotenv = "server/$(DOTENV_FILENAME)"
         NWORKERS = "nworkers"
         JOBS_QUEUE_SIZE = "jobs_queue_size"
 
-		@test response.status == 200
-		@test haskey(body, JULIA_VERSION)
+        @test response.status == 200
+        @test haskey(body, JULIA_VERSION)
         @test body[JULIA_VERSION] isa String
         @test haskey(body, MODEL_SELECTION_VERSION)
         @test body[MODEL_SELECTION_VERSION] isa String

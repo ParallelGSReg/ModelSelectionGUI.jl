@@ -42,7 +42,7 @@ start(dotenv=".mycustomenv")
 
 # or
 
-load_dotenv(".mycustomenv")
+load_envvars(".mycustomenv")
 start()
 ```
 !!! note

@@ -34,7 +34,7 @@ Defines the base URL of the server. By default, it uses the value of `SERVER_URL
 SERVER_URL = SERVER_URL_DEFAULT
 
 """
-    load_dotenv(path::String = ENV_FILE_DEFAULT)
+    load_envvars(path::String = ENV_FILE_DEFAULT)
 
 Load environment variables from a `.env` file specified by `path`. If a certain environment variable is defined in the file, the corresponding global variable will be updated. Otherwise, the default value will be used.
 
@@ -44,10 +44,10 @@ Global variables updated by this function are `SERVER_PORT`, `CLIENT_PORT`, `OPE
 
 # Examples
 ```julia
-load_dotenv("./path/to/.env")
+load_envvars("./path/to/.env")
 ```
 """
-function load_dotenv(path::String = ENV_FILE_DEFAULT)
+function load_envvars(path::String = ENV_FILE_DEFAULT)
     global SERVER_PORT
     global CLIENT_PORT
     global OPEN_BROWSER
@@ -65,4 +65,30 @@ function load_dotenv(path::String = ENV_FILE_DEFAULT)
     OPEN_CLIENT =
         ("OPEN_CLIENT" in keys(ENV)) ? parse(Bool, ENV["OPEN_CLIENT"]) : OPEN_CLIENT_DEFAULT
     SERVER_URL = ("SERVER_URL" in keys(ENV)) ? ENV["SERVER_URL"] : SERVER_URL_DEFAULT
+end
+
+"""
+    reset_envvars()
+
+Reset environment variables to the default values.
+
+Global variables updated by this function are `SERVER_PORT`, `CLIENT_PORT`, `OPEN_BROWSER`, `OPEN_CLIENT`, and `SERVER_URL`.
+
+# Examples
+```julia
+reset_envvars()
+```
+"""
+function reset_envvars()
+    global SERVER_PORT
+    global CLIENT_PORT
+    global OPEN_BROWSER
+    global OPEN_CLIENT
+    global SERVER_URL
+    
+    SERVER_PORT = SERVER_PORT_DEFAULT
+    CLIENT_PORT = SERVER_PORT + 1
+    OPEN_BROWSER = OPEN_BROWSER_DEFAULT
+    OPEN_CLIENT = OPEN_CLIENT_DEFAULT
+    SERVER_URL = SERVER_URL_DEFAULT
 end

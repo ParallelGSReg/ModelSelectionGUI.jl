@@ -23,4 +23,7 @@ ModelSelectionGUI.get_job(id::String)
 ModelSelectionGUI.get_job_queue(id::String)
 ModelSelectionGUI.get_current_job(id::Union{String,Nothing} = nothing)
 ModelSelectionGUI.get_job_finished(id::String)
+ModelSelectionGUI.clear_jobs_queue()
+ModelSelectionGUI.clear_current_job()
+ModelSelectionGUI.clear_jobs_finished()
 ```

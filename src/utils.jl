@@ -184,17 +184,17 @@ to_dict(job)
 """
 function to_dict(job::ModelSelectionJob)
     return Dict(
-        :id => job.id,
+        ID => job.id,
         FILENAME => job.filename,
         FILEHASH => job.filehash,
         PARAMETERS => job.parameters,
         STATUS => job.status,
-        :time_enqueued => job.time_enqueued,
-        :time_started => job.time_started,
-        :time_finished => job.time_finished,
-        :estimator => String(job.estimator),
-        :equation => job.equation,
-        :msg => job.msg,
+        TIME_ENQUEUED => job.time_enqueued,
+        TIME_STARTED => job.time_started,
+        TIME_FINISHED => job.time_finished,
+        ESTIMATOR => String(job.estimator),
+        EQUATION => job.equation,
+        MSG => job.msg,
     )
 end
 

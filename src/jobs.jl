@@ -218,7 +218,6 @@ Returns `nothing` if the job is not found.
 ```julia
 get_job("id")
 ```
-
 """
 function get_job(id::String)
     job = get_job_queue(id)
@@ -313,3 +312,50 @@ function get_job_finished(id::String)
     end
     return nothing
 end
+
+"""
+    clear_jobs_queue()
+
+Clear the jobs queue. 
+
+# Example
+```julia
+clear_jobs_queue()
+```
+"""
+function clear_jobs_queue()
+    global jobs_queue
+    jobs_queue = Vector{ModelSelectionJob}()
+end
+
+"""
+    clear_current_job()
+
+Clear the current job.
+
+# Example
+```julia
+clear_current_job()
+```
+"""
+function clear_current_job()
+    global current_job
+    current_job = nothing
+end
+
+"""
+    clear_jobs_finished()
+
+Clear all the finished jobs. 
+
+# Example
+```julia
+clear_jobs_finished()
+```
+"""
+function clear_jobs_finished()
+    global jobs_finished
+    jobs_finished = Vector{ModelSelectionJob}()
+end
+
+

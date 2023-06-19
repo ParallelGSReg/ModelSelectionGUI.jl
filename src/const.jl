@@ -211,6 +211,34 @@ Symbol representing the number of observations. Used as a key in various data st
 const NOBS = :nobs
 
 """
+    TIME_ENQUEUED
+
+Symbol representing the time that a job is enqueued. Used as a key in various data structures throughout the application.
+"""
+const TIME_ENQUEUED = :time_enqueued
+
+"""
+    TIME_STARTED
+
+Symbol representing the time that a job started. Used as a key in various data structures throughout the application.
+"""
+const TIME_STARTED = :time_started
+
+"""
+    TIME_FINISHED
+
+Symbol representing the time that a job finished. Used as a key in various data structures throughout the application.
+"""
+const TIME_FINISHED = :time_finished
+
+"""
+    MSG
+
+Symbol representing an API message. Used as a key in various data structures throughout the application.
+"""
+const MSG = :msg
+
+"""
     ALLSUBSETREGRESSION
 
 Symbol representing the All Subset Regression result type. Used as a key in various data structures throughout the application.
@@ -258,3 +286,10 @@ const RESULTS = :results
 String representing the MIME type for CSV files. Used when handling CSV file data within the application.
 """
 const CSV_MIME = "text/csv"
+
+"""
+    PLAIN_MIME
+
+String representing the MIME type for CSV files. Used when handling plain txt file data within the application.
+"""
+const PLAIN_MIME = "text/plain"

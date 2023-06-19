@@ -15,7 +15,8 @@ Pages = ["public.md"]
 ## Contents
 
 ```@docs
-load_dotenv(path::String = ENV_FILE_DEFAULT)
+load_envvars(path::String = ENV_FILE_DEFAULT)
+reset_envvars()
 start(; server_port::Union{Int, Nothing} = nothing, client_port::Union{Int, Nothing} = nothing, open_browser::Union{Bool, Nothing} = nothing, open_client::Union{Bool, Nothing} = nothing, dotenv::String = ENV_FILE_DEFAULT)
 stop()
 ```

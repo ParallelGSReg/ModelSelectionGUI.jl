@@ -32,7 +32,7 @@ function start(;
     open_client::Union{Bool,Nothing} = nothing,
     dotenv::String = ENV_FILE_DEFAULT,
 )
-    load_dotenv(dotenv)
+    load_envvars(dotenv)
 
     if server_port === nothing
         server_port = SERVER_PORT

@@ -366,7 +366,7 @@
             "type": "object",
             "description": "The parameters used for model selection, including any additional parameters specified in the request",
             "example": {
-              "ttest": "true"
+              "ttest": true
             }
           }
         }

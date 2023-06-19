@@ -41,6 +41,10 @@ ModelSelectionGUI.ESTIMATOR
 ModelSelectionGUI.EQUATION
 ModelSelectionGUI.DATANAMES
 ModelSelectionGUI.NOBS
+ModelSelectionGUI.TIME_ENQUEUED
+ModelSelectionGUI.TIME_STARTED
+ModelSelectionGUI.TIME_FINISHED
+ModelSelectionGUI.MSG
 ModelSelectionGUI.ALLSUBSETREGRESSION
 ModelSelectionGUI.CROSSVALIDATION
 ModelSelectionGUI.SUMMARY
@@ -48,4 +52,5 @@ ModelSelectionGUI.AVAILABLE_RESULTS_TYPES
 ModelSelectionGUI.DEFAULT_WS_CHANNEL
 ModelSelectionGUI.RESULTS
 ModelSelectionGUI.CSV_MIME
+ModelSelectionGUI.PLAIN_MIME
 ```

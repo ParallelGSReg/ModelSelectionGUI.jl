@@ -106,24 +106,24 @@ depending on the specified result type.
 
 # Arguments
 - `job::ModelSelectionJob`: The `ModelSelectionJob` instance from which to extract results.
-- `resulttype::String`: The type of result to extract. This can be one of: `SUMMARY`, 
-  `ALLSUBSETREGRESSION`, `CROSSVALIDATION`.
+- `resulttype::Symbol`: The type of result to extract. This can be one of: `:summary`, 
+`:allsubsetregression`, `:crossvalidation`.
 
 # Returns
 - An HTTP response object.
-  - If `resulttype` is `SUMMARY`, the response body is a text string 
+  - If `resulttype` is `:summary`, the response body is a text string 
   containing a summary of the job's results.
-  - If `resulttype` is `ALLSUBSETREGRESSION` or 
-  `CROSSVALIDATION`, the response body is a CSV-formatted string of the corresponding results. 
+  - If `resulttype` is `:allsubsetregression` or 
+  `:crossvalidation`, the response body is a CSV-formatted string of the corresponding results. 
   - If there are no results of the requested type, a 400 (Bad Request) HTTP response is returned.
 
 # Example
 ```julia
 job = ModelSelectionJob(...)  # job is an instance of ModelSelectionJob
-job_results_response(job, "SUMMARY")
+job_results_response(job, :summary)
 ```
 """
-function job_results_response(job::ModelSelectionJob, resulttype::String)
+function job_results_response(job::ModelSelectionJob, resulttype::Symbol)
     if resulttype == SUMMARY
         io_buffer = IOBuffer()
         outputstr = ""

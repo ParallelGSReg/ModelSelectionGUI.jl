@@ -1,12 +1,12 @@
 using Test
 using ModelSelectionGUI
-
-const DOTENV_FILENAME = ".testenv"
+using ModelSelectionGUI: ModelSelectionJob
 
 tests = [
-    "variables/test_variables.jl",
-    "server/test_server.jl",
-    "files/test_files.jl",
+    "unit/test_variables.jl",
+    "integration/test_server.jl",
+    "integration/test_files.jl",
+    "integration/test_jobs.jl",
 ]
 
 for test in tests
