@@ -32,7 +32,7 @@ If the web client is enabled open your web browser and enter the following URL: 
 
 ## Documentation
 
-For more detailed information about this package, its functionalities, and usage instructions, please refer to our [documentation page](https://parallelgsreg.github.io/ModelSelectionGUI.jl/dev/).
+For more detailed information about this package, its functionalities, and usage instructions, please refer to our [documentation page](https://parallelgsreg.github.io/ModelSelectionGUI.jl).
 
 ## ModelSelection.jl package
 ModelSelectionGUI.jl package functions as an interface with ModelSelection.jl. For more details about the functionalities and features provided by ModelSelection.jl, please visit the [package repository](https://github.com/ParallelGSReg/ModelSelection.jl).
@@ -60,4 +60,4 @@ This package is licensed under the [MIT License](LICENSE).
 [codecov-url]: https://codecov.io/gh/ParallelGSReg/ModelSelectionGUI.jl
 
 [documentation-main-img]: https://github.com/ParallelGSReg/ModelSelectionGUI.jl/actions/workflows/docs.yaml/badge.svg
-[documentation-main-url]: https://parallelgsreg.github.io/ModelSelectionGUI.jl/
+[documentation-main-url]: https://parallelgsreg.github.io/ModelSelectionGUI.jl
