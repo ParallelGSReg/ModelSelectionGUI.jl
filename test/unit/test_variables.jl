@@ -13,7 +13,7 @@
         client_port = 5050
         open_browser = true
         open_client = true
-        server_url = "http://testhost"
+        server_url = "http://localhost"
         load_envvars(DOTENV_FILENAME)
         @test ModelSelectionGUI.SERVER_PORT == server_port
         @test ModelSelectionGUI.CLIENT_PORT == client_port
@@ -27,7 +27,7 @@
         client_port = 5050
         open_browser = true
         open_client = true
-        server_url = "http://testhost"
+        server_url = "http://localhost"
         reset_envvars()
         load_envvars(DOTENV_FILENAME)
         @test ModelSelectionGUI.SERVER_PORT == server_port

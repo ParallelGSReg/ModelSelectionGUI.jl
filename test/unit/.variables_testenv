@@ -2,4 +2,4 @@ SERVER_PORT=5000
 CLIENT_PORT=5050
 OPEN_BROWSER=true
 OPEN_CLIENT=true
-SERVER_URL=http://testhost
+SERVER_URL=http://localhost

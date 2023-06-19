@@ -99,7 +99,7 @@ function job_info_response(job::ModelSelectionJob)
 end
 
 """
-    job_results_response(job::ModelSelectionJob, resulttype::String)
+    job_results_response(job::ModelSelectionJob, resulttype::Symbol)
 
 Generates an HTTP response with information about the results of a `ModelSelectionJob` 
 depending on the specified result type.
