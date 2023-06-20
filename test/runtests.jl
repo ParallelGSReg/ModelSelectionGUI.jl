@@ -6,6 +6,7 @@ tests = [
     "unit/test_types.jl",
     "unit/test_utils.jl",
     "unit/test_variables.jl",
+    "unit/test_exceptions.jl",
     "unit/test_responses.jl",
     "integration/test_server.jl",
     "integration/test_files.jl",

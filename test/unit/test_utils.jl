@@ -154,19 +154,11 @@ const DATA_FILENAME = "data.csv"
     @testset "get_request_job_id" begin
         function func1(key::Symbol)
             dict = Dict(:id => "job_id")
-            if haskey(dict, key)
-                return dict[key]
-            else
-                return nothing
-            end
+            return dict[key]
         end
         function func2(key::Symbol)
             dict = Dict(:filehash => "job_id")
-            if haskey(dict, key)
-                return dict[key]
-            else
-                return nothing
-            end
+            return dict[key]
         end
         @test ModelSelectionGUI.get_request_job_id(func1) == "job_id"
         @test ModelSelectionGUI.get_request_job_id(func2) isa Nothing

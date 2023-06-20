@@ -130,8 +130,15 @@ const DATA_FILENAME = "data.csv"
         job.time_enqueued = DateTime(time_equeued)
         job.time_started = DateTime(time_started)
         job.time_finished = DateTime(time_finished)
-        job.modelselection_data = nothing
         job.msg = "msg"
+        
+        data = CSV.read(job.tempfile, DataFrame)
+        job.modelselection_data = gsr(
+            job.estimator,
+            job.equation,
+            data;
+            job.parameters...,
+        )
 
         response = ModelSelectionGUI.job_info_response(job)
         headers = split(Dict(response.headers)["Content-Type"])
@@ -242,5 +249,8 @@ const DATA_FILENAME = "data.csv"
         response = ModelSelectionGUI.job_results_response(job, :crossvalidation)
         @test response.status == 200
         @test Dict(response.headers)["Content-Type"] == ModelSelectionGUI.CSV_MIME
+
+        response = ModelSelectionGUI.job_results_response(job, :invalid)
+        @test response.status == 400
     end
 end
