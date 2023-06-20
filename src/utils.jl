@@ -211,12 +211,16 @@ Get the job id from a set of parameters.
 
 # Example
 ```Julia
-get_request_job_id(Dict("id" => 1))
+get_request_job_id(params)
 ```
 """
 function get_request_job_id(params::Any)
     try
-        return string(params(:id))
+        job_id = params(:id)
+        if job_id === nothing
+            return nothing
+        end
+        return string(job_id)
     catch e
         return nothing
     end
@@ -235,12 +239,16 @@ Get the file hash from a set of parameters.
 
 # Example
 ```Julia
-get_request_filehash(Dict("filehash" => "abc"))
+get_request_filehash(params)
 ```
 """
 function get_request_filehash(params::Any)
     try
-        return string(params(:filehash))
+        filehash = params(:filehash)
+        if filehash === nothing
+            return nothing
+        end
+        return string(filehash)
     catch e
         return nothing
     end

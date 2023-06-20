@@ -151,4 +151,44 @@ const DATA_FILENAME = "data.csv"
         @test haskey(dict, ModelSelectionGUI.MSG)
         @test dict[ModelSelectionGUI.MSG] == msg
     end
+    @testset "get_request_job_id" begin
+        function func1(key::Symbol)
+            dict = Dict(:id => "job_id")
+            if haskey(dict, key)
+                return dict[key]
+            else
+                return nothing
+            end
+        end
+        function func2(key::Symbol)
+            dict = Dict(:filehash => "job_id")
+            if haskey(dict, key)
+                return dict[key]
+            else
+                return nothing
+            end
+        end
+        @test ModelSelectionGUI.get_request_job_id(func1) == "job_id"
+        @test ModelSelectionGUI.get_request_job_id(func2) isa Nothing
+    end
+    @testset "get_request_filehash" begin
+        function func1(key::Symbol)
+            dict = Dict(:filehash => "filehash")
+            if haskey(dict, key)
+                return dict[key]
+            else
+                return nothing
+            end
+        end
+        function func2(key::Symbol)
+            dict = Dict(:id => "filehash")
+            if haskey(dict, key)
+                return dict[key]
+            else
+                return nothing
+            end
+        end
+        @test ModelSelectionGUI.get_request_filehash(func1) == "filehash"
+        @test ModelSelectionGUI.get_request_filehash(func2) isa Nothing
+    end
 end

@@ -15,11 +15,11 @@ const DOTENV = "integration/.testenv"
         msg = String(response.body)
         body = JSON.parse(msg)
 
-        JULIA_VERSION = "julia_version"
-        MODEL_SELECTION_VERSION = "model_selection_version"
-        NCORES = "ncores"
-        NWORKERS = "nworkers"
-        JOBS_QUEUE_SIZE = "jobs_queue_size"
+        JULIA_VERSION = String(ModelSelectionGUI.JULIA_VERSION)
+        MODEL_SELECTION_VERSION = String(ModelSelectionGUI.MODEL_SELECTION_VERSION)
+        NCORES = String(ModelSelectionGUI.NCORES)
+        NWORKERS = String(ModelSelectionGUI.NWORKERS)
+        JOBS_QUEUE_SIZE = String(ModelSelectionGUI.JOBS_QUEUE_SIZE)
 
         @test response.status == 200
         @test haskey(body, JULIA_VERSION)

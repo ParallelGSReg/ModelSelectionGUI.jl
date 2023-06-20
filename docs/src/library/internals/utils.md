@@ -18,7 +18,6 @@ ModelSelectionGUI.get_csv_filename(filename::String, result::ModelSelection.Cros
 ModelSelectionGUI.get_txt_filename(filename::String)
 ModelSelectionGUI.get_csv_from_result(filename::String, result::ModelSelectionResult)
 ModelSelectionGUI.get_parameters(raw_payload::Dict{String,Any})
-ModelSelectionGUI.to_dict(job::ModelSelectionJob)
 ModelSelectionGUI.get_request_job_id(params::Any)
 ModelSelectionGUI.get_request_filehash(params::Any)
 ```

@@ -24,4 +24,5 @@ function browser(; path::Union{String,Nothing} = nothing, port::Int64 = CLIENT_P
         start = (Sys.isapple() ? "open" : "xdg-open")
         run(Cmd([start, url]))
     end
+    return true
 end
