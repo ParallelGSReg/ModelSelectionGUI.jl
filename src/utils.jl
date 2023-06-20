@@ -192,7 +192,7 @@ function to_dict(job::ModelSelectionJob)
         TIME_ENQUEUED => job.time_enqueued,
         TIME_STARTED => job.time_started,
         TIME_FINISHED => job.time_finished,
-        ESTIMATOR => String(job.estimator),
+        ESTIMATOR => job.estimator,
         EQUATION => job.equation,
         MSG => job.msg,
     )
