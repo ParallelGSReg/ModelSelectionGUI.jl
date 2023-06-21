@@ -15,5 +15,5 @@ bad_request_exception("Invalid request parameters.")
 ```
 """
 function bad_request_exception(message)
-    html(message, status = 400)
+    html(message, status = HTTP_400_BAD_REQUEST)
 end

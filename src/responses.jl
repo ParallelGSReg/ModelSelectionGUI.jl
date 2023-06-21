@@ -152,32 +152,25 @@ function job_results_response(job::ModelSelectionJob, resulttype::Symbol)
         return HTTP.Response(200, headers, body = body)
     end
 
-    data = nothing
+    result = nothing
     if resulttype == ALLSUBSETREGRESSION
-        for result in job.modelselection_data.results
-            if typeof(result) ==
-               ModelSelection.AllSubsetRegression.AllSubsetRegressionResult
-                filename = get_csv_filename(job.filename, result)
-                data = get_csv_from_result(filename, result)
+        for res in job.modelselection_data.results
+            if typeof(res) == ModelSelection.AllSubsetRegression.AllSubsetRegressionResult
+                result = res
                 break
             end
         end
     elseif resulttype == CROSSVALIDATION
-        for result in job.modelselection_data.results
-            if typeof(result) == ModelSelection.CrossValidation.CrossValidationResult
-                filename = get_csv_filename(job.filename, result)
-                data = get_csv_from_result(filename, result)
+        for res in job.modelselection_data.results
+            if typeof(res) == ModelSelection.CrossValidation.CrossValidationResult
+                result = res
                 break
             end
         end
     end
 
-    if data === nothing
-        return bad_request_exception(
-            @sprintf("The job does not have a result of type %s", resulttype)
-        )  # FIXME: Move to constant JOB_HAS_NOT_RESULTTYPE
-    end
-
+    filename = get_csv_filename(job.filename, result)
+    data = get_csv_from_result(filename, result)
     body = data[DATA]
     filename = data[FILENAME]
     headers = Dict(
