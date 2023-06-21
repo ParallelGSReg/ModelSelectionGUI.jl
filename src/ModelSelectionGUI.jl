@@ -1,7 +1,6 @@
 module ModelSelectionGUI
 using ModelSelection
 
-include("status_codes.jl")
 include("strings.jl")
 include("types.jl")
 include("utils.jl")

@@ -249,5 +249,8 @@ const DATA_FILENAME = "data.csv"
         response = ModelSelectionGUI.job_results_response(job, :crossvalidation)
         @test response.status == 200
         @test Dict(response.headers)["Content-Type"] == ModelSelectionGUI.CSV_MIME
+
+        response = ModelSelectionGUI.job_results_response(job, :invalid)
+        @test response.status == 400
     end
 end

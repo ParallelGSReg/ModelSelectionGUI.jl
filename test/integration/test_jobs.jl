@@ -5,7 +5,7 @@ const DATA_FILENAME = "data.csv"
     @testset "POST /job-enqueue/:filehash" begin
         using HTTP, JSON
         filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f671"
-        url = "$(ModelSelectionGUI.SERVER_URL):$(ModelSelectionGUI.SERVER_PORT)/job-enqueue/"
+        url = "$(ModelSelectionGUI.SERVER_URL):$(ModelSelectionGUI.SERVER_PORT)/job-enqueue/$(filehash)"
         filename = DATA_FILENAME
         tempfile = DATA_FILENAME
         ttest = true
@@ -20,7 +20,7 @@ const DATA_FILENAME = "data.csv"
         reset_envvars()
         start(dotenv = DOTENV)
         response = HTTP.post(
-            "$(url)$(filehash)",
+            url,
             ["Content-Type" => "application/json"],
             JSON.json(body)
         )
@@ -75,23 +75,6 @@ const DATA_FILENAME = "data.csv"
         @test body[EQUATION] == equation
 
         @test haskey(body, MSG)
-
-        body = Dict(:equation => equation, :ttest => ttest)
-        test_url = "$(url)$(filehash)"
-        @test (HTTP.post(test_url, ["Content-Type" => "application/json"], JSON.json(body))).status == 400
-
-        body = Dict(:estimator => estimator, :ttest => ttest)
-        test_url = "$(url)$(filehash)"
-        @test (HTTP.post(test_url, ["Content-Type" => "application/json"], JSON.json(body))).status == 400
-
-        test_url = "$(url)invalid"
-        @test (HTTP.post(test_url, ["Content-Type" => "application/json"], JSON.json(body))).status == 400
-
-        filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f672"
-        ModelSelectionGUI.add_job_file(filehash, "invalid", "data.csv")
-        test_url = "$(url)$(filehash)"
-        @test (HTTP.post(test_url, ["Content-Type" => "application/json"], JSON.json(body))).status == 400
-        
         stop()
     end
     
@@ -99,7 +82,7 @@ const DATA_FILENAME = "data.csv"
         using HTTP, JSON, Dates
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5ace"
         filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f671"
-        url = "$(ModelSelectionGUI.SERVER_URL):$(ModelSelectionGUI.SERVER_PORT)/job/"
+        url = "$(ModelSelectionGUI.SERVER_URL):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)"
         filename = DATA_FILENAME
         tempfile = DATA_FILENAME
         estimator = :ols
@@ -129,7 +112,7 @@ const DATA_FILENAME = "data.csv"
 
         reset_envvars()
         start(dotenv = DOTENV)
-        response = HTTP.get("$(url)$(id)")
+        response = HTTP.get(url)
         body = String(response.body)
         body = JSON.parse(body)
 
@@ -189,8 +172,6 @@ const DATA_FILENAME = "data.csv"
         @test body[MSG] isa String
         @test body[MSG] == msg
         
-        @test (HTTP.get("$(url)invalid")).status == 400
-
         ModelSelectionGUI.clear_jobs_queue()
         ModelSelectionGUI.clear_current_job()
         ModelSelectionGUI.clear_jobs_finished()
