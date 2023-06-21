@@ -85,7 +85,7 @@ function reset_envvars()
     global OPEN_BROWSER
     global OPEN_CLIENT
     global SERVER_URL
-    
+
     SERVER_PORT = SERVER_PORT_DEFAULT
     CLIENT_PORT = SERVER_PORT + 1
     OPEN_BROWSER = OPEN_BROWSER_DEFAULT

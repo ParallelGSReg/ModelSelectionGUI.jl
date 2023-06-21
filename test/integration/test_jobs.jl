@@ -12,18 +12,10 @@ const DATA_FILENAME = "data.csv"
         equation = "y x1 x2 x3"
         estimator = :ols
         ModelSelectionGUI.add_job_file(filehash, tempfile, filename)
-        body = Dict(
-            :estimator => estimator,
-            :equation => equation,
-            :ttest => ttest,
-        )
+        body = Dict(:estimator => estimator, :equation => equation, :ttest => ttest)
         reset_envvars()
         start(dotenv = DOTENV)
-        response = HTTP.post(
-            url,
-            ["Content-Type" => "application/json"],
-            JSON.json(body)
-        )
+        response = HTTP.post(url, ["Content-Type" => "application/json"], JSON.json(body))
         msg = String(response.body)
         body = JSON.parse(msg)
 
@@ -43,7 +35,7 @@ const DATA_FILENAME = "data.csv"
         @test response.status == 200
         @test haskey(body, ID)
         @test body[ID] isa String
-        
+
         @test response.status == 200
         @test haskey(body, FILENAME)
         @test body[FILENAME] isa String
@@ -77,7 +69,7 @@ const DATA_FILENAME = "data.csv"
         @test haskey(body, MSG)
         stop()
     end
-    
+
     @testset "GET /job/:id" begin
         using HTTP, JSON, Dates
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5ace"
@@ -87,7 +79,7 @@ const DATA_FILENAME = "data.csv"
         tempfile = DATA_FILENAME
         estimator = :ols
         equation = "y x1 x2 x3"
-        ttest = true        
+        ttest = true
         payload = Dict(
             ModelSelectionGUI.ESTIMATOR => estimator,
             ModelSelectionGUI.EQUATION => equation,
@@ -151,14 +143,17 @@ const DATA_FILENAME = "data.csv"
         @test body[STATUS] == String(status)
         @test haskey(body, TIME_ENQUEUED)
         @test body[TIME_ENQUEUED] isa String
-        @test Dates.format(DateTime(body[TIME_ENQUEUED]), "yyyy-mm-ddTHH:MM:SS") == time_equeued
-        
+        @test Dates.format(DateTime(body[TIME_ENQUEUED]), "yyyy-mm-ddTHH:MM:SS") ==
+              time_equeued
+
         @test haskey(body, TIME_STARTED)
         @test body[TIME_STARTED] isa String
-        @test Dates.format(DateTime(body[TIME_STARTED]), "yyyy-mm-ddTHH:MM:SS") == time_started
+        @test Dates.format(DateTime(body[TIME_STARTED]), "yyyy-mm-ddTHH:MM:SS") ==
+              time_started
         @test haskey(body, TIME_FINISHED)
         @test body[TIME_FINISHED] isa String
-        @test Dates.format(DateTime(body[TIME_FINISHED]), "yyyy-mm-ddTHH:MM:SS") == time_finished
+        @test Dates.format(DateTime(body[TIME_FINISHED]), "yyyy-mm-ddTHH:MM:SS") ==
+              time_finished
 
         @test haskey(body, ESTIMATOR)
         @test body[ESTIMATOR] isa String
@@ -171,7 +166,7 @@ const DATA_FILENAME = "data.csv"
         @test haskey(body, MSG)
         @test body[MSG] isa String
         @test body[MSG] == msg
-        
+
         ModelSelectionGUI.clear_jobs_queue()
         ModelSelectionGUI.clear_current_job()
         ModelSelectionGUI.clear_jobs_finished()
@@ -186,7 +181,7 @@ const DATA_FILENAME = "data.csv"
         tempfile = DATA_FILENAME
         estimator = :ols
         equation = "y x1 x2 x3"
-        ttest = true        
+        ttest = true
         payload = Dict(
             ModelSelectionGUI.ESTIMATOR => estimator,
             ModelSelectionGUI.EQUATION => equation,
@@ -200,17 +195,12 @@ const DATA_FILENAME = "data.csv"
         job.time_started = DateTime(time)
         job.time_finished = DateTime(time)
         job.modelselection_data = nothing
-        
+
         data = CSV.read(job.tempfile, DataFrame)
-        job.modelselection_data = gsr(
-            job.estimator,
-            job.equation,
-            data;
-            job.parameters...,
-        )
+        job.modelselection_data = gsr(job.estimator, job.equation, data; job.parameters...)
 
         push!(ModelSelectionGUI.jobs_finished, job)
-        
+
         start(dotenv = DOTENV)
         response = HTTP.get(url)
 
@@ -231,7 +221,7 @@ const DATA_FILENAME = "data.csv"
         tempfile = DATA_FILENAME
         estimator = :ols
         equation = "y x1 x2 x3"
-        ttest = true        
+        ttest = true
         payload = Dict(
             ModelSelectionGUI.ESTIMATOR => estimator,
             ModelSelectionGUI.EQUATION => equation,
@@ -245,17 +235,12 @@ const DATA_FILENAME = "data.csv"
         job.time_started = DateTime(time)
         job.time_finished = DateTime(time)
         job.modelselection_data = nothing
-        
+
         data = CSV.read(job.tempfile, DataFrame)
-        job.modelselection_data = gsr(
-            job.estimator,
-            job.equation,
-            data;
-            job.parameters...,
-        )
+        job.modelselection_data = gsr(job.estimator, job.equation, data; job.parameters...)
 
         push!(ModelSelectionGUI.jobs_finished, job)
-        
+
         start(dotenv = DOTENV)
         response = HTTP.get(url)
 
@@ -276,7 +261,7 @@ const DATA_FILENAME = "data.csv"
         tempfile = DATA_FILENAME
         estimator = :ols
         equation = "y x1 x2 x3"
-        ttest = true        
+        ttest = true
         payload = Dict(
             ModelSelectionGUI.ESTIMATOR => estimator,
             ModelSelectionGUI.EQUATION => equation,
@@ -291,17 +276,12 @@ const DATA_FILENAME = "data.csv"
         job.time_started = DateTime(time)
         job.time_finished = DateTime(time)
         job.modelselection_data = nothing
-        
+
         data = CSV.read(job.tempfile, DataFrame)
-        job.modelselection_data = gsr(
-            job.estimator,
-            job.equation,
-            data;
-            job.parameters...,
-        )
+        job.modelselection_data = gsr(job.estimator, job.equation, data; job.parameters...)
 
         push!(ModelSelectionGUI.jobs_finished, job)
-        
+
         start(dotenv = DOTENV)
         response = HTTP.get(url)
 

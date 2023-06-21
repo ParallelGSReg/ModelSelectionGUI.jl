@@ -12,14 +12,14 @@ const DATA_FILENAME = "data.csv"
         data = DataFrame([1 2 3; 4 5 6], ["a", "b", "c"])
         ModelSelectionGUI.save_tempfile(name, data)
         new_data = CSV.read(name, DataFrame)
-        
+
         old_names = names(data)
         new_names = names(new_data)
-        for i in 1:3
+        for i = 1:3
             @test old_names[i] == new_names[i]
         end
-        for i in 1:2
-            for j in 1:3
+        for i = 1:2
+            for j = 1:3
                 @test data[i, j] == new_data[i, j]
             end
         end
@@ -63,12 +63,11 @@ const DATA_FILENAME = "data.csv"
         using CSV, DataFrames, ModelSelection
         csv_filename = "data_allsubsetregression.csv"
         data = CSV.read(DATA_FILENAME, DataFrame)
-        modelselection_data = gsr(
-            :ols,
-            "y x1 x2 x3",
-            data,
+        modelselection_data = gsr(:ols, "y x1 x2 x3", data)
+        result = ModelSelectionGUI.get_csv_from_result(
+            DATA_FILENAME,
+            modelselection_data.results[1],
         )
-        result = ModelSelectionGUI.get_csv_from_result(DATA_FILENAME, modelselection_data.results[1])
         @test result isa Dict
         @test result[ModelSelectionGUI.FILENAME] == csv_filename
         @test result[ModelSelectionGUI.DATA] isa String
@@ -87,7 +86,7 @@ const DATA_FILENAME = "data.csv"
         @test parameters[:b] == b
         @test haskey(parameters, :c)
         @test parameters[:c] == c
-        
+
         @test haskey(parameters, :fixedvariables)
         @test parameters[:fixedvariables][1] == Symbol(fixedvariables[1])
         @test parameters[:fixedvariables][2] == Symbol(fixedvariables[2])

@@ -40,6 +40,6 @@
         @test ModelSelectionGUI.CLIENT_PORT == ModelSelectionGUI.SERVER_PORT_DEFAULT + 1
         @test ModelSelectionGUI.OPEN_BROWSER == ModelSelectionGUI.OPEN_BROWSER_DEFAULT
         @test ModelSelectionGUI.OPEN_CLIENT == ModelSelectionGUI.OPEN_CLIENT_DEFAULT
-        @test ModelSelectionGUI.SERVER_URL == ModelSelectionGUI.SERVER_URL_DEFAULT 
+        @test ModelSelectionGUI.SERVER_URL == ModelSelectionGUI.SERVER_URL_DEFAULT
     end
 end

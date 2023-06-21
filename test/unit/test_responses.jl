@@ -5,7 +5,7 @@ const DATA_FILENAME = "data.csv"
         using JSON
         version = v"1.3.0" # TODO: Update this version when the package is updated.
         pkg_version = ModelSelectionGUI.get_pkg_version("ModelSelection")
-        
+
         ncores = 2
         nworkers = 1
         model_selection_version = "1.3.0"
@@ -17,18 +17,18 @@ const DATA_FILENAME = "data.csv"
         response = ModelSelectionGUI.server_info_response(
             ncores,
             nworkers,
-            model_selection_version, 
+            model_selection_version,
             julia_version,
             jobs_queue_size,
         )
-        
+
         headers = split(Dict(response.headers)["Content-Type"])
-        headers[1] = replace(headers[1], ";"=>"")
-        headers[2] = replace(headers[2], "charset="=>"")
+        headers[1] = replace(headers[1], ";" => "")
+        headers[2] = replace(headers[2], "charset=" => "")
         msg = String(response.body)
         body = JSON.parse(msg)
-        
-        
+
+
         @test response.status == 200
         @test headers[1] == content_type
         @test headers[2] == charset
@@ -64,19 +64,14 @@ const DATA_FILENAME = "data.csv"
         nobs = 2
         content_type = "application/json"
         charset = "utf-8"
-        response = ModelSelectionGUI.upload_response(
-            filename,
-            filehash,
-            datanames,
-            nobs,
-        )
+        response = ModelSelectionGUI.upload_response(filename, filehash, datanames, nobs)
 
         headers = split(Dict(response.headers)["Content-Type"])
-        headers[1] = replace(headers[1], ";"=>"")
-        headers[2] = replace(headers[2], "charset="=>"")
+        headers[1] = replace(headers[1], ";" => "")
+        headers[2] = replace(headers[2], "charset=" => "")
         msg = String(response.body)
         body = JSON.parse(msg)
-                
+
         @test response.status == 200
         @test headers[1] == content_type
         @test headers[2] == charset
@@ -94,7 +89,7 @@ const DATA_FILENAME = "data.csv"
         @test body[FILEHASH] == filehash
         @test haskey(body, DATANAMES)
         @test body[DATANAMES] isa Vector
-        for i in 1:lastindex(datanames)
+        for i = 1:lastindex(datanames)
             @test body[DATANAMES][i] == datanames[i]
         end
         @test haskey(body, NOBS)
@@ -112,7 +107,7 @@ const DATA_FILENAME = "data.csv"
         tempfile = DATA_FILENAME
         estimator = :ols
         equation = "y x1 x2 x3"
-        ttest = true        
+        ttest = true
         payload = Dict(
             ModelSelectionGUI.ESTIMATOR => estimator,
             ModelSelectionGUI.EQUATION => equation,
@@ -131,19 +126,14 @@ const DATA_FILENAME = "data.csv"
         job.time_started = DateTime(time_started)
         job.time_finished = DateTime(time_finished)
         job.msg = "msg"
-        
+
         data = CSV.read(job.tempfile, DataFrame)
-        job.modelselection_data = gsr(
-            job.estimator,
-            job.equation,
-            data;
-            job.parameters...,
-        )
+        job.modelselection_data = gsr(job.estimator, job.equation, data; job.parameters...)
 
         response = ModelSelectionGUI.job_info_response(job)
         headers = split(Dict(response.headers)["Content-Type"])
-        headers[1] = replace(headers[1], ";"=>"")
-        headers[2] = replace(headers[2], "charset="=>"")
+        headers[1] = replace(headers[1], ";" => "")
+        headers[2] = replace(headers[2], "charset=" => "")
         body = String(response.body)
         body = JSON.parse(body)
 
@@ -184,14 +174,17 @@ const DATA_FILENAME = "data.csv"
         @test body[STATUS] == String(status)
         @test haskey(body, TIME_ENQUEUED)
         @test body[TIME_ENQUEUED] isa String
-        @test Dates.format(DateTime(body[TIME_ENQUEUED]), "yyyy-mm-ddTHH:MM:SS") == time_equeued
-        
+        @test Dates.format(DateTime(body[TIME_ENQUEUED]), "yyyy-mm-ddTHH:MM:SS") ==
+              time_equeued
+
         @test haskey(body, TIME_STARTED)
         @test body[TIME_STARTED] isa String
-        @test Dates.format(DateTime(body[TIME_STARTED]), "yyyy-mm-ddTHH:MM:SS") == time_started
+        @test Dates.format(DateTime(body[TIME_STARTED]), "yyyy-mm-ddTHH:MM:SS") ==
+              time_started
         @test haskey(body, TIME_FINISHED)
         @test body[TIME_FINISHED] isa String
-        @test Dates.format(DateTime(body[TIME_FINISHED]), "yyyy-mm-ddTHH:MM:SS") == time_finished
+        @test Dates.format(DateTime(body[TIME_FINISHED]), "yyyy-mm-ddTHH:MM:SS") ==
+              time_finished
 
         @test haskey(body, ESTIMATOR)
         @test body[ESTIMATOR] isa String
@@ -214,7 +207,7 @@ const DATA_FILENAME = "data.csv"
         tempfile = DATA_FILENAME
         estimator = :ols
         equation = "y x1 x2 x3"
-        ttest = true        
+        ttest = true
         payload = Dict(
             ModelSelectionGUI.ESTIMATOR => estimator,
             ModelSelectionGUI.EQUATION => equation,
@@ -229,14 +222,9 @@ const DATA_FILENAME = "data.csv"
         job.time_started = DateTime(time)
         job.time_finished = DateTime(time)
         job.modelselection_data = nothing
-        
+
         data = CSV.read(job.tempfile, DataFrame)
-        job.modelselection_data = gsr(
-            job.estimator,
-            job.equation,
-            data;
-            job.parameters...,
-        )
+        job.modelselection_data = gsr(job.estimator, job.equation, data; job.parameters...)
 
         response = ModelSelectionGUI.job_results_response(job, :summary)
         @test response.status == 200

@@ -2,7 +2,7 @@
 
 [![][documentation-main-img]][documentation-main-url] [![][build-main-img]][test-main-url] [![][test-main-img]][test-main-url] [![][codecov-img]][codecov-url]
 
-The ModelSelectionGUI is a web server package designed to provide a user-friendly interface for utilizing the ModelSelection package. It consists of a backend and an optional frontend that offers a graphical user interface (GUI) for seamless interaction with the underlying ModelSelection functionality.
+The ModelSelectionGUI is a web server package designed to provide a user-friendly interface for utilizing the ModelSelection package. It consists of a backend and an optional frontend that offers a graphical user interface (GUI) for seamless interaction with the underlying [ModelSelection](https://github.com/ParallelGSReg/ModelSelectionGUI.jl) functionality.
 
 ## Features
 
@@ -34,8 +34,8 @@ If the web client is enabled open your web browser and enter the following URL: 
 
 For more detailed information about this package, its functionalities, and usage instructions, please refer to our [documentation page](https://parallelgsreg.github.io/ModelSelectionGUI.jl).
 
-## ModelSelection.jl package
-ModelSelectionGUI.jl package functions as an interface with ModelSelection.jl. For more details about the functionalities and features provided by ModelSelection.jl, please visit the [package repository](https://github.com/ParallelGSReg/ModelSelection.jl).
+## ModelSelection package
+ModelSelectionGUI package functions as an interface with ModelSelection.jl. For more details about the functionalities and features provided by ModelSelection, please visit the [package repository](https://github.com/ParallelGSReg/ModelSelection.jl).
 
 ## Contributing
 
