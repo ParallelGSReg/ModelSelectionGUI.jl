@@ -216,7 +216,11 @@ get_request_job_id(params)
 """
 function get_request_job_id(params::Any)
     try
-        return string(params(:id))
+        job_id = params(:id)
+        if job_id === nothing
+            return nothing
+        end
+        return string(job_id)
     catch e
         return nothing
     end
@@ -240,7 +244,11 @@ get_request_filehash(params)
 """
 function get_request_filehash(params::Any)
     try
-        return string(params(:filehash))
+        filehash = params(:filehash)
+        if filehash === nothing
+            return nothing
+        end
+        return string(filehash)
     catch e
         return nothing
     end

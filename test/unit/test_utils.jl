@@ -166,11 +166,19 @@ const DATA_FILENAME = "data.csv"
     @testset "get_request_filehash" begin
         function func1(key::Symbol)
             dict = Dict(:filehash => "filehash")
-            return dict[key]
+            if haskey(dict, key)
+                return dict[key]
+            else
+                return nothing
+            end
         end
         function func2(key::Symbol)
             dict = Dict(:id => "filehash")
-            return dict[key]
+            if haskey(dict, key)
+                return dict[key]
+            else
+                return nothing
+            end
         end
         @test ModelSelectionGUI.get_request_filehash(func1) == "filehash"
         @test ModelSelectionGUI.get_request_filehash(func2) isa Nothing
