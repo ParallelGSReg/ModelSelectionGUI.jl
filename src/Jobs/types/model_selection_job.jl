@@ -1,6 +1,4 @@
 using Dates
-using ModelSelection:
-    Preprocessing, AllSubsetRegression, CrossValidation, ModelSelectionData
 
 """
     ModelSelectionJob
@@ -9,9 +7,7 @@ A mutable struct that represents a job for performing model selection.
 
 # Fields
 - `id::String`: The unique identifier (UUID) of the model selection job.
-- `filename::String`: The name of the file used for model selection.
-- `tempfile::String`: The name of a temporary file used during the job's processing.
-- `hash::String`: The unique identifier (UUID) of the file used for model selection.
+- `file::File`: The file used for model selection.
 - `parameters::Dict{Symbol,Any}`: The parameters used for model selection, including any additional parameters specified in the request.
 - `status::Symbol`: The status of the model selection job (`"pending"`, `"running"`, `"finished"`, or `"failed"`).
 - `time_enqueued::DateTime`: The timestamp when the model selection job was enqueued.
@@ -25,22 +21,18 @@ A mutable struct that represents a job for performing model selection.
 # Example
 ```julia
 result = ModelSelectionJob(
-    filename = "data.csv",
-    tempfile = "/tmp/12413947-1597-4b1b-a798-efcb2293e808.csv",
-    filehash = "12413947-95bc-4573-a804-efcb2293e808",
-    payload = {
-        :estimator: :ols,
-        :equation: "y x1 x2 x3",
-        "ttest": true,
-    },
+    file = File("12413947-95bc-4573-a804-efcb2293e808", "data.csv", "/tmp/my_file.csv"),
+    estimator = :ols,
+    equation = "y x1 x2 x3",
+    parameters = Dict(
+        "ttest" => true,
+    ),
 )
 ```
 """
 mutable struct ModelSelectionJob
     id::String
-    filename::String
-    tempfile::String
-    filehash::String
+    file::File
     parameters::Dict{Symbol,Any}
     status::Symbol
     time_enqueued::DateTime
@@ -52,24 +44,17 @@ mutable struct ModelSelectionJob
     msg::Union{String,Nothing}
 
     function ModelSelectionJob(
-        filename::String,
-        tempfile::String,
-        filehash::String,
-        payload::Dict{Symbol,Any},
+        file::File,
+        estimator::Symbol,
+        equation::String,
+        parameters::Dict{Symbol,Any},
     )
-        estimator = Symbol(payload[ESTIMATOR])
-        equation = payload[EQUATION]
-        delete!(payload, ESTIMATOR)
-        delete!(payload, EQUATION)
-
         id = string(uuid4())
         time_enqueued = now()
         new(
             id,
-            filename,
-            tempfile,
-            filehash,
-            payload,
+            file,
+            parameters,
             PENDING,
             time_enqueued,
             nothing,

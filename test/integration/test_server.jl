@@ -8,6 +8,7 @@ const DOTENV = "integration/.testenv"
 
     @testset "GET /server-info" begin
         using HTTP, JSON
+        
         url = "$(ModelSelectionGUI.SERVER_URL):$(ModelSelectionGUI.SERVER_PORT)/server-info"
         reset_envvars()
         start(dotenv = DOTENV)

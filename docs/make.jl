@@ -1,7 +1,9 @@
 using Documenter, DocumenterTools
 using DataFrames
 using ModelSelectionGUI, ModelSelection
-using ModelSelectionGUI: ModelSelectionJob
+using ModelSelectionGUI.Config
+using ModelSelectionGUI.GUI
+using ModelSelectionGUI.Jobs
 
 # The DOCSARGS environment variable can be used to pass additional arguments to make.jl.
 # This is useful on CI, if you need to change the behavior of the build slightly but you
@@ -14,40 +16,28 @@ end
 
 makedocs(
     format = Documenter.HTML(
-        prettyurls = true,
+        prettyurls = false,
         assets = ["assets/favicon.ico"],
     ),
     source = "src",
     build   = "build",
     clean   = true,
-    modules = [ModelSelectionGUI],
+    modules = [ModelSelectionGUI, Config, GUI, Jobs],
     sitename = "ModelSelectionGUI.jl",
-    # expandfirst
+    authors = "Adán Mauri Ungaro <adan.mauri@gmail.com",
     pages = [
         "Home" => "index.md",
-        "Getting Started" => "start.md",
         "Configuration" => "configuration.md",
-        "API" => Any[
-            "Rest" => Any[
-                "Endpoints" => "api/rest/index.md",
-                "Swagger" => "api/rest/swagger.md",
-            ],
-            "Websockets" => "api/websockets/index.md",
-        ],
         "Library" => Any[
             "Public" => "library/public.md",
-            "Internals" => Any[
-                "library/internals/browser.md",
-                "library/internals/constants.md",
-                "library/internals/exceptions.md",
-                "library/internals/jobs.md",
-                "library/internals/responses.md",
-                "library/internals/strings.md",
-                "library/internals/types.md",
-                "library/internals/utils.md",
-                "library/internals/variables.md",
-                "library/internals/views.md",
+            "Modules" => Any[
+                "library/modules/Config.md",
+                "library/modules/GUI.md",
+                "library/modules/Jobs.md",
             ],
+            #"Modules" => Any[
+            #    "library/public.md"
+            #],
         ],
         "Contributing" => "contributing.md",
         "News" => "news.md",

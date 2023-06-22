@@ -167,38 +167,6 @@ function get_parameters(raw_payload::Dict{String,Any})
 end
 
 """
-    to_dict(job::ModelSelectionJob)
-
-Convert a ModelSelectionJob object to a dictionary.
-
-# Arguments
-- `job::ModelSelectionJob`: The job to convert.
-
-# Returns
-- A dictionary representation of the job.
-
-# Example
-```Julia
-to_dict(job)
-```
-"""
-function to_dict(job::ModelSelectionJob)
-    return Dict(
-        ID => job.id,
-        FILENAME => job.filename,
-        FILEHASH => job.filehash,
-        PARAMETERS => job.parameters,
-        STATUS => job.status,
-        TIME_ENQUEUED => job.time_enqueued,
-        TIME_STARTED => job.time_started,
-        TIME_FINISHED => job.time_finished,
-        ESTIMATOR => job.estimator,
-        EQUATION => job.equation,
-        MSG => job.msg,
-    )
-end
-
-"""
     get_request_job_id(params::Any)
 
 Get the job id from a set of parameters.
@@ -252,4 +220,23 @@ function get_request_filehash(params::Any)
     catch e
         return nothing
     end
+end
+
+"""
+    job_notify(message::String, data::Union{Dict{Any,Any},Nothing} = nothing)
+
+Notifies all subscribers on the default WebSocket channel with the specified `message` and `data`.
+
+# Arguments
+- `message::String`: The message to send.
+- `data::Union{Dict{Any,Any},Nothing}`: The data to send.
+
+# Example
+```julia
+job_notify("message", Dict("data" => "data"))
+```
+"""
+function job_notify(message::String, data::Union{Dict{Any,Any},Nothing} = nothing)
+    msg = Dict(ID => Jobs.get_current_job(job_manager, id), MESSAGE => message, DATA => data)
+    Genie.WebChannels.broadcast(string(DEFAULT_WS_CHANNEL), JSON.json(msg))
 end

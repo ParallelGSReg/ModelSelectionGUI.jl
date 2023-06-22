@@ -11,7 +11,7 @@ const DATA_FILENAME = "data.csv"
         ttest = true
         equation = "y x1 x2 x3"
         estimator = :ols
-        ModelSelectionGUI.add_job_file(filehash, tempfile, filename)
+        ModelSelectionGUI.add_file(filehash, tempfile, filename)
         body = Dict(:estimator => estimator, :equation => equation, :ttest => ttest)
         reset_envvars()
         start(dotenv = DOTENV)
@@ -167,9 +167,9 @@ const DATA_FILENAME = "data.csv"
         @test body[MSG] isa String
         @test body[MSG] == msg
 
-        ModelSelectionGUI.clear_jobs_queue()
+        ModelSelectionGUI.clear_pending_queue()
         ModelSelectionGUI.clear_current_job()
-        ModelSelectionGUI.clear_jobs_finished()
+        ModelSelectionGUI.clear_finished_queue()
         stop()
     end
     @testset "GET /job/:id/results/summary" begin
@@ -207,9 +207,9 @@ const DATA_FILENAME = "data.csv"
         @test response.status == 200
         @test Dict(response.headers)["Content-Type"] == ModelSelectionGUI.PLAIN_MIME
 
-        ModelSelectionGUI.clear_jobs_queue()
+        ModelSelectionGUI.clear_pending_queue()
         ModelSelectionGUI.clear_current_job()
-        ModelSelectionGUI.clear_jobs_finished()
+        ModelSelectionGUI.clear_finished_queue()
         stop()
     end
     @testset "GET /job/:id/results/allsubsetregression" begin
@@ -247,9 +247,9 @@ const DATA_FILENAME = "data.csv"
         @test response.status == 200
         @test Dict(response.headers)["Content-Type"] == ModelSelectionGUI.CSV_MIME
 
-        ModelSelectionGUI.clear_jobs_queue()
+        ModelSelectionGUI.clear_pending_queue()
         ModelSelectionGUI.clear_current_job()
-        ModelSelectionGUI.clear_jobs_finished()
+        ModelSelectionGUI.clear_finished_queue()
         stop()
     end
     @testset "GET /job/:id/results/crossvalidation" begin
@@ -288,9 +288,9 @@ const DATA_FILENAME = "data.csv"
         @test response.status == 200
         @test Dict(response.headers)["Content-Type"] == ModelSelectionGUI.CSV_MIME
 
-        ModelSelectionGUI.clear_jobs_queue()
+        ModelSelectionGUI.clear_pending_queue()
         ModelSelectionGUI.clear_current_job()
-        ModelSelectionGUI.clear_jobs_finished()
+        ModelSelectionGUI.clear_finished_queue()
         stop()
     end
 end
