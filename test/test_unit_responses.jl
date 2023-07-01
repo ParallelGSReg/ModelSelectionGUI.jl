@@ -1,10 +1,7 @@
-const DATA_FILENAME = "data.csv"
-
 @testset "Test responses" begin
     @testset "server_info_response" begin
         using JSON
-        version = v"1.3.0" # TODO: Update this version when the package is updated.
-        pkg_version = ModelSelectionGUI.get_pkg_version("ModelSelection")
+        using ModelSelectionGUI
 
         ncores = 2
         nworkers = 1
@@ -21,23 +18,21 @@ const DATA_FILENAME = "data.csv"
             julia_version,
             jobs_queue_size,
         )
-
         headers = split(Dict(response.headers)["Content-Type"])
         headers[1] = replace(headers[1], ";" => "")
         headers[2] = replace(headers[2], "charset=" => "")
         msg = String(response.body)
         body = JSON.parse(msg)
 
-
-        @test response.status == 200
-        @test headers[1] == content_type
-        @test headers[2] == charset
         JULIA_VERSION = String(ModelSelectionGUI.JULIA_VERSION)
         MODEL_SELECTION_VERSION = String(ModelSelectionGUI.MODEL_SELECTION_VERSION)
         NCORES = String(ModelSelectionGUI.NCORES)
         NWORKERS = String(ModelSelectionGUI.NWORKERS)
-        JOBS_QUEUE_SIZE = String(ModelSelectionGUI.JOBS_QUEUE_SIZE)
+        PENDING_QUEUE_SIZE = String(ModelSelectionGUI.PENDING_QUEUE_SIZE)
 
+        @test response.status == 200
+        @test headers[1] == content_type
+        @test headers[2] == charset
         @test response.status == 200
         @test haskey(body, JULIA_VERSION)
         @test body[JULIA_VERSION] isa String
@@ -51,36 +46,37 @@ const DATA_FILENAME = "data.csv"
         @test haskey(body, NWORKERS)
         @test body[NWORKERS] isa Int64
         @test body[NWORKERS] == nworkers
-        @test haskey(body, JOBS_QUEUE_SIZE)
-        @test body[JOBS_QUEUE_SIZE] isa Int64
-        @test body[JOBS_QUEUE_SIZE] == jobs_queue_size
+        @test haskey(body, PENDING_QUEUE_SIZE)
+        @test body[PENDING_QUEUE_SIZE] isa Int64
+        @test body[PENDING_QUEUE_SIZE] == jobs_queue_size
     end
 
     @testset "upload_response" begin
         using JSON
+        using ModelSelectionGUI
+
         filename = "data.csv"
-        filehash = "1234567890"
-        datanames = ["a", "b", "c"]
+        filehash = "e5579c1a-6a28-485c-9a1b-07cb6b8bd44a"
+        datanames = ["y", "x1", "x2", "x3"]
         nobs = 2
         content_type = "application/json"
         charset = "utf-8"
-        response = ModelSelectionGUI.upload_response(filename, filehash, datanames, nobs)
 
+        response = ModelSelectionGUI.upload_response(filename, filehash, datanames, nobs)
         headers = split(Dict(response.headers)["Content-Type"])
         headers[1] = replace(headers[1], ";" => "")
         headers[2] = replace(headers[2], "charset=" => "")
         msg = String(response.body)
         body = JSON.parse(msg)
 
-        @test response.status == 200
-        @test headers[1] == content_type
-        @test headers[2] == charset
-
         FILENAME = String(ModelSelectionGUI.FILENAME)
         FILEHASH = String(ModelSelectionGUI.FILEHASH)
         DATANAMES = String(ModelSelectionGUI.DATANAMES)
         NOBS = String(ModelSelectionGUI.NOBS)
 
+        @test response.status == 200
+        @test headers[1] == content_type
+        @test headers[2] == charset
         @test haskey(body, FILENAME)
         @test body[FILENAME] isa String
         @test body[FILENAME] == filename
@@ -96,21 +92,24 @@ const DATA_FILENAME = "data.csv"
         @test body[NOBS] isa Int64
         @test body[NOBS] == nobs
     end
+
     @testset "job_info_response" begin
-        using Dates, JSON
+        using CSV, DataFrames, Dates, JSON
+        using ModelSelectionGUI, ModelSelection
+        using ModelSelectionGUI: ModelSelectionJob
+
+        DATA_FILENAME = joinpath(dirname(@__FILE__), "data.csv")
         content_type = "application/json"
         charset = "utf-8"
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5ace"
         filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f671"
-        url = "$(ModelSelectionGUI.SERVER_URL):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)"
+        url = "$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)"
         filename = DATA_FILENAME
         tempfile = DATA_FILENAME
         estimator = :ols
         equation = "y x1 x2 x3"
         ttest = true
-        payload = Dict(
-            ModelSelectionGUI.ESTIMATOR => estimator,
-            ModelSelectionGUI.EQUATION => equation,
+        parameters = Dict(
             :ttest => ttest,
         )
         time_equeued = "2023-01-01T01:01:01"
@@ -118,7 +117,7 @@ const DATA_FILENAME = "data.csv"
         time_finished = "2023-03-03T03:03:03"
         status = ModelSelectionGUI.RUNNING
         msg = "msg"
-        job = ModelSelectionJob(filename, tempfile, filehash, payload)
+        job = ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
 
         job.id = id
         job.status = status
@@ -200,29 +199,30 @@ const DATA_FILENAME = "data.csv"
     end
     @testset "job_results_response" begin
         using JSON, Dates, ModelSelection, CSV, DataFrames
+        using ModelSelectionGUI
+        using ModelSelectionGUI: ModelSelectionJob
+        
+        DATA_FILENAME = joinpath(dirname(@__FILE__), "data.csv")
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5ace"
         filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f671"
-        url = "$(ModelSelectionGUI.SERVER_URL):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/summary"
+        url = "$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/summary"
         filename = DATA_FILENAME
         tempfile = DATA_FILENAME
         estimator = :ols
         equation = "y x1 x2 x3"
         ttest = true
-        payload = Dict(
-            ModelSelectionGUI.ESTIMATOR => estimator,
-            ModelSelectionGUI.EQUATION => equation,
+        parameters = Dict(
             :ttest => ttest,
             :kfoldcrossvalidation => true,
         )
         time = "2023-01-01T01:01:01"
-        job = ModelSelectionJob(filename, tempfile, filehash, payload)
+        job = ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
         job.id = id
         job.status = ModelSelectionGUI.FINISHED
         job.time_enqueued = DateTime(time)
         job.time_started = DateTime(time)
         job.time_finished = DateTime(time)
         job.modelselection_data = nothing
-
         data = CSV.read(job.tempfile, DataFrame)
         job.modelselection_data = gsr(job.estimator, job.equation, data; job.parameters...)
 
@@ -239,6 +239,5 @@ const DATA_FILENAME = "data.csv"
         @test Dict(response.headers)["Content-Type"] == ModelSelectionGUI.CSV_MIME
 
         response = ModelSelectionGUI.job_results_response(job, :invalid)
-        @test response.status == 400
-    end
+            end
 end

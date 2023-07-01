@@ -1,18 +1,19 @@
-@testset "Test types" begin
-    @testset "ModelSelectionJob" begin
+@safetestset "Test types" begin
+    @safetestset "ModelSelectionJob" begin
         using Dates
+        using ModelSelectionGUI
+        using ModelSelectionGUI: ModelSelectionJob
+
         estimator = :ols
         equation = "y x1 x2 x3"
         ttest = true
         filename = "data.csv"
         tempfile = "/temp/data.csv"
         filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f671"
-        payload = Dict(
-            ModelSelectionGUI.ESTIMATOR => estimator,
-            ModelSelectionGUI.EQUATION => equation,
+        parameters = Dict(
             :ttest => ttest,
         )
-        job = ModelSelectionJob(filename, tempfile, filehash, payload)
+        job = ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
 
         @test job.id isa String
         @test job.filename isa String

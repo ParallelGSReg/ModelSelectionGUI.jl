@@ -4,7 +4,7 @@
 This constant is a string template for error messages indicating that a job with a given ID does not exist. 
 It's typically used in a context where you're trying to find a job by its ID and the ID does not match any existing job.
 """
-const MISSING_JOB_ID = "The job with id '%s' does not exists"
+const MISSING_JOB_ID = ["The job with id ", " does not exists"]
 
 """
     FILE_NOT_SENT
@@ -40,7 +40,7 @@ const FILE_NOT_SAVED = "The file could not be saved"
 This constant is a string template for error messages indicating that a given file hash is not valid.
 It's typically used when you're validating the hash of a file.
 """
-const FILEHASH_NOT_VALID = "The filehash '%s' is not valid"
+const FILEHASH_NOT_VALID = ["The filehash ", " is not valid"]
 
 """
     ESTIMATOR_MISSING
@@ -69,7 +69,7 @@ const MISSING_RESULT_TYPE = "The result type is missing"
 This constant is a string template for error messages indicating that a given result type is not valid. 
 It's typically used in a context where you're trying to request a result by its type and the type does not match any known result types.
 """
-const INVALID_RESULT_TYPE = "The result type '%s' is not valid. [Available result types: %s]"
+const INVALID_RESULT_TYPE = ["The result type ", " is not valid. [Available result types: ", "]"]
 
 """
     JOB_HAS_NOT_RESULTTYPE
@@ -77,4 +77,4 @@ const INVALID_RESULT_TYPE = "The result type '%s' is not valid. [Available resul
 This constant is a string template for error messages indicating that a job does not have a result of a specified type.
 It's typically used when you're trying to request a result by its type from a job and the job does not have a result of that type.
 """
-const JOB_HAS_NOT_RESULTTYPE = "The job does not have a result of type %s"
+const JOB_HAS_NOT_RESULTTYPE = "The job does not have a result of type "

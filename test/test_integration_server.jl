@@ -1,17 +1,19 @@
-const DOTENV = "integration/.testenv"
+@safetestset "Test server" begin
+    @safetestset "Server start and stop" begin
+        using ModelSelectionGUI
 
-@testset "Server" begin
-    @testset "Server start and stop" begin
-        start(dotenv = DOTENV)
+        start(no_task=true)
         stop()
     end
-
-    @testset "GET /server-info" begin
+    @safetestset "GET /server-info" begin
         using HTTP, JSON
-        url = "$(ModelSelectionGUI.SERVER_URL):$(ModelSelectionGUI.SERVER_PORT)/server-info"
-        reset_envvars()
-        start(dotenv = DOTENV)
-        response = HTTP.get(url)
+        using ModelSelectionGUI
+        
+        start(no_task=true)
+
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/server-info"
+
+        response = HTTP.get(url; connect_timeout = 60)
         msg = String(response.body)
         body = JSON.parse(msg)
 
@@ -19,7 +21,7 @@ const DOTENV = "integration/.testenv"
         MODEL_SELECTION_VERSION = String(ModelSelectionGUI.MODEL_SELECTION_VERSION)
         NCORES = String(ModelSelectionGUI.NCORES)
         NWORKERS = String(ModelSelectionGUI.NWORKERS)
-        JOBS_QUEUE_SIZE = String(ModelSelectionGUI.JOBS_QUEUE_SIZE)
+        PENDING_QUEUE_SIZE = String(ModelSelectionGUI.PENDING_QUEUE_SIZE)
 
         @test response.status == 200
         @test haskey(body, JULIA_VERSION)
@@ -30,8 +32,8 @@ const DOTENV = "integration/.testenv"
         @test body[NCORES] isa Int64
         @test haskey(body, NWORKERS)
         @test body[NWORKERS] isa Int64
-        @test haskey(body, JOBS_QUEUE_SIZE)
-        @test body[JOBS_QUEUE_SIZE] isa Int64
+        @test haskey(body, PENDING_QUEUE_SIZE)
+        @test body[PENDING_QUEUE_SIZE] isa Int64
 
         stop()
     end

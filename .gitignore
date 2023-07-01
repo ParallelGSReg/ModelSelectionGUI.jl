@@ -25,6 +25,7 @@ Manifest.toml
 
 .env*
 !.env.template
+!.env.variables
 *.csv
 *.json
 !docs/swagger/*.json

@@ -1,49 +1,53 @@
 using Genie, Genie.Router
 using JSON
-using SwagUI
 using ConfigEnv
 
-options = Options()
-options.show_explorer = false
-swagger_document = JSON.parsefile("./docs/swagger/swagger.json")
-
 """
-    start(; server_port::Union{Int, Nothing} = nothing, client_port::Union{Int, Nothing} = nothing, open_browser::Union{Bool, Nothing} = nothing, open_client::Union{Bool, Nothing} = nothing, dotenv::String = ENV_FILE_DEFAULT)
+    start(; server_host::Union{String,Nothing} = nothing, server_port::Union{Int, Nothing} = nothing, client_port::Union{Int, Nothing} = nothing, OPEN_DOCUMENTATION::Union{Bool, Nothing} = nothing, open_client::Union{Bool, Nothing} = nothing, dotenv::String = ENV_FILE_DEFAULT, no_task::Bool = false)
 
 Initiate the server with optional parameters. Default values are loaded from environment variables if the parameters are not provided.
-
-- `server_port`: Port number for the server. If `nothing`, the default server port (as defined in the environment variables) is used.
-- `client_port`: Port number for the client. If `nothing`, the default client port (as defined in the environment variables) is used.
-- `open_browser`: If `true`, opens a new browser window with the server port after server starts. If `nothing`, follows the default setting in the environment variables.
-- `open_client`: If `true`, opens a new browser window with the client port after server starts. If `nothing`, follows the default setting in the environment variables.
-- `dotenv`: Specifies the path to the file containing environment variables.
-
 This function also sets up several routes, a WebSocket channel, and initiates a background task.
 
-# Examples
+# Parameters
+
+- `server_host::String`: The server host address.
+- `server_port::Int64`: Port number for the server.
+- `ssl_enabled::Bool`: Indicates whether SSL encryption is enabled.
+- `open_client::Bool`: Indicates whether to open a client window automatically.
+- `open_documentation::Bool`: Indicates whether to open a documentation window automatically.
+- `dotenv::String`: Specifies the path to the file containing environment variables. Default value is `.env`.
+- `no_task::Bool`: If `true`, does not initiate a background task. Dafault value is `false`.
+
+# Example
 ```julia
-start(server_port = 8080, open_browser = true)
+start(server_port = 8080, OPEN_DOCUMENTATION = true)
 ```
 """
 function start(;
+    server_host::Union{String,Nothing} = nothing,
     server_port::Union{Int,Nothing} = nothing,
-    client_port::Union{Int,Nothing} = nothing,
-    open_browser::Union{Bool,Nothing} = nothing,
+    ssl_enabled::Union{Bool,Nothing} = nothing,
+    open_documentation::Union{Bool, Nothing} = nothing,
     open_client::Union{Bool,Nothing} = nothing,
     dotenv::String = ENV_FILE_DEFAULT,
+    no_task::Bool = false,
 )
     load_envvars(dotenv)
+
+    if server_host === nothing
+        server_host = SERVER_HOST
+    end
 
     if server_port === nothing
         server_port = SERVER_PORT
     end
 
-    if client_port === nothing
-        client_port = CLIENT_PORT
+    if ssl_enabled === nothing
+        ssl_enabled = SSL_ENABLED
     end
 
-    if open_browser === nothing
-        open_browser = OPEN_BROWSER
+    if open_documentation === nothing
+        open_documentation = OPEN_DOCUMENTATION
     end
 
     if open_client === nothing
@@ -52,10 +56,7 @@ function start(;
 
     Genie.config.websockets_server = true
     route("/", home_view)
-    route("/docs") do
-        render_swagger(swagger_document, options = options)
-    end
-
+    route("/docs", docs_view)
     route("/server-info", server_info_view, method = GET)
     route("/upload-file", upload_file_view, method = POST)
     route("/job-enqueue/:filehash", job_enqueue_view, method = POST)
@@ -65,15 +66,18 @@ function start(;
         "/$(string(DEFAULT_WS_CHANNEL))/$(Genie.config.webchannels_subscribe_channel)",
         websocket_channel_view,
     )
-    schedule(Task(consume_job_queue))
+    if !no_task
+        start_task()
+    end
     up(server_port, async = true)
-    if open_browser || open_client
+    if open_documentation || open_client
+        create_application()
         sleep(3)
-        if open_browser
-            browser(path = "/docs", port = server_port)
+        if open_documentation
+            open_window(path = "/docs")
         end
         if open_client
-            browser(port = client_port)
+            open_window(path = "/")
         end
     end
 end
@@ -81,15 +85,15 @@ end
 """
     stop()
 
-Shut down the server.
+Shut down the server, close all windows and stop backgound tasks.
 
-This function calls the `down()` function to stop the server.
-
-# Examples
+# Example
 ```julia
 stop()
 ```
 """
 function stop()
+    stop_task()
+    close_windows()
     down()
 end

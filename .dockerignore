@@ -1,0 +1,28 @@
+CONTRIBUTING.md
+Manifest.toml
+NEWS.md
+README.md
+TODO.md
+
+# Exclude version control system files
+.git
+.gitignore
+
+# Exclude build artifacts
+*.jlso
+*.ji
+*.bak
+*.swp
+
+# Exclude editor and IDE specific files
+.vscode
+.idea
+*.sublime-*
+
+# Exclude test and documentation files
+/test
+
+# Exclude temporary and cache files
+/tmp
+/cache
+.julia

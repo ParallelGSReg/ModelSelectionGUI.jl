@@ -22,10 +22,10 @@ makedocs(
     clean   = true,
     modules = [ModelSelectionGUI],
     sitename = "ModelSelectionGUI.jl",
-    # expandfirst
     pages = [
         "Home" => "index.md",
         "Getting Started" => "start.md",
+        "Usage" => "usage.md",
         "Configuration" => "configuration.md",
         "API" => Any[
             "Rest" => Any[
@@ -37,7 +37,6 @@ makedocs(
         "Library" => Any[
             "Public" => "library/public.md",
             "Internals" => Any[
-                "library/internals/browser.md",
                 "library/internals/constants.md",
                 "library/internals/exceptions.md",
                 "library/internals/jobs.md",
@@ -47,6 +46,7 @@ makedocs(
                 "library/internals/utils.md",
                 "library/internals/variables.md",
                 "library/internals/views.md",
+                "library/internals/windows.md",
             ],
         ],
         "Contributing" => "contributing.md",

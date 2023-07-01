@@ -1,11 +1,15 @@
-const DOTENV = "integration/.testenv"
-const DATA_FILENAME = "data.csv"
-
-@testset "Jobs" begin
-    @testset "POST /job-enqueue/:filehash" begin
+@safetestset "Test jobs" begin
+    @safetestset "POST /job-enqueue/:filehash" begin
         using HTTP, JSON
+        using ModelSelectionGUI
+
+        DATA_FILENAME = joinpath(dirname(@__FILE__), "data.csv")
         filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f671"
-        url = "$(ModelSelectionGUI.SERVER_URL):$(ModelSelectionGUI.SERVER_PORT)/job-enqueue/$(filehash)"
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job-enqueue/$(filehash)"
+
+        reset_envvars()
+        start(no_task=true)
+
         filename = DATA_FILENAME
         tempfile = DATA_FILENAME
         ttest = true
@@ -13,9 +17,7 @@ const DATA_FILENAME = "data.csv"
         estimator = :ols
         ModelSelectionGUI.add_job_file(filehash, tempfile, filename)
         body = Dict(:estimator => estimator, :equation => equation, :ttest => ttest)
-        reset_envvars()
-        start(dotenv = DOTENV)
-        response = HTTP.post(url, ["Content-Type" => "application/json"], JSON.json(body))
+        response = HTTP.post(url, ["Content-Type" => "application/json"], JSON.json(body); connect_timeout = 60)
         msg = String(response.body)
         body = JSON.parse(msg)
 
@@ -33,56 +35,66 @@ const DATA_FILENAME = "data.csv"
         TTEST = "ttest"
 
         @test response.status == 200
-        @test haskey(body, ID)
         @test body[ID] isa String
-
-        @test response.status == 200
         @test haskey(body, FILENAME)
-        @test body[FILENAME] isa String
         @test body[FILENAME] == filename
-
         @test haskey(body, FILEHASH)
-        @test body[FILEHASH] isa String
         @test body[FILEHASH] == filehash
-
         @test haskey(body, PARAMETERS)
         @test body[PARAMETERS] isa Dict
         @test haskey(body[PARAMETERS], TTEST)
-        @test body[PARAMETERS][TTEST] isa Bool
         @test body[PARAMETERS][TTEST] == ttest
-
-        @test haskey(body, STATUS)
         @test body[STATUS] isa String
-        @test haskey(body, TIME_ENQUEUED)
         @test body[TIME_ENQUEUED] isa String
         @test haskey(body, TIME_STARTED)
         @test haskey(body, TIME_FINISHED)
-
-        @test haskey(body, ESTIMATOR)
-        @test body[ESTIMATOR] isa String
         @test body[ESTIMATOR] == String(estimator)
-
-        @test haskey(body, EQUATION)
-        @test body[EQUATION] isa String
-        @test body[EQUATION] == equation
-
+        @test body[EQUATION] == equation       
         @test haskey(body, MSG)
+
+        filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f672"
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job-enqueue/$(filehash)"
+        body = Dict(:estimator => estimator, :equation => equation, :ttest => ttest)
+        @test_throws HTTP.Exceptions.StatusError HTTP.post(url, ["Content-Type" => "application/json"], JSON.json(body); connect_timeout = 60)
+        
+        filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f672"
+        ModelSelectionGUI.add_job_file(filehash, "invalid.csv", "data.csv")
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job-enqueue/$(filehash)"
+        body = Dict(:estimator => estimator, :equation => equation, :ttest => ttest)
+        @test_throws HTTP.Exceptions.StatusError HTTP.post(url, ["Content-Type" => "application/json"], JSON.json(body); connect_timeout = 60)
+        
+        filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f671"
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job-enqueue/$(filehash)"
+        body = Dict(:equation => equation, :ttest => ttest)
+        @test_throws HTTP.Exceptions.StatusError HTTP.post(url, ["Content-Type" => "application/json"], JSON.json(body); connect_timeout = 60)
+        
+        filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f671"
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job-enqueue/$(filehash)"
+        body = Dict(:estimator => estimator, :ttest => ttest)
+        @test_throws HTTP.Exceptions.StatusError HTTP.post(url, ["Content-Type" => "application/json"], JSON.json(body); connect_timeout = 60)
+                
         stop()
     end
 
-    @testset "GET /job/:id" begin
-        using HTTP, JSON, Dates
+    @safetestset "GET /job/:id" begin
+        using Dates, HTTP, JSON
+        using ModelSelectionGUI
+        using ModelSelectionGUI: ModelSelectionJob
+        
+        reset_envvars()
+        start(no_task=true)
+
+        DATA_FILENAME = joinpath(dirname(@__FILE__), "data.csv")
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5ace"
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)"
+        
         filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f671"
-        url = "$(ModelSelectionGUI.SERVER_URL):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)"
         filename = DATA_FILENAME
         tempfile = DATA_FILENAME
         estimator = :ols
         equation = "y x1 x2 x3"
         ttest = true
-        payload = Dict(
-            ModelSelectionGUI.ESTIMATOR => estimator,
-            ModelSelectionGUI.EQUATION => equation,
+        parameters = Dict(
             :ttest => ttest,
         )
         time_equeued = "2023-01-01T01:01:01"
@@ -90,7 +102,7 @@ const DATA_FILENAME = "data.csv"
         time_finished = "2023-03-03T03:03:03"
         status = ModelSelectionGUI.RUNNING
         msg = "msg"
-        job = ModelSelectionJob(filename, tempfile, filehash, payload)
+        job = ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
 
         job.id = id
         job.status = status
@@ -100,14 +112,11 @@ const DATA_FILENAME = "data.csv"
         job.modelselection_data = nothing
         job.msg = "msg"
 
-        push!(ModelSelectionGUI.jobs_finished, job)
+        push!(ModelSelectionGUI.finished_queue, job)
 
-        reset_envvars()
-        start(dotenv = DOTENV)
-        response = HTTP.get(url)
+        response = HTTP.get(url; connect_timeout = 60)
         body = String(response.body)
         body = JSON.parse(body)
-
         ID = String(ModelSelectionGUI.ID)
         FILENAME = String(ModelSelectionGUI.FILENAME)
         FILEHASH = String(ModelSelectionGUI.FILEHASH)
@@ -122,73 +131,56 @@ const DATA_FILENAME = "data.csv"
         TTEST = "ttest"
 
         @test response.status == 200
-        @test haskey(body, ID)
         @test body[ID] isa String
-        @test haskey(body, FILENAME)
-        @test body[FILENAME] isa String
         @test body[FILENAME] == filename
-
-        @test haskey(body, FILEHASH)
-        @test body[FILEHASH] isa String
         @test body[FILEHASH] == filehash
-
-        @test haskey(body, PARAMETERS)
         @test body[PARAMETERS] isa Dict
         @test haskey(body[PARAMETERS], TTEST)
-        @test body[PARAMETERS][TTEST] isa Bool
         @test body[PARAMETERS][TTEST] == ttest
-
-        @test haskey(body, STATUS)
-        @test body[STATUS] isa String
         @test body[STATUS] == String(status)
-        @test haskey(body, TIME_ENQUEUED)
         @test body[TIME_ENQUEUED] isa String
         @test Dates.format(DateTime(body[TIME_ENQUEUED]), "yyyy-mm-ddTHH:MM:SS") ==
               time_equeued
-
-        @test haskey(body, TIME_STARTED)
-        @test body[TIME_STARTED] isa String
         @test Dates.format(DateTime(body[TIME_STARTED]), "yyyy-mm-ddTHH:MM:SS") ==
               time_started
-        @test haskey(body, TIME_FINISHED)
-        @test body[TIME_FINISHED] isa String
         @test Dates.format(DateTime(body[TIME_FINISHED]), "yyyy-mm-ddTHH:MM:SS") ==
               time_finished
-
-        @test haskey(body, ESTIMATOR)
-        @test body[ESTIMATOR] isa String
         @test body[ESTIMATOR] == String(estimator)
-
-        @test haskey(body, EQUATION)
-        @test body[EQUATION] isa String
         @test body[EQUATION] == equation
-
-        @test haskey(body, MSG)
-        @test body[MSG] isa String
         @test body[MSG] == msg
 
-        ModelSelectionGUI.clear_jobs_queue()
+        id = "83ecac9e-678d-4c80-9314-0ae4a67d5acd"
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)"
+        @test_throws HTTP.Exceptions.StatusError HTTP.get(url; connect_timeout = 60)
+        
+        ModelSelectionGUI.clear_pending_queue()
         ModelSelectionGUI.clear_current_job()
-        ModelSelectionGUI.clear_jobs_finished()
+        ModelSelectionGUI.clear_finished_queue()
         stop()
     end
-    @testset "GET /job/:id/results/summary" begin
-        using HTTP, JSON, Dates, ModelSelection, CSV, DataFrames
+    @safetestset "GET /job/:id/results/summary" begin
+        using CSV, DataFrames, Dates, HTTP, JSON
+        using ModelSelectionGUI, ModelSelection
+        using ModelSelectionGUI: ModelSelectionJob
+
+        reset_envvars()
+        start(no_task=true)
+
+        DATA_FILENAME = joinpath(dirname(@__FILE__), "data.csv")
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5ace"
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/summary"
+
         filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f671"
-        url = "$(ModelSelectionGUI.SERVER_URL):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/summary"
         filename = DATA_FILENAME
         tempfile = DATA_FILENAME
         estimator = :ols
         equation = "y x1 x2 x3"
         ttest = true
-        payload = Dict(
-            ModelSelectionGUI.ESTIMATOR => estimator,
-            ModelSelectionGUI.EQUATION => equation,
+        parameters = Dict(
             :ttest => ttest,
         )
         time = "2023-01-01T01:01:01"
-        job = ModelSelectionJob(filename, tempfile, filehash, payload)
+        job = ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
         job.id = id
         job.status = ModelSelectionGUI.FINISHED
         job.time_enqueued = DateTime(time)
@@ -199,36 +191,48 @@ const DATA_FILENAME = "data.csv"
         data = CSV.read(job.tempfile, DataFrame)
         job.modelselection_data = gsr(job.estimator, job.equation, data; job.parameters...)
 
-        push!(ModelSelectionGUI.jobs_finished, job)
+        push!(ModelSelectionGUI.finished_queue, job)
 
-        start(dotenv = DOTENV)
-        response = HTTP.get(url)
+        response = HTTP.get(url; connect_timeout = 60)
 
         @test response.status == 200
         @test Dict(response.headers)["Content-Type"] == ModelSelectionGUI.PLAIN_MIME
 
-        ModelSelectionGUI.clear_jobs_queue()
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/nothing"
+        @test_throws HTTP.Exceptions.StatusError HTTP.get(url; connect_timeout = 60)
+        
+        id = "83ecac9e-678d-4c80-9314-0ae4a67d5acd"
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/summary"
+        @test_throws HTTP.Exceptions.StatusError HTTP.get(url; connect_timeout = 60)
+        
+        ModelSelectionGUI.clear_pending_queue()
         ModelSelectionGUI.clear_current_job()
-        ModelSelectionGUI.clear_jobs_finished()
+        ModelSelectionGUI.clear_finished_queue()
         stop()
     end
-    @testset "GET /job/:id/results/allsubsetregression" begin
-        using HTTP, JSON, Dates, ModelSelection, CSV, DataFrames
+    @safetestset "GET /job/:id/results/allsubsetregression" begin
+        using CSV, DataFrames, Dates, HTTP, JSON
+        using ModelSelectionGUI, ModelSelection
+        using ModelSelectionGUI: ModelSelectionJob
+
+        reset_envvars()
+        start(no_task=true)
+
+        DATA_FILENAME = joinpath(dirname(@__FILE__), "data.csv")
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5ace"
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/allsubsetregression"
+
         filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f671"
-        url = "$(ModelSelectionGUI.SERVER_URL):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/allsubsetregression"
         filename = DATA_FILENAME
         tempfile = DATA_FILENAME
         estimator = :ols
         equation = "y x1 x2 x3"
         ttest = true
-        payload = Dict(
-            ModelSelectionGUI.ESTIMATOR => estimator,
-            ModelSelectionGUI.EQUATION => equation,
+        parameters = Dict(
             :ttest => ttest,
         )
         time = "2023-01-01T01:01:01"
-        job = ModelSelectionJob(filename, tempfile, filehash, payload)
+        job = ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
         job.id = id
         job.status = ModelSelectionGUI.FINISHED
         job.time_enqueued = DateTime(time)
@@ -239,37 +243,49 @@ const DATA_FILENAME = "data.csv"
         data = CSV.read(job.tempfile, DataFrame)
         job.modelselection_data = gsr(job.estimator, job.equation, data; job.parameters...)
 
-        push!(ModelSelectionGUI.jobs_finished, job)
+        push!(ModelSelectionGUI.finished_queue, job)
 
-        start(dotenv = DOTENV)
-        response = HTTP.get(url)
+        response = HTTP.get(url; connect_timeout = 60)
 
         @test response.status == 200
         @test Dict(response.headers)["Content-Type"] == ModelSelectionGUI.CSV_MIME
 
-        ModelSelectionGUI.clear_jobs_queue()
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/nothing"
+        @test_throws HTTP.Exceptions.StatusError HTTP.get(url; connect_timeout = 60)
+        
+        id = "83ecac9e-678d-4c80-9314-0ae4a67d5acd"
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/allsubsetregression"
+        @test_throws HTTP.Exceptions.StatusError HTTP.get(url; connect_timeout = 60)
+        
+        ModelSelectionGUI.clear_pending_queue()
         ModelSelectionGUI.clear_current_job()
-        ModelSelectionGUI.clear_jobs_finished()
+        ModelSelectionGUI.clear_finished_queue()
         stop()
     end
-    @testset "GET /job/:id/results/crossvalidation" begin
-        using HTTP, JSON, Dates, ModelSelection, CSV, DataFrames
+    @safetestset "GET /job/:id/results/crossvalidation" begin
+        using DataFrames, Dates, CSV, HTTP, JSON
+        using ModelSelectionGUI, ModelSelection
+        using ModelSelectionGUI: ModelSelectionJob
+
+        reset_envvars()
+        start(no_task=true)
+
+        DATA_FILENAME = joinpath(dirname(@__FILE__), "data.csv")
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5ace"
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/crossvalidation"
+
         filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f671"
-        url = "$(ModelSelectionGUI.SERVER_URL):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/crossvalidation"
         filename = DATA_FILENAME
         tempfile = DATA_FILENAME
         estimator = :ols
         equation = "y x1 x2 x3"
         ttest = true
-        payload = Dict(
-            ModelSelectionGUI.ESTIMATOR => estimator,
-            ModelSelectionGUI.EQUATION => equation,
+        parameters = Dict(
             :ttest => ttest,
             :kfoldcrossvalidation => true,
         )
         time = "2023-01-01T01:01:01"
-        job = ModelSelectionJob(filename, tempfile, filehash, payload)
+        job = ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
         job.id = id
         job.status = ModelSelectionGUI.FINISHED
         job.time_enqueued = DateTime(time)
@@ -280,17 +296,23 @@ const DATA_FILENAME = "data.csv"
         data = CSV.read(job.tempfile, DataFrame)
         job.modelselection_data = gsr(job.estimator, job.equation, data; job.parameters...)
 
-        push!(ModelSelectionGUI.jobs_finished, job)
+        push!(ModelSelectionGUI.finished_queue, job)
 
-        start(dotenv = DOTENV)
-        response = HTTP.get(url)
+        response = HTTP.get(url; connect_timeout = 60)
 
         @test response.status == 200
         @test Dict(response.headers)["Content-Type"] == ModelSelectionGUI.CSV_MIME
 
-        ModelSelectionGUI.clear_jobs_queue()
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/nothing"
+        @test_throws HTTP.Exceptions.StatusError HTTP.get(url; connect_timeout = 60)
+        
+        id = "83ecac9e-678d-4c80-9314-0ae4a67d5acd"
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/crossvalidation"
+        @test_throws HTTP.Exceptions.StatusError HTTP.get(url; connect_timeout = 60)
+        
+        ModelSelectionGUI.clear_pending_queue()
         ModelSelectionGUI.clear_current_job()
-        ModelSelectionGUI.clear_jobs_finished()
+        ModelSelectionGUI.clear_finished_queue()
         stop()
     end
 end

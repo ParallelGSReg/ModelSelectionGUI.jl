@@ -11,7 +11,7 @@ include("responses.jl")
 include("exceptions.jl")
 include("views.jl")
 include("core.jl")
-include("browser.jl")
+include("windows.jl")
 
-export start, stop, load_envvars, reset_envvars, to_dict
+export start, stop, load_envvars, set_envvars, reset_envvars, to_dict
 end # module ModelSelectionGUI

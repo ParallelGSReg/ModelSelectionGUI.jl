@@ -6,11 +6,11 @@ using Genie
 
 Get the installed version of a Julia package by its name.
 
-# Arguments
+# Parameters
 - `name::AbstractString`: The name of the Julia package.
 
 # Returns
-- The version of the specified package.
+- `String`: The version of the specified package.
 
 # Example
 ```Julia
@@ -31,12 +31,12 @@ end
 
 Save a DataFrame to a temporary CSV file.
 
-# Arguments
+# Parameters
 - `name::String`: The name of the temporary file.
 - `data::DataFrame`: The DataFrame to save.
 
 # Returns
-- The filepath where the DataFrame was saved.
+- `String`: The filepath where the DataFrame was saved.
 
 # Example
 ```Julia
@@ -52,12 +52,12 @@ end
 
 Get a filename for a CSV file that stores the results of an all subset regression.
 
-# Arguments
+# Parameters
 - `filename::String`: The original filename.
 - `result::ModelSelection.AllSubsetRegression.AllSubsetRegressionResult`: The result of the all subset regression.
 
 # Returns
-- The filename for the CSV file.
+- `String`: The filename for the CSV file.
 
 # Example
 ```Julia
@@ -68,7 +68,7 @@ function get_csv_filename(
     filename::String,
     result::ModelSelection.AllSubsetRegression.AllSubsetRegressionResult,
 )
-    return replace(filename, ".csv" => "") * "_allsubsetregression.csv"
+    return replace(basename(filename), ".csv" => "") * "_allsubsetregression.csv"
 end
 
 """
@@ -76,12 +76,12 @@ end
 
 Get a filename for a CSV file that stores the results of cross validation.
 
-# Arguments
+# Parameters
 - `filename::String`: The original filename.
 - `result::ModelSelection.CrossValidation.CrossValidationResult`: The result of cross validation.
 
 # Returns
-- The filename for the CSV file.
+- `String`: The filename for the CSV file.
 
 # Example
 ```Julia
@@ -92,7 +92,7 @@ function get_csv_filename(
     filename::String,
     result::ModelSelection.CrossValidation.CrossValidationResult,
 )
-    return replace(filename, ".csv" => "") * "_crossvalidation.csv"
+    return replace(basename(filename), ".csv" => "") * "_crossvalidation.csv"
 end
 
 """
@@ -100,14 +100,19 @@ end
 
 Get a filename for a TXT file that stores summary data.
 
-# Arguments
+# Parameters
 - `filename::String`: The original filename.
 
 # Returns
-- The filename for the TXT file.
+-  `String`: The filename for the TXT file.
+
+# Example
+```Julia
+get_txt_filename("data.csv")
+```
 """
 function get_txt_filename(filename::String)
-    return replace(filename, ".csv" => "") * "_summary.txt"
+    return replace(basename(filename), ".csv" => "") * "_summary.txt"
 end
 
 """
@@ -115,12 +120,12 @@ end
 
 Get CSV formatted data from a result of a model selection process.
 
-# Arguments
+# Parameters
 - `filename::String`: The original filename.
 - `result::ModelSelectionResult`: The result of the model selection process.
 
 # Returns
-- A dictionary containing the filename and CSV data.
+- `Dict{Symbol,Any}`: A dictionary containing the filename and CSV data.
 
 # Example
 ```Julia
@@ -144,11 +149,11 @@ end
 
 Convert a dictionary with string keys to a dictionary with symbol keys.
 
-# Arguments
+# Parameters
 - `raw_payload::Dict{String,Any}`: A dictionary with string keys.
 
 # Returns
-- A dictionary with the same keys and values, but with the keys converted to symbols.
+- `Dict{Symbol,Any}`: A dictionary with the same keys and values, but with the keys converted to symbols.
 
 # Example
 ```Julia
@@ -171,11 +176,11 @@ end
 
 Convert a ModelSelectionJob object to a dictionary.
 
-# Arguments
+# Parameters
 - `job::ModelSelectionJob`: The job to convert.
 
 # Returns
-- A dictionary representation of the job.
+- `Dict{Symbol,Any}`: A dictionary representation of the job.
 
 # Example
 ```Julia
@@ -203,11 +208,12 @@ end
 
 Get the job id from a set of parameters.
 
-# Arguments
+# Parameters
 - `params::Any`: The parameters to search.
 
 # Returns
-- The job id if it exists, nothing otherwise.
+- `String`: The job id if it exists.
+- `Nothing`: If the id does not exist.
 
 # Example
 ```Julia
@@ -216,11 +222,7 @@ get_request_job_id(params)
 """
 function get_request_job_id(params::Any)
     try
-        job_id = params(:id)
-        if job_id === nothing
-            return nothing
-        end
-        return string(job_id)
+        return string(params(:id))
     catch e
         return nothing
     end
@@ -231,11 +233,12 @@ end
 
 Get the file hash from a set of parameters.
 
-# Arguments
+# Parameters
 - `params::Any`: The parameters to search.
 
 # Returns
-- The file hash if it exists, nothing otherwise.
+- `String`: The hash id if it exists.
+- `Nothing`: If the hsh does not exist.
 
 # Example
 ```Julia
@@ -244,11 +247,7 @@ get_request_filehash(params)
 """
 function get_request_filehash(params::Any)
     try
-        filehash = params(:filehash)
-        if filehash === nothing
-            return nothing
-        end
-        return string(filehash)
+        return string(params(:filehash))
     catch e
         return nothing
     end

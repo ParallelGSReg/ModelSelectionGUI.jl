@@ -1,20 +1,34 @@
-const DATA_FILENAME = "data.csv"
-
-@testset "Test utils" begin
-    @testset "get_pkg_version" begin
-        version = v"1.3.0" # TODO: Update this version when the package is updated.
+@safetestset "Test utils" begin
+    @safetestset "get_pkg_version" begin
+        using Pkg
+        using ModelSelectionGUI, ModelSelection
+        
+        function get_pkg_version(name::AbstractString)
+            version = nothing
+            for dependency in Pkg.dependencies()
+                if dependency[2].name == name
+                    return dependency[2].version
+                end
+            end
+            return version
+        end
+        version = get_pkg_version("ModelSelection")
         pkg_version = ModelSelectionGUI.get_pkg_version("ModelSelection")
+        
         @test pkg_version == version
     end
-    @testset "save_tempfile" begin
+
+    @safetestset "save_tempfile" begin
         using CSV, DataFrames
+        using ModelSelectionGUI
+
         name = tempname()
-        data = DataFrame([1 2 3; 4 5 6], ["a", "b", "c"])
+        data = DataFrame([1 2 3 4; 5 6 7 8], ["y", "x1", "x2", "x3"])
         ModelSelectionGUI.save_tempfile(name, data)
         new_data = CSV.read(name, DataFrame)
-
         old_names = names(data)
         new_names = names(new_data)
+
         for i = 1:3
             @test old_names[i] == new_names[i]
         end
@@ -24,8 +38,10 @@ const DATA_FILENAME = "data.csv"
             end
         end
     end
-    @testset "get_csv_filename AllSubsetRegressionResult" begin
-        using ModelSelection
+
+    @safetestset "get_csv_filename AllSubsetRegressionResult" begin
+        using ModelSelectionGUI, ModelSelection
+
         csv_filename = "data_allsubsetregression.csv"
         filename = "data.csv"
         result = ModelSelection.AllSubsetRegression.AllSubsetRegressionResult(
@@ -37,10 +53,13 @@ const DATA_FILENAME = "data.csv"
             false,
             false,
         )
+
         @test csv_filename == ModelSelectionGUI.get_csv_filename(filename, result)
     end
-    @testset "get_csv_filename CrossValidationResult" begin
-        using ModelSelection
+
+    @safetestset "get_csv_filename CrossValidationResult" begin
+        using ModelSelectionGUI, ModelSelection
+
         csv_filename = "data_crossvalidation.csv"
         filename = "data.csv"
         result = ModelSelection.CrossValidation.CrossValidationResult(
@@ -52,15 +71,24 @@ const DATA_FILENAME = "data.csv"
             nothing,
             [],
         )
+
         @test csv_filename == ModelSelectionGUI.get_csv_filename(filename, result)
     end
-    @testset "get_txt_filename" begin
+
+    @safetestset "get_txt_filename" begin
+        using ModelSelectionGUI
+
         txt_filename = "data_summary.txt"
         filename = "data.csv"
+
         @test txt_filename == ModelSelectionGUI.get_txt_filename(filename)
     end
-    @testset "get_csv_from_result" begin
-        using CSV, DataFrames, ModelSelection
+
+    @safetestset "get_csv_from_result" begin
+        using CSV, DataFrames
+        using ModelSelectionGUI, ModelSelection
+
+        DATA_FILENAME = joinpath(dirname(@__FILE__), "data.csv")
         csv_filename = "data_allsubsetregression.csv"
         data = CSV.read(DATA_FILENAME, DataFrame)
         modelselection_data = gsr(:ols, "y x1 x2 x3", data)
@@ -68,11 +96,15 @@ const DATA_FILENAME = "data.csv"
             DATA_FILENAME,
             modelselection_data.results[1],
         )
+
         @test result isa Dict
         @test result[ModelSelectionGUI.FILENAME] == csv_filename
         @test result[ModelSelectionGUI.DATA] isa String
     end
-    @testset "get_parameters" begin
+
+    @safetestset "get_parameters" begin
+        using ModelSelectionGUI
+
         a = 1
         b = 2
         c = 3
@@ -86,26 +118,27 @@ const DATA_FILENAME = "data.csv"
         @test parameters[:b] == b
         @test haskey(parameters, :c)
         @test parameters[:c] == c
-
         @test haskey(parameters, :fixedvariables)
         @test parameters[:fixedvariables][1] == Symbol(fixedvariables[1])
         @test parameters[:fixedvariables][2] == Symbol(fixedvariables[2])
         @test parameters[:fixedvariables][3] == Symbol(fixedvariables[3])
     end
-    @testset "to_dict" begin
+
+    @safetestset "to_dict" begin
         using Dates
+        using ModelSelectionGUI
+        using ModelSelectionGUI: ModelSelectionJob
+
         estimator = :ols
         equation = "y x1 x2 x3"
         ttest = true
         filename = "data.csv"
         tempfile = "/temp/data.csv"
         filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f671"
-        payload = Dict(
-            ModelSelectionGUI.ESTIMATOR => estimator,
-            ModelSelectionGUI.EQUATION => equation,
+        parameters = Dict(
             :ttest => ttest,
         )
-        job = ModelSelectionJob(filename, tempfile, filehash, payload)
+        job = ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5ace"
         status = ModelSelectionGUI.FINISHED
         time_enqueued = DateTime("2023-01-01T01:01:01")
@@ -150,7 +183,10 @@ const DATA_FILENAME = "data.csv"
         @test haskey(dict, ModelSelectionGUI.MSG)
         @test dict[ModelSelectionGUI.MSG] == msg
     end
-    @testset "get_request_job_id" begin
+
+    @safetestset "get_request_job_id" begin
+        using ModelSelectionGUI
+
         function func1(key::Symbol)
             dict = Dict(:id => "job_id")
             return dict[key]
@@ -159,26 +195,23 @@ const DATA_FILENAME = "data.csv"
             dict = Dict(:filehash => "job_id")
             return dict[key]
         end
+
         @test ModelSelectionGUI.get_request_job_id(func1) == "job_id"
         @test ModelSelectionGUI.get_request_job_id(func2) isa Nothing
     end
-    @testset "get_request_filehash" begin
+
+    @safetestset "get_request_filehash" begin
+        using ModelSelectionGUI
+
         function func1(key::Symbol)
             dict = Dict(:filehash => "filehash")
-            if haskey(dict, key)
-                return dict[key]
-            else
-                return nothing
-            end
+            return dict[key]
         end
         function func2(key::Symbol)
             dict = Dict(:id => "filehash")
-            if haskey(dict, key)
-                return dict[key]
-            else
-                return nothing
-            end
+            return dict[key]
         end
+
         @test ModelSelectionGUI.get_request_filehash(func1) == "filehash"
         @test ModelSelectionGUI.get_request_filehash(func2) isa Nothing
     end

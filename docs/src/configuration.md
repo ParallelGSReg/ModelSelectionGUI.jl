@@ -8,9 +8,9 @@ The package supports the following environment variables for configuration:
 |------|---------|-------------|
 |`SERVER_PORT` | `8000`| The port number on which the web server will listen|
 |`CLIENT_PORT`|`SERVER_PORT + 1`| The port number on which the client will listen|
-|`OPEN_BROWSER`|`false`| Open the web browser after starting the server with the documentation|
-|`OPEN_CLIENT`|`false`| Open the web browser after starting the server with the client|
-|`SERVER_URL`|`127.0.0.1`| Defines the base URL of the server|
+|`OPEN_DOCUMENTATION`|`false`| Open a window with the documentation after starting the server|
+|`OPEN_CLIENT`|`false`| Open a window with the client after starting the server|
+|`SERVER_HOST`|`127.0.0.1`| Defines the base URL of the server|
 
 !!! note
     You can choose to set these environment variables based on your specific requirements. If not set, the package will use the default values mentioned above.

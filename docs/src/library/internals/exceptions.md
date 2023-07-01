@@ -1,6 +1,6 @@
 # Exceptions
 
-This section of the package is responsible for controlling how and when a browser window is opened.
+This section of the package is responsible for controlling how and when a window is opened.
 
 ## Index
 

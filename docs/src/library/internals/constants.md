@@ -14,10 +14,11 @@ Pages = ["constants.md"]
 ModelSelectionGUI.MODEL_SELECTION_NAME
 ModelSelectionGUI.MODEL_SELECTION_VER
 ModelSelectionGUI.ENV_FILE_DEFAULT
+ModelSelectionGUI.SERVER_HOST_DEFAULT
 ModelSelectionGUI.SERVER_PORT_DEFAULT
-ModelSelectionGUI.OPEN_BROWSER_DEFAULT
+ModelSelectionGUI.SSL_ENABLED_DEFAULT
+ModelSelectionGUI.OPEN_DOCUMENTATION_DEFAULT
 ModelSelectionGUI.OPEN_CLIENT_DEFAULT
-ModelSelectionGUI.SERVER_URL_DEFAULT
 ModelSelectionGUI.DATA
 ModelSelectionGUI.FILEHASH
 ModelSelectionGUI.FILENAME
@@ -29,9 +30,8 @@ ModelSelectionGUI.NCORES
 ModelSelectionGUI.NWORKERS
 ModelSelectionGUI.MODEL_SELECTION_VERSION
 ModelSelectionGUI.JULIA_VERSION
-ModelSelectionGUI.JOBS_QUEUE_SIZE
+ModelSelectionGUI.PENDING_QUEUE_SIZE
 ModelSelectionGUI.STATUS
-ModelSelectionGUI.JOB_ID
 ModelSelectionGUI.ENQUEUED
 ModelSelectionGUI.RUNNING
 ModelSelectionGUI.FINISHED
@@ -53,4 +53,6 @@ ModelSelectionGUI.DEFAULT_WS_CHANNEL
 ModelSelectionGUI.RESULTS
 ModelSelectionGUI.CSV_MIME
 ModelSelectionGUI.PLAIN_MIME
+ModelSelectionGUI.SWAGGER_DOCUMENT_FILE
+ModelSelectionGUI.FRONTEND_FILE
 ```

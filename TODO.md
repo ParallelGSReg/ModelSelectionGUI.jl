@@ -1,6 +1,3 @@
  - Frontend in VueJS
- - Dockerize application using PackageCompiler
- - Develop Docker Compose
  - A prebuild for each main platform
- - A script to run everything with one command
- - Have at least 90% of coverage tests
+ - Add in documentation: How to download and unzip repository using macOS

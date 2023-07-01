@@ -12,6 +12,7 @@ Pages = ["views.md"]
 
 ```@docs
 ModelSelectionGUI.home_view()
+ModelSelectionGUI.docs_view()
 ModelSelectionGUI.server_info_view()
 ModelSelectionGUI.upload_file_view()
 ModelSelectionGUI.job_enqueue_view()

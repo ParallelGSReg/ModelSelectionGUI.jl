@@ -1,58 +1,63 @@
 """
     MODEL_SELECTION_NAME
 
-Name of the Model Selection package.
+Name of the ModelSelection package.
 """
 const MODEL_SELECTION_NAME = "ModelSelection"
 
 """
     MODEL_SELECTION_VER
 
-Version of the Model Selection package. Determined by calling `get_pkg_version(MODEL_SELECTION_NAME)`.
+Version of the ModelSelection package.
 """
 const MODEL_SELECTION_VER = get_pkg_version(MODEL_SELECTION_NAME)
 
 """
     ENV_FILE_DEFAULT
 
-Default path for the .env file used for storing environment variables. The default path is ".env".
+Default path for the .env file used for storing environment variables. The default path is `.envv.
 """
 const ENV_FILE_DEFAULT = ".env"
 
 """
+    SERVER_HOST_DEFAULT
+
+Default base URL for the server. The default URL is `127.0.0.1`.
+"""
+const SERVER_HOST_DEFAULT = "127.0.0.1"
+
+"""
     SERVER_PORT_DEFAULT
 
-Default port number for the server. The default port is 8000.
+Default port number for the server. The default port is `8000`.
 """
 const SERVER_PORT_DEFAULT = 8000
 
 """
-    OPEN_BROWSER_DEFAULT
+    SSL_ENABLED_DEFAULT
 
-Default value for whether to open the browser automatically when the server starts for Swagger documentation. 
-The default behavior is not to open the browser, i.e., false.
+Default value for whether SSL (Secure Socket Layer) is enabled in the application. The default value is `false`.
 """
-const OPEN_BROWSER_DEFAULT = false
+const SSL_ENABLED_DEFAULT = false
 
 """
     OPEN_CLIENT_DEFAULT
 
-Default value for whether to open the client automatically when the server starts. 
-The default behavior is not to open the client, i.e., false.
+Whether to open a window with the client automatically when the server starts. The default value is `false`.
 """
 const OPEN_CLIENT_DEFAULT = false
 
 """
-    SERVER_URL_DEFAULT
+    OPEN_DOCUMENTATION_DEFAULT
 
-Default base URL for the server. The default URL is "http://127.0.0.1".
+Whether to open a window with documentation automatically when the server starts for Swagger documentation. The default value is `false`.
 """
-const SERVER_URL_DEFAULT = "http://127.0.0.1"
+const OPEN_DOCUMENTATION_DEFAULT = false
 
 """
     DATA
 
-Symbol representing data. Used as a key in various data structures throughout the application.
+Symbol key representing data. Used as a key in various data structures throughout the application.
 """
 const DATA = :data
 
@@ -127,11 +132,11 @@ Symbol representing the Julia version. Used as a key in various data structures 
 const JULIA_VERSION = :julia_version
 
 """
-    JOBS_QUEUE_SIZE
+    PENDING_QUEUE_SIZE
 
 Symbol representing the size of the jobs queue. Used as a key in various data structures throughout the application.
 """
-const JOBS_QUEUE_SIZE = :jobs_queue_size
+const PENDING_QUEUE_SIZE = :jobs_queue_size
 
 """
     STATUS
@@ -139,13 +144,6 @@ const JOBS_QUEUE_SIZE = :jobs_queue_size
 Symbol representing the status of an operation. Used as a key in various data structures throughout the application.
 """
 const STATUS = :status
-
-"""
-    JOB_ID
-
-Symbol representing the ID of a job. Used as a key in various data structures throughout the application.
-"""
-const JOB_ID = :job_id
 
 """
     ENQUEUED
@@ -283,13 +281,26 @@ const RESULTS = :results
 """
     CSV_MIME
 
-String representing the MIME type for CSV files. Used when handling CSV file data within the application.
+MIME type for CSV files.
 """
 const CSV_MIME = "text/csv"
 
 """
     PLAIN_MIME
 
-String representing the MIME type for CSV files. Used when handling plain txt file data within the application.
+MIME type for CSV files.
 """
 const PLAIN_MIME = "text/plain"
+
+"""
+    SWAGGER_DOCUMENT_FILE
+
+The file path of the Swagger document.
+"""
+const SWAGGER_DOCUMENT_FILE = "./docs/swagger/swagger.json"
+
+"""
+    FRONTEND_FILE
+The file path of the frontend HTML file.
+"""
+const FRONTEND_FILE = "./frontend/index.html"

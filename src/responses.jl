@@ -6,7 +6,7 @@ using ModelSelection
 
 Creates a JSON object with server information.
 
-# Arguments
+# Parameters
 - `ncores::Int64`: The number of cores on the server.
 - `nworkers::Int64`: The number of worker threads on the server.
 - `model_selection_version::String`: The version number of the ModelSelection package.
@@ -14,7 +14,7 @@ Creates a JSON object with server information.
 - `jobs_queue_size::Int64`: The size of the job queue.
 
 # Returns
-- A JSON object containing the server information.
+- `Object`: A JSON object containing the server information.
 
 # Example
 ```julia
@@ -33,7 +33,7 @@ function server_info_response(
         NWORKERS => nworkers,
         MODEL_SELECTION_VERSION => model_selection_version,
         JULIA_VERSION => julia_version,
-        JOBS_QUEUE_SIZE => jobs_queue_size,
+        PENDING_QUEUE_SIZE => jobs_queue_size,
     )
     return Genie.Renderer.Json.json(data)
 end
@@ -43,14 +43,14 @@ end
 
 Creates a JSON object to provide a response for a file upload operation.
 
-# Arguments
+# Parameters
 - `filename::String`: The name of the uploaded file.
 - `filehash::String`: The hash value of the uploaded file.
 - `datanames::Array{String,1}`: An array of data names from the uploaded file.
 - `nobs::Int64`: The number of observations in the uploaded file.
 
 # Returns
-- A JSON object with details about the uploaded file.
+- `Object`: A JSON object with details about the uploaded file.
 
 # Example
 ```julia
@@ -77,11 +77,11 @@ end
 
 Creates a JSON object that provides information about a `ModelSelectionJob`.
 
-# Arguments
+# Parameters
 - `job::ModelSelectionJob`: The `ModelSelectionJob` instance to extract information from.
 
 # Returns
-- A JSON object with the details of the `ModelSelectionJob`.
+- `Object`: A JSON object with the details of the `ModelSelectionJob`.
 
 # Example
 ```julia
@@ -104,13 +104,13 @@ end
 Generates an HTTP response with information about the results of a `ModelSelectionJob` 
 depending on the specified result type.
 
-# Arguments
+# Parameters
 - `job::ModelSelectionJob`: The `ModelSelectionJob` instance from which to extract results.
 - `resulttype::Symbol`: The type of result to extract. This can be one of: `:summary`, 
 `:allsubsetregression`, `:crossvalidation`.
 
 # Returns
-- An HTTP response object.
+- `HTTP.Response`: A HTTP response object.
   - If `resulttype` is `:summary`, the response body is a text string 
   containing a summary of the job's results.
   - If `resulttype` is `:allsubsetregression` or 
@@ -173,9 +173,7 @@ function job_results_response(job::ModelSelectionJob, resulttype::Symbol)
     end
 
     if data === nothing
-        return bad_request_exception(
-            @sprintf("The job does not have a result of type %s", resulttype)
-        )  # FIXME: Move to constant JOB_HAS_NOT_RESULTTYPE
+        return bad_request_exception(JOB_HAS_NOT_RESULTTYPE * string(resulttype))
     end
 
     body = data[DATA]

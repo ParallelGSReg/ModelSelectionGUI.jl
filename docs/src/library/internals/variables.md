@@ -11,9 +11,11 @@ Pages = ["variables.md"]
 ## Contents
 
 ```@docs
+ModelSelectionGUI.SERVER_HOST
 ModelSelectionGUI.SERVER_PORT
-ModelSelectionGUI.CLIENT_PORT
-ModelSelectionGUI.OPEN_BROWSER
+ModelSelectionGUI.SSL_ENABLED
+ModelSelectionGUI.OPEN_DOCUMENTATION
 ModelSelectionGUI.OPEN_CLIENT
-ModelSelectionGUI.SERVER_URL
+ModelSelectionGUI.ELECTRON_APPLICATION
+ModelSelectionGUI.JOB_TASK
 ```
