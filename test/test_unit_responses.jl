@@ -109,15 +109,14 @@
         estimator = :ols
         equation = "y x1 x2 x3"
         ttest = true
-        parameters = Dict(
-            :ttest => ttest,
-        )
+        parameters = Dict(:ttest => ttest)
         time_equeued = "2023-01-01T01:01:01"
         time_started = "2023-02-02T02:02:02"
         time_finished = "2023-03-03T03:03:03"
         status = ModelSelectionGUI.RUNNING
         msg = "msg"
-        job = ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
+        job =
+            ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
 
         job.id = id
         job.status = status
@@ -201,7 +200,7 @@
         using JSON, Dates, ModelSelection, CSV, DataFrames
         using ModelSelectionGUI
         using ModelSelectionGUI: ModelSelectionJob
-        
+
         DATA_FILENAME = joinpath(dirname(@__FILE__), "data.csv")
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5ace"
         filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f671"
@@ -211,12 +210,10 @@
         estimator = :ols
         equation = "y x1 x2 x3"
         ttest = true
-        parameters = Dict(
-            :ttest => ttest,
-            :kfoldcrossvalidation => true,
-        )
+        parameters = Dict(:ttest => ttest, :kfoldcrossvalidation => true)
         time = "2023-01-01T01:01:01"
-        job = ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
+        job =
+            ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
         job.id = id
         job.status = ModelSelectionGUI.FINISHED
         job.time_enqueued = DateTime(time)
@@ -239,5 +236,5 @@
         @test Dict(response.headers)["Content-Type"] == ModelSelectionGUI.CSV_MIME
 
         response = ModelSelectionGUI.job_results_response(job, :invalid)
-            end
+    end
 end

@@ -28,7 +28,8 @@
         @test ModelSelectionGUI.SERVER_HOST == ModelSelectionGUI.SERVER_HOST_DEFAULT
         @test ModelSelectionGUI.SERVER_PORT == ModelSelectionGUI.SERVER_PORT_DEFAULT
         @test ModelSelectionGUI.SSL_ENABLED == ModelSelectionGUI.SSL_ENABLED_DEFAULT
-        @test ModelSelectionGUI.OPEN_DOCUMENTATION == ModelSelectionGUI.OPEN_DOCUMENTATION_DEFAULT
+        @test ModelSelectionGUI.OPEN_DOCUMENTATION ==
+              ModelSelectionGUI.OPEN_DOCUMENTATION_DEFAULT
         @test ModelSelectionGUI.OPEN_CLIENT == ModelSelectionGUI.OPEN_CLIENT_DEFAULT
     end
     @safetestset "Dotenv values" begin
@@ -59,17 +60,18 @@
         open_documentation = true
         open_client = true
         load_envvars(envfile)
-        
+
         @test ModelSelectionGUI.SERVER_PORT == server_port
         @test ModelSelectionGUI.SSL_ENABLED == ssl_enabled
         @test ModelSelectionGUI.OPEN_DOCUMENTATION == open_documentation
         @test ModelSelectionGUI.OPEN_CLIENT == open_client
         @test ModelSelectionGUI.SERVER_HOST == server_host
-        
+
         reset_envvars()
         @test ModelSelectionGUI.SERVER_PORT == ModelSelectionGUI.SERVER_PORT_DEFAULT
         @test ModelSelectionGUI.SSL_ENABLED == ModelSelectionGUI.SSL_ENABLED_DEFAULT
-        @test ModelSelectionGUI.OPEN_DOCUMENTATION == ModelSelectionGUI.OPEN_DOCUMENTATION_DEFAULT
+        @test ModelSelectionGUI.OPEN_DOCUMENTATION ==
+              ModelSelectionGUI.OPEN_DOCUMENTATION_DEFAULT
         @test ModelSelectionGUI.OPEN_CLIENT == ModelSelectionGUI.OPEN_CLIENT_DEFAULT
         @test ModelSelectionGUI.SERVER_HOST == ModelSelectionGUI.SERVER_HOST_DEFAULT
     end

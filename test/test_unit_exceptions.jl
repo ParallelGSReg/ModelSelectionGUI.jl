@@ -4,5 +4,5 @@
 
         response = ModelSelectionGUI.bad_request_exception("msg")
 
-            end
+    end
 end

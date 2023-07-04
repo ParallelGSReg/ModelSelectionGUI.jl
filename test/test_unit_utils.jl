@@ -2,7 +2,7 @@
     @safetestset "get_pkg_version" begin
         using Pkg
         using ModelSelectionGUI, ModelSelection
-        
+
         function get_pkg_version(name::AbstractString)
             version = nothing
             for dependency in Pkg.dependencies()
@@ -14,7 +14,7 @@
         end
         version = get_pkg_version("ModelSelection")
         pkg_version = ModelSelectionGUI.get_pkg_version("ModelSelection")
-        
+
         @test pkg_version == version
     end
 
@@ -135,10 +135,9 @@
         filename = "data.csv"
         tempfile = "/temp/data.csv"
         filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f671"
-        parameters = Dict(
-            :ttest => ttest,
-        )
-        job = ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
+        parameters = Dict(:ttest => ttest)
+        job =
+            ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5ace"
         status = ModelSelectionGUI.FINISHED
         time_enqueued = DateTime("2023-01-01T01:01:01")

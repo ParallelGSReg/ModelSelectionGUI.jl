@@ -8,7 +8,7 @@
         url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job-enqueue/$(filehash)"
 
         reset_envvars()
-        start(no_task=true)
+        start(no_task = true)
 
         filename = DATA_FILENAME
         tempfile = DATA_FILENAME
@@ -17,7 +17,12 @@
         estimator = :ols
         ModelSelectionGUI.add_job_file(filehash, tempfile, filename)
         body = Dict(:estimator => estimator, :equation => equation, :ttest => ttest)
-        response = HTTP.post(url, ["Content-Type" => "application/json"], JSON.json(body); connect_timeout = 60)
+        response = HTTP.post(
+            url,
+            ["Content-Type" => "application/json"],
+            JSON.json(body);
+            connect_timeout = 60,
+        )
         msg = String(response.body)
         body = JSON.parse(msg)
 
@@ -49,30 +54,50 @@
         @test haskey(body, TIME_STARTED)
         @test haskey(body, TIME_FINISHED)
         @test body[ESTIMATOR] == String(estimator)
-        @test body[EQUATION] == equation       
+        @test body[EQUATION] == equation
         @test haskey(body, MSG)
 
         filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f672"
         url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job-enqueue/$(filehash)"
         body = Dict(:estimator => estimator, :equation => equation, :ttest => ttest)
-        @test_throws HTTP.Exceptions.StatusError HTTP.post(url, ["Content-Type" => "application/json"], JSON.json(body); connect_timeout = 60)
-        
+        @test_throws HTTP.Exceptions.StatusError HTTP.post(
+            url,
+            ["Content-Type" => "application/json"],
+            JSON.json(body);
+            connect_timeout = 60,
+        )
+
         filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f672"
         ModelSelectionGUI.add_job_file(filehash, "invalid.csv", "data.csv")
         url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job-enqueue/$(filehash)"
         body = Dict(:estimator => estimator, :equation => equation, :ttest => ttest)
-        @test_throws HTTP.Exceptions.StatusError HTTP.post(url, ["Content-Type" => "application/json"], JSON.json(body); connect_timeout = 60)
-        
+        @test_throws HTTP.Exceptions.StatusError HTTP.post(
+            url,
+            ["Content-Type" => "application/json"],
+            JSON.json(body);
+            connect_timeout = 60,
+        )
+
         filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f671"
         url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job-enqueue/$(filehash)"
         body = Dict(:equation => equation, :ttest => ttest)
-        @test_throws HTTP.Exceptions.StatusError HTTP.post(url, ["Content-Type" => "application/json"], JSON.json(body); connect_timeout = 60)
-        
+        @test_throws HTTP.Exceptions.StatusError HTTP.post(
+            url,
+            ["Content-Type" => "application/json"],
+            JSON.json(body);
+            connect_timeout = 60,
+        )
+
         filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f671"
         url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job-enqueue/$(filehash)"
         body = Dict(:estimator => estimator, :ttest => ttest)
-        @test_throws HTTP.Exceptions.StatusError HTTP.post(url, ["Content-Type" => "application/json"], JSON.json(body); connect_timeout = 60)
-                
+        @test_throws HTTP.Exceptions.StatusError HTTP.post(
+            url,
+            ["Content-Type" => "application/json"],
+            JSON.json(body);
+            connect_timeout = 60,
+        )
+
         stop()
     end
 
@@ -80,29 +105,28 @@
         using Dates, HTTP, JSON
         using ModelSelectionGUI
         using ModelSelectionGUI: ModelSelectionJob
-        
+
         reset_envvars()
-        start(no_task=true)
+        start(no_task = true)
 
         DATA_FILENAME = joinpath(dirname(@__FILE__), "data.csv")
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5ace"
         url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)"
-        
+
         filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f671"
         filename = DATA_FILENAME
         tempfile = DATA_FILENAME
         estimator = :ols
         equation = "y x1 x2 x3"
         ttest = true
-        parameters = Dict(
-            :ttest => ttest,
-        )
+        parameters = Dict(:ttest => ttest)
         time_equeued = "2023-01-01T01:01:01"
         time_started = "2023-02-02T02:02:02"
         time_finished = "2023-03-03T03:03:03"
         status = ModelSelectionGUI.RUNNING
         msg = "msg"
-        job = ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
+        job =
+            ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
 
         job.id = id
         job.status = status
@@ -152,7 +176,7 @@
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5acd"
         url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)"
         @test_throws HTTP.Exceptions.StatusError HTTP.get(url; connect_timeout = 60)
-        
+
         ModelSelectionGUI.clear_pending_queue()
         ModelSelectionGUI.clear_current_job()
         ModelSelectionGUI.clear_finished_queue()
@@ -164,7 +188,7 @@
         using ModelSelectionGUI: ModelSelectionJob
 
         reset_envvars()
-        start(no_task=true)
+        start(no_task = true)
 
         DATA_FILENAME = joinpath(dirname(@__FILE__), "data.csv")
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5ace"
@@ -176,11 +200,10 @@
         estimator = :ols
         equation = "y x1 x2 x3"
         ttest = true
-        parameters = Dict(
-            :ttest => ttest,
-        )
+        parameters = Dict(:ttest => ttest)
         time = "2023-01-01T01:01:01"
-        job = ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
+        job =
+            ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
         job.id = id
         job.status = ModelSelectionGUI.FINISHED
         job.time_enqueued = DateTime(time)
@@ -200,11 +223,11 @@
 
         url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/nothing"
         @test_throws HTTP.Exceptions.StatusError HTTP.get(url; connect_timeout = 60)
-        
+
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5acd"
         url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/summary"
         @test_throws HTTP.Exceptions.StatusError HTTP.get(url; connect_timeout = 60)
-        
+
         ModelSelectionGUI.clear_pending_queue()
         ModelSelectionGUI.clear_current_job()
         ModelSelectionGUI.clear_finished_queue()
@@ -216,7 +239,7 @@
         using ModelSelectionGUI: ModelSelectionJob
 
         reset_envvars()
-        start(no_task=true)
+        start(no_task = true)
 
         DATA_FILENAME = joinpath(dirname(@__FILE__), "data.csv")
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5ace"
@@ -228,11 +251,10 @@
         estimator = :ols
         equation = "y x1 x2 x3"
         ttest = true
-        parameters = Dict(
-            :ttest => ttest,
-        )
+        parameters = Dict(:ttest => ttest)
         time = "2023-01-01T01:01:01"
-        job = ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
+        job =
+            ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
         job.id = id
         job.status = ModelSelectionGUI.FINISHED
         job.time_enqueued = DateTime(time)
@@ -252,11 +274,11 @@
 
         url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/nothing"
         @test_throws HTTP.Exceptions.StatusError HTTP.get(url; connect_timeout = 60)
-        
+
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5acd"
         url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/allsubsetregression"
         @test_throws HTTP.Exceptions.StatusError HTTP.get(url; connect_timeout = 60)
-        
+
         ModelSelectionGUI.clear_pending_queue()
         ModelSelectionGUI.clear_current_job()
         ModelSelectionGUI.clear_finished_queue()
@@ -268,7 +290,7 @@
         using ModelSelectionGUI: ModelSelectionJob
 
         reset_envvars()
-        start(no_task=true)
+        start(no_task = true)
 
         DATA_FILENAME = joinpath(dirname(@__FILE__), "data.csv")
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5ace"
@@ -280,12 +302,10 @@
         estimator = :ols
         equation = "y x1 x2 x3"
         ttest = true
-        parameters = Dict(
-            :ttest => ttest,
-            :kfoldcrossvalidation => true,
-        )
+        parameters = Dict(:ttest => ttest, :kfoldcrossvalidation => true)
         time = "2023-01-01T01:01:01"
-        job = ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
+        job =
+            ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
         job.id = id
         job.status = ModelSelectionGUI.FINISHED
         job.time_enqueued = DateTime(time)
@@ -305,11 +325,11 @@
 
         url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/nothing"
         @test_throws HTTP.Exceptions.StatusError HTTP.get(url; connect_timeout = 60)
-        
+
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5acd"
         url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/crossvalidation"
         @test_throws HTTP.Exceptions.StatusError HTTP.get(url; connect_timeout = 60)
-        
+
         ModelSelectionGUI.clear_pending_queue()
         ModelSelectionGUI.clear_current_job()
         ModelSelectionGUI.clear_finished_queue()

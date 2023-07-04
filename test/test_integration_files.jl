@@ -3,8 +3,8 @@
     @safetestset "Upload file" begin
         using HTTP, JSON
         using ModelSelectionGUI
-        
-        start(no_task=true)
+
+        start(no_task = true)
 
         url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/upload-file"
         DATA_FILENAME = joinpath(dirname(@__FILE__), "data.csv")
@@ -31,10 +31,20 @@
         @test body[NOBS] isa Int64
 
         body = HTTP.Form(Dict(:file => HTTP.Multipart(DATA_FILENAME, file, "text/plain")))
-        @test_throws HTTP.Exceptions.StatusError HTTP.post(url, [], body; connect_timeout = 60)
-        
+        @test_throws HTTP.Exceptions.StatusError HTTP.post(
+            url,
+            [],
+            body;
+            connect_timeout = 60,
+        )
+
         body = HTTP.Form(Dict(:data => HTTP.Multipart(DATA_FILENAME, file, "text/plain")))
-        @test_throws HTTP.Exceptions.StatusError HTTP.post(url, [], body; connect_timeout = 60)
+        @test_throws HTTP.Exceptions.StatusError HTTP.post(
+            url,
+            [],
+            body;
+            connect_timeout = 60,
+        )
 
         stop()
     end

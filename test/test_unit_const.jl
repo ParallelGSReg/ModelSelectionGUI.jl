@@ -81,7 +81,7 @@
     @test ModelSelectionGUI.ALLSUBSETREGRESSION == ALLSUBSETREGRESSION
     @test ModelSelectionGUI.CROSSVALIDATION == CROSSVALIDATION
     @test ModelSelectionGUI.SUMMARY == SUMMARY
-    for i in 1:length(ModelSelectionGUI.AVAILABLE_RESULTS_TYPES)
+    for i = 1:length(ModelSelectionGUI.AVAILABLE_RESULTS_TYPES)
         @test ModelSelectionGUI.AVAILABLE_RESULTS_TYPES[i] == AVAILABLE_RESULTS_TYPES[i]
     end
     @test ModelSelectionGUI.DEFAULT_WS_CHANNEL == DEFAULT_WS_CHANNEL

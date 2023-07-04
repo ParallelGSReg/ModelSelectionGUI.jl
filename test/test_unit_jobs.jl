@@ -1,10 +1,10 @@
 @safetestset "Test jobs" begin
-    
+
     @safetestset "ModelSelectionJob" begin
         using CSV, DataFrames, Dates
         using ModelSelectionGUI
         using ModelSelectionGUI: ModelSelectionJob
-        
+
         filename = "data.csv"
         tempfile = "/temp/data.csv"
         filehash = "96c12b9b-c132-405c-af22-b4c1d8053b1e"
@@ -14,7 +14,8 @@
         parameters = Dict{Symbol,Any}(:ttest => ttest)
         status = ModelSelectionGUI.PENDING
 
-        job = ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
+        job =
+            ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
 
         @test job.id isa String
         @test job.filename == filename
@@ -32,7 +33,7 @@
         @test job.msg isa Nothing
 
         dict = ModelSelectionGUI.to_dict(job)
-        
+
         @test dict isa Dict{Symbol,Any}
         @test dict[ModelSelectionGUI.ID] == job.id
         @test dict[ModelSelectionGUI.FILENAME] == filename
@@ -54,14 +55,16 @@
         filename1 = "data1.csv"
         tempfile1 = "/temp/data1.csv"
         ModelSelectionGUI.add_job_file(filehash1, tempfile1, filename1)
-        
+
         filehash2 = "16c12b9b-c132-405c-af22-b4c1d8053b1e"
         filename2 = "data2.csv"
         tempfile2 = "/temp/data2.csv"
         ModelSelectionGUI.add_job_file(filehash2, tempfile2, filename2)
 
-        @test ModelSelectionGUI.get_job_file(filehash1)[ModelSelectionGUI.FILENAME] == filename1
-        @test ModelSelectionGUI.get_job_file(filehash2)[ModelSelectionGUI.FILENAME] == filename2
+        @test ModelSelectionGUI.get_job_file(filehash1)[ModelSelectionGUI.FILENAME] ==
+              filename1
+        @test ModelSelectionGUI.get_job_file(filehash2)[ModelSelectionGUI.FILENAME] ==
+              filename2
     end
 
     @safetestset "Jobs queue" begin
@@ -79,29 +82,37 @@
         ttest = true
         parameters = Dict{Symbol,Any}(:ttest => ttest)
 
-        job1 = ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
+        job1 =
+            ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
         ModelSelectionGUI.add_pending_job(job1)
         @test length(ModelSelectionGUI.pending_queue) == 1
-        @test ModelSelectionGUI.get_pending_queue_length() == length(ModelSelectionGUI.pending_queue)
+        @test ModelSelectionGUI.get_pending_queue_length() ==
+              length(ModelSelectionGUI.pending_queue)
         @test ModelSelectionGUI.pending_queue[1] == job1
 
-        job2 = ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
+        job2 =
+            ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
         ModelSelectionGUI.add_pending_job(job2)
         @test length(ModelSelectionGUI.pending_queue) == 2
-        @test ModelSelectionGUI.get_pending_queue_length() == length(ModelSelectionGUI.pending_queue)
+        @test ModelSelectionGUI.get_pending_queue_length() ==
+              length(ModelSelectionGUI.pending_queue)
         @test ModelSelectionGUI.pending_queue[2] == job2
 
-        job3 = ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
+        job3 =
+            ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
         push!(ModelSelectionGUI.finished_queue, job3)
 
-        job4 = ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
+        job4 =
+            ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
         ModelSelectionGUI.set_current_job(job4)
 
         @test ModelSelectionGUI.get_job(ModelSelectionGUI.pending_queue, job1.id) == job1
         @test ModelSelectionGUI.get_job(ModelSelectionGUI.pending_queue, job2.id) == job2
-        @test ModelSelectionGUI.get_job(ModelSelectionGUI.pending_queue, "missing") === nothing
+        @test ModelSelectionGUI.get_job(ModelSelectionGUI.pending_queue, "missing") ===
+              nothing
         @test ModelSelectionGUI.get_job(ModelSelectionGUI.finished_queue, job3.id) == job3
-        @test ModelSelectionGUI.get_job(ModelSelectionGUI.finished_queue, "missing") === nothing
+        @test ModelSelectionGUI.get_job(ModelSelectionGUI.finished_queue, "missing") ===
+              nothing
 
         @test ModelSelectionGUI.get_job(job1.id) == job1
         @test ModelSelectionGUI.get_job(job2.id) == job2
@@ -134,13 +145,14 @@
         push!(ModelSelectionGUI.finished_queue, job3)
         ModelSelectionGUI.set_current_job(job4)
         ModelSelectionGUI.clear_all_jobs()
-        
+
         @test length(ModelSelectionGUI.pending_queue) == 0
         @test length(ModelSelectionGUI.finished_queue) == 0
         @test ModelSelectionGUI.current_job === nothing
         @test ModelSelectionGUI.get_current_job() === nothing
-    
-        job = ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
+
+        job =
+            ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
         ModelSelectionGUI.run_job(job)
         job.status == ModelSelectionGUI.FINISHED
         @test length(ModelSelectionGUI.finished_queue) == 1
@@ -149,7 +161,14 @@
         @test job.time_started isa DateTime
         @test job.time_finished isa DateTime
 
-        job = ModelSelectionJob(filename, tempfile, filehash, estimator, equation, Dict{Symbol,Any}(:invalid => "error"))
+        job = ModelSelectionJob(
+            filename,
+            tempfile,
+            filehash,
+            estimator,
+            equation,
+            Dict{Symbol,Any}(:invalid => "error"),
+        )
         ModelSelectionGUI.run_job(job)
         job.status == ModelSelectionGUI.FAILED
         @test length(ModelSelectionGUI.finished_queue) == 2

@@ -63,7 +63,7 @@ mutable struct ModelSelectionJob
         time_enqueued = now()
         if parameters === nothing
             parameters = Dict{Symbol,Any}()
-        else 
+        else
             parameters = Dict{Symbol,Any}(parameters)
         end
         new(

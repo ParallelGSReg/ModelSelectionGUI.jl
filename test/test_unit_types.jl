@@ -10,10 +10,9 @@
         filename = "data.csv"
         tempfile = "/temp/data.csv"
         filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f671"
-        parameters = Dict(
-            :ttest => ttest,
-        )
-        job = ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
+        parameters = Dict(:ttest => ttest)
+        job =
+            ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
 
         @test job.id isa String
         @test job.filename isa String

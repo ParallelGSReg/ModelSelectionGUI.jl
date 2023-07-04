@@ -110,7 +110,9 @@ function job_enqueue_view()
     file = get_job_file(filehash)
 
     if file === nothing
-        return bad_request_exception(FILEHASH_NOT_VALID[1] * filehash * FILEHASH_NOT_VALID[2])
+        return bad_request_exception(
+            FILEHASH_NOT_VALID[1] * filehash * FILEHASH_NOT_VALID[2],
+        )
     end
 
     if !isfile(file[TEMP_FILENAME])
@@ -184,9 +186,14 @@ function job_results_view()
     catch
         return bad_request_exception(MISSING_RESULT_TYPE)
     end
-    
+
     if !(resulttype in AVAILABLE_RESULTS_TYPES)
-        return bad_request_exception(INVALID_RESULT_TYPE[1] * string(resulttype) * INVALID_RESULT_TYPE[2] * join(AVAILABLE_RESULTS_TYPES, ", "))
+        return bad_request_exception(
+            INVALID_RESULT_TYPE[1] *
+            string(resulttype) *
+            INVALID_RESULT_TYPE[2] *
+            join(AVAILABLE_RESULTS_TYPES, ", "),
+        )
     end
 
     return job_results_response(job, resulttype)

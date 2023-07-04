@@ -27,7 +27,7 @@ function start(;
     server_host::Union{String,Nothing} = nothing,
     server_port::Union{Int,Nothing} = nothing,
     ssl_enabled::Union{Bool,Nothing} = nothing,
-    open_documentation::Union{Bool, Nothing} = nothing,
+    open_documentation::Union{Bool,Nothing} = nothing,
     open_client::Union{Bool,Nothing} = nothing,
     dotenv::String = ENV_FILE_DEFAULT,
     no_task::Bool = false,

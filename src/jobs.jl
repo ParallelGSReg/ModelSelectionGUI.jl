@@ -19,7 +19,7 @@ finished_queue = Vector{ModelSelectionJob}()
 
 A dictionary that maps job hashes to their corresponding file information.
 """
-jobs_files = Dict{String, Dict{Symbol, String}}()
+jobs_files = Dict{String,Dict{Symbol,String}}()
 
 """
     pending_queue_condition::Condition()

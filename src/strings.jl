@@ -69,7 +69,8 @@ const MISSING_RESULT_TYPE = "The result type is missing"
 This constant is a string template for error messages indicating that a given result type is not valid. 
 It's typically used in a context where you're trying to request a result by its type and the type does not match any known result types.
 """
-const INVALID_RESULT_TYPE = ["The result type ", " is not valid. [Available result types: ", "]"]
+const INVALID_RESULT_TYPE =
+    ["The result type ", " is not valid. [Available result types: ", "]"]
 
 """
     JOB_HAS_NOT_RESULTTYPE

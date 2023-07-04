@@ -64,11 +64,16 @@ load_envvars("./path/to/.env")
 function load_envvars(path::String = ENV_FILE_DEFAULT)
     dotenv(path)
     set_envvars(
-        server_host = ("SERVER_HOST" in keys(ENV)) ? ENV["SERVER_HOST"] : SERVER_HOST_DEFAULT,
-        server_port = ("SERVER_PORT" in keys(ENV)) ? parse(Int64, ENV["SERVER_PORT"]) : SERVER_PORT_DEFAULT,
-        ssl_enabled = ("SSL_ENABLED" in keys(ENV)) ? parse(Bool, ENV["SSL_ENABLED"]) : SSL_ENABLED_DEFAULT,
-        open_documentation = ("OPEN_CLIENT" in keys(ENV)) ? parse(Bool, ENV["OPEN_CLIENT"]) : OPEN_CLIENT_DEFAULT,
-        open_client = ("OPEN_DOCUMENTATION" in keys(ENV)) ? parse(Bool, ENV["OPEN_DOCUMENTATION"]) : OPEN_DOCUMENTATION_DEFAULT,
+        server_host = ("SERVER_HOST" in keys(ENV)) ? ENV["SERVER_HOST"] :
+                      SERVER_HOST_DEFAULT,
+        server_port = ("SERVER_PORT" in keys(ENV)) ? parse(Int64, ENV["SERVER_PORT"]) :
+                      SERVER_PORT_DEFAULT,
+        ssl_enabled = ("SSL_ENABLED" in keys(ENV)) ? parse(Bool, ENV["SSL_ENABLED"]) :
+                      SSL_ENABLED_DEFAULT,
+        open_documentation = ("OPEN_CLIENT" in keys(ENV)) ?
+                             parse(Bool, ENV["OPEN_CLIENT"]) : OPEN_CLIENT_DEFAULT,
+        open_client = ("OPEN_DOCUMENTATION" in keys(ENV)) ?
+                      parse(Bool, ENV["OPEN_DOCUMENTATION"]) : OPEN_DOCUMENTATION_DEFAULT,
     )
 end
 

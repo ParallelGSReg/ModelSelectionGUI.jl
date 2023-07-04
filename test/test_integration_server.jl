@@ -2,14 +2,14 @@
     @safetestset "Server start and stop" begin
         using ModelSelectionGUI
 
-        start(no_task=true)
+        start(no_task = true)
         stop()
     end
     @safetestset "GET /server-info" begin
         using HTTP, JSON
         using ModelSelectionGUI
-        
-        start(no_task=true)
+
+        start(no_task = true)
 
         url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/server-info"
 
