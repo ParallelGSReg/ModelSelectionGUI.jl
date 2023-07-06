@@ -266,7 +266,7 @@ Notifies all subscribers on the default WebSocket channel with the specified `me
 job_notify("message", Dict("data" => "data"))
 ```
 """
-function job_notify(message::String, data::Union{Dict{Any,Any},Nothing} = nothing)
+function job_notify(message::String, data::Union{Any,Nothing} = nothing)
     msg = Dict(ID => get_current_job(), MESSAGE => message, DATA => data)
     Genie.WebChannels.broadcast(string(DEFAULT_WS_CHANNEL), JSON.json(msg))
 end
