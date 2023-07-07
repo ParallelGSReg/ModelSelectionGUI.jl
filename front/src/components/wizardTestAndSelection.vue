@@ -4,7 +4,7 @@
     <div id="variables-wrapper" class="boxDiv">
         <div class="first-col">
           <label for="criteriaSelect">Criteria</label>
-           <Multiselect class="select" id="criteriaSelect" v-model="criteriaVariable" :options="criteriaOptions" placeholder="criteria" ></Multiselect>
+           <Multiselect class="select" id="criteriaSelect" :multiple="true" v-model="criteriaVariable" :options="criteriaOptions" placeholder="criteria" ></Multiselect>
           <div class="col">
               <div class="check form-check form-switch">
                   <input class="form-check-input" type="checkbox" id="ttestCheck" >
@@ -42,37 +42,46 @@ export default {
 components: { Multiselect },
 data(){
   return{
-      criteriaVariable: null,
-      criteriaOptions: Object.values(this.$constants['CRITERIA_OLS']),
+      estimator: 'OLS',
+      criteriaVariable: [],
+      criteriaOptions: Object.keys(this.$constants['CRITERIA_OLS']),
   }
 },
 setup(){
   const modelSelectionStore = useModelSelectionStore();
   const instance = getCurrentInstance();
-   /*watch(
+   watch(
       () => modelSelectionStore.job.estimator,
       (newValue) => {
         instance.proxy.setSelectCriteriaOption(newValue)
       }
-    );*/
+    );
 },
 methods:{
     nextButton(){
-      if(this.criteriaVariable == null) {
+      const modelSelectionStore = useModelSelectionStore()
+      let ttest = document.getElementById("ttestCheck").checked
+      let ztest = document.getElementById("ztestCheck").checked
+      let residualtest = document.getElementById("residualtestCheck").checked
+      let checks = [ttest,ztest,residualtest]
+      if (checks.filter(elem => elem ==true).length > 1 ) {
+        modelSelectionStore.errors = this.$errors.TTEST_ZTEST_RESIDUALTEST_MUTUALLY_EXCLUSIVE
         return false
-      }else{
-        let ttest = document.getElementById("ttestCheck").checked
-        let ztest = document.getElementById("ztestCheck").checked
-        let residualtest = document.getElementById("residualtestCheck").checked
-        const modelSelectionStore = useModelSelectionStore();
-        modelSelectionStore.setTestAndSelectionData(this.criteriaVariable,ttest,ztest,residualtest)
-        return true
       }
+      let criteria = []
+      if(this.criteriaVariable.length >0){
+        this.criteriaVariable.forEach(element => {
+          criteria.push(this.$constants["CRITERIA_"+this.estimator][element])
+        });
+      }
+      modelSelectionStore.setTestAndSelectionData(criteria,ttest,ztest,residualtest)
+      return true
     },
-    setSelectCriteriaOption(newValue){
+    setSelectCriteriaOption(estimator){
       const modelSelectionStore = useModelSelectionStore();
-      let criteria = 'CRITERIA_'+ newValue.toUpperCase()
-      this.criteriaVariable =  Object.values(this.$constants[criteria])
+      this.estimator = estimator.toUpperCase()
+      let criteria = 'CRITERIA_'+ this.estimator
+      this.criteriaOptions =  Object.keys(this.$constants[criteria])
     }
     }
   }

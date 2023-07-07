@@ -4,11 +4,20 @@ export default {
       'paths': {
         'server_info': '/server-info',
         'load_database': '/upload-file',
-        'run': '/run',
-        'status' : '/status',
+        'run': '/job-enqueue/',
+        'status' : '/job',
         'results_summary': '/results/summary',
         'results_allsubsetregression': '/results/allsubsetregression',
         'results_crossvalidation': '/results/crossvalidation'
+                                             
+      }
+    },
+    'WS':{
+      'host': 'ws://127.0.0.1:8000',
+      'msg' : {
+        'channel': 'sync',
+        'message': 'subscribe',
+        'payload': {}
       }
     },
     'INSAMPLE_MIN_SIZE': 20,
@@ -45,24 +54,24 @@ export default {
       }
     ],
     'CRITERIA_OLS': {
-      'r2adj': 'Adjusted R²',
-      'bic': 'BIC',
-      'aic': 'AIC',
-      'aicc': 'AIC Corrected',
-      'cp': 'Mallows\'s Cp',
-      'rmse': 'RMSE',
-      'rmseout': 'RMSE OUT',
-      'sse': 'SSE'
+      'Adjusted R²' : 'r2adj',
+      'BIC' : 'bic',
+      'AIC' : 'aic',
+      'AIC Corrected' : 'aicc',
+      'Mallows\'s Cp' : 'cp',
+      'RMSE' : 'rmse',
+      'RMSE OUT' : 'rmseout',
+      'SSE' : 'sse'
     },
     'CRITERIA_LOGIT': {
-      'bic': 'BIC',
-      'aic': 'AIC',
+      'BIC' : 'bic',
+      'AIC' : 'aic',
     },
     'METHODS': [
       'fast',
       'precise'
     ],
-    //proximamente deberiamos agregar estas opciones y sacar fast y precise
+    //soon we should add these options and take out quickly and accurately
     //"qr_64", "cho_64", "svd_64", "qr_32", "cho_32", "svd_32", "qr_16", "cho_16", "svd_16"
     'PRELIMINARY_SELECTION':[
       'lasso'

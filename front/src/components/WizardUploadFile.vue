@@ -22,9 +22,11 @@ export default {
 
 methods:{
     nextButton(){
+      const modelSelectionStore = useModelSelectionStore();
       let inputFile = document.getElementById("formFile")
       let file= inputFile.files[0]
       if(file == undefined){
+        modelSelectionStore.errors = this.$errors.REQUIRED_UPLOAD_FILE
         return false
       }else{
         this.sendData(file)

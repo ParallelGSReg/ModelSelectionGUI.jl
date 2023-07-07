@@ -6,16 +6,16 @@
           <label for="estimatorSelect">Estimator </label>
            <Multiselect class="select" id="estimatorSelect" v-model="estimatorVariable" :options="estimatorOptions" placeholder="estimator" ></Multiselect>
           <div class="col">
-            <label for="fixedSelect">Fixed Variable </label>
-            <Multiselect class="select" id="fixedSelect" v-model="fixedVariables" :multiple="true" :disabled="isDisabledFixed" :options="fixedVariablesOptions" @select="onSelectFixed" placeholder="Fixed Variable" ></Multiselect>
+             <label for="explanatorySelect">Explanatory Variable</label>
+              <Multiselect class="select" id="explanatorySelect" v-model="explanatoryVariables" :disabled="isDisabledExp" :multiple="true" :options="expVariablesOptions" @select="onSelectExp" placeholder="Explanatory Varaiables"></Multiselect>           
           </div>  
         </div>
         <div class="second-col">
-            <label for="independentSelect">Independent Variable </label>
-              <Multiselect class="select" id="independentSelect" v-model="dependentVariable" :options="variablesOptions" @select="onSelectIndependent" placeholder="Dependent Variable"></Multiselect>
+            <label for="dependentSelect">Dependent Variable </label>
+              <Multiselect class="select" id="dependentSelect" v-model="dependentVariable" :options="variablesOptions" @select="onSelectIndependent" placeholder="Dependent Variable"></Multiselect>
             <div class="col">
-              <label for="dependentSelect">Dependent Variable </label>
-              <Multiselect class="select" id="dependentSelect" v-model="explanatoryVariables" :disabled="isDisabledExp" :multiple="true" :options="expVariablesOptions" placeholder="Explanatory Varaiables"></Multiselect>           
+            <label for="fixedSelect">Fixed Variable </label>
+            <Multiselect class="select" id="fixedSelect" v-model="fixedVariables" :multiple="true" :disabled="isDisabledFixed" :options="fixedVariablesOptions"  placeholder="Fixed Variable" ></Multiselect>
             </div>
         </div>  
         <div class="third-col">
@@ -85,16 +85,18 @@ methods:{
     onSelectIndependent(option){
         this.fixedVariables = []
         this.explanatoryVariables =[]      
-        this.isDisabledFixed = false  
-        this.fixedVariablesOptions = this.variablesOptions.filter((item)=> item != option)
+        this.isDisabledExp = false  
+        this.expVariablesOptions = this.variablesOptions.filter((item)=> item != option)
     },
-    onSelectFixed(option){
-        this.explanatoryVariables = []
-        this.isDisabledExp = false
-        this.expVariablesOptions = this.fixedVariablesOptions.filter((item)=> (!this.fixedVariables.includes(item)) && (item != option))
+    onSelectExp(option){
+        this.fixedVariables = []
+        this.isDisabledFixed = false
+        this.fixedVariablesOptions = this.expVariablesOptions.filter((item)=> (!this.explanatoryVariables.includes(item)) && (item != option))
     },
     nextButton(){
-      if((this.dependentVariable == null) || (this.explanatoryVariables.lenght == 0 ) || (this.fixedVariables.lenght == 0)){
+      const modelSelectionStore = useModelSelectionStore()
+      if((this.dependentVariable == null) || (this.explanatoryVariables.lenght == 0 )){
+        modelSelectionStore.errors = this.$errors.REQUIRED_ESTIMATOR_AND_DEP_EXP_VARIABLES
         return false
       }else{
         let intercept = document.getElementById("interceptCheck").checked

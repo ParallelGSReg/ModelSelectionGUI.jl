@@ -9,7 +9,6 @@
       </ul>
       </div>
     </div>
-    <button type="button" class="btn btn-dark" @click="confirmVariables">ConfirmVariables</button>
   </div>
 </template>
 
@@ -27,11 +26,10 @@ const steps= ref(constants.STEPS);
 function nextButton (){
   let data = modelSelectionStore.getJsonToSend()
   console.log(data)
-  axios.post(constants.API.host + constants.API.paths.run + "/" + modelSelectionStore.filehash,
+  axios.post(constants.API.host + constants.API.paths.run + modelSelectionStore.filehash,
   data, {headers: {"Content-Type": "application/json"}})
   .then((response)=>{
     modelSelectionStore.uid = response.data.id
-    console.log(response)
 })
   return true;
 }

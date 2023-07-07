@@ -1,6 +1,6 @@
-
 import { defineStore } from 'pinia'
 import { toRaw } from "vue";
+
 const default_job ={
   estimator: null, 
   depvar: null,
@@ -14,7 +14,7 @@ const default_job ={
   ttest: false,  
   ztest: false,  
   residualtest: false,
-  criteria: null, 
+  criteria: [], 
   seasonaladjustment: [], 
   removeoutliers: true, 
   fe_sqr: null,     
@@ -31,7 +31,8 @@ const default_job ={
 
 
 export const useModelSelectionStore = defineStore('moldelSelection',{
-  state: () => ({datanames : [], filehash : null, uid:null,
+  state: () => ({errors: null,datanames : [], filehash : null, uid:null,
+  loadingJobResponse: true,
   job: default_job,
   result_job: {},
   }),
@@ -83,6 +84,9 @@ export const useModelSelectionStore = defineStore('moldelSelection',{
     jobRequest["equation"] = equation
     for(var key in myJob) {
       if((myJob[key] != default_job[key]) && (key != "expvars") && (key != "depvar") && (!this.checkEmptyArray(myJob[key]))){
+        if((key == "outsample") || (key == "numfolds")){
+          myJob[key] = +myJob[key]
+        }
         jobRequest[key] = myJob[key]
       }
     }

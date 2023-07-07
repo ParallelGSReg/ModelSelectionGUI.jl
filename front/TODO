@@ -1,11 +1,10 @@
-!   Evaluate to make a page for spinner (waiting the job finish) CHECK HOWTO
-
-!   make Result Page:
-    *   Show json jobresult
-    *   buttons that make petition to /job/:id/results/:type
+!   Result Page:
+    *   show all the result information
+    *   check correctly way to get the last message of WS
+    *   show progress of the job (web Socket Result)
+    *   correct Styles of tables
 
 -   check what happend when remove variables from multiselect expVars and fixedVariables.
--   best way to set errors from each component
 -   check warning that occours when ref the components to call next function
 -   check styles
 -   add informationData (request: server-info) to the footer

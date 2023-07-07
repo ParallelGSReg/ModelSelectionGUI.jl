@@ -59,8 +59,8 @@
             </div>
                <div class="col">
                <div class="check form-check form-switch rigthCheck">
-                  <input class="form-check-input" type="checkbox" id="kfoldcrossvalidationCheck" >
-                  <label class="form-check-label" for="kfoldcrossvalidationCheck"> Kfoldcross validation </label>
+                  <input class="form-check-input" type="checkbox" id="kfoldcrossvalidationCheck" @change="kfoldcrossvalidationCheckSelected()">
+                  <label class="form-check-label" for="kfoldcrossvalidationCheck" > Kfoldcross validation </label>
                 </div>
                </div>  
             </div> 
@@ -80,12 +80,13 @@
 <script >
 import Multiselect from 'vue-multiselect'
 import {useModelSelectionStore} from '../stores/moldelSelection'
+import { watch,getCurrentInstance } from 'vue';
 
 
 export default {
-components: { Multiselect },
-data(){
-  return{
+  components: { Multiselect },
+  data(){
+    return{
       feSqr: null,
       feLog: null,
       feInv: null,
@@ -93,27 +94,55 @@ data(){
       interaction: null,
       preliminaryselection:null,
       seasonaladjustment: [],
-      expVars : ['y1','y2','y3'],
+      expVars : [],
       preliminaryselectionOption: this.$constants['PRELIMINARY_SELECTION'],
-  }
-},
-methods:{
+    }
+  },
+  setup(){
+  const modelSelectionStore = useModelSelectionStore();
+  const instance = getCurrentInstance();
+  watch(
+        () => modelSelectionStore.job.expvars,
+        (newExpVars) => {
+          console.log("newExpVars")
+          instance.proxy.setExpVarsOptionsnewExpVars(newExpVars)
+        }
+      );
+  },
+  methods:{
+    setExpVarsOptionsnewExpVars(newExpVars){
+      this.expVars =  newExpVars
+    },
     nextButton(){
+        const modelSelectionStore = useModelSelectionStore();
+        if((this.seasonaladjustment.length > 0) && (modelSelectionStore.job.time == null)){
+          modelSelectionStore.errors = this.$errors.TIME_VARIABLE_REQUIRED_FOR_SEASONALADJUSTMENT
+          return false
+        }
         let removeoutliers = document.getElementById("removeoutliersCheck").checked
         let modelavg = document.getElementById("modelavgCheck").checked
         let orderresults = document.getElementById("orderresultsCheck").checked
         let kfoldcrossvalidation = document.getElementById("kfoldcrossvalidationCheck").checked
         let numfolds = document.getElementById("numfolds").value
-        const modelSelectionStore = useModelSelectionStore();
         modelSelectionStore.setDataCleaningAndFeatureExtrationData(this.seasonaladjustment,removeoutliers,this.feSqr,
                                                                    this.feLog,this.feInv,this.feLag,this.interaction, 
                                                                    this.preliminaryselection,modelavg,orderresults,
                                                                    kfoldcrossvalidation,numfolds)
         modelSelectionStore.toShow(this.$constants['JOB'])
         return true
-    }
+    },
+    kfoldcrossvalidationCheckSelected(){
+      let kfoldcrossvalidation = document.getElementById("kfoldcrossvalidationCheck").checked
+      let numfolds = document.getElementById("numfolds")
+      if(kfoldcrossvalidation){
+        numfolds.disabled = false
+      }else{
+        numfolds.disabled = true
+        numfolds.value = '0'
+      }
     }
   }
+}
 </script>
 
 <style scoped>
