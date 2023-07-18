@@ -9,7 +9,8 @@ const TTEST_ZTEST_RESIDUALTEST_MUTUALLY_EXCLUSIVE ="The tests are mutually exclu
 const TIME_VARIABLE_REQUIRED_FOR_SEASONALADJUSTMENT ="To use the season adjustment option it is necessary to set timevariable"
 
 
-export default{ REQUIRED_UPLOAD_FILE,
+export default{ 
+                REQUIRED_UPLOAD_FILE,
                 REQUIRED_ESTIMATOR_AND_DEP_EXP_VARIABLES,
                 TTEST_ZTEST_RESIDUALTEST_MUTUALLY_EXCLUSIVE,
                 TIME_VARIABLE_REQUIRED_FOR_SEASONALADJUSTMENT

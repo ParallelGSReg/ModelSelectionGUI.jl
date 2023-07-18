@@ -1,12 +1,22 @@
  <template>
  <footer class="footer text-muted">
     <div class="footer-links-container container-fluid">
-      <ul class="footer-links">
+      <ul class="footer-links" id="listProyectInfo">
         <li><a href="https://parallelgsreg.github.io/GlobalSearchRegression.jl/">About</a></li>
         <li><a href="https://github.com/ParallelGSReg/GlobalSearchRegression.jl">GitHub</a></li>
         <li><a href="https://julialang.org/">Julia</a></li>
       </ul>
       <p><b>Global Search Regression</b> is licensed under the <a href="https://github.com/ParallelGSReg/GlobalSearchRegression.jl/blob/master/LICENSE.md" target="_blank" rel="license noopener">MIT License</a>.</p>
+  <!--  <div id="server-info">
+      <p><b>Server Info:</b></p>
+      <ul class="footer-links" id="listServerInfo">
+        <li>Julia Version: {{julia_version}}</li>
+        <li>cores: {{cores}}</li>
+        <li>Model Selection Version: {{model_selecion_version}}</li>
+        <li>Jobs Queue Size: {{jobs_queue_size}}</li>
+        <li>Workers: {{nworkers}}</li>
+      </ul>
+    </div> -->
     </div>
   </footer>
  </template>
@@ -19,11 +29,11 @@ import axios from 'axios'
 export default {
   data(){
     return{
-      julia_version : 0,
-      cores : 0,
-      model_selecion_version : 0,
+      julia_version : "",
+      cores : 1,
+      model_selecion_version : "",
       jobs_queue_size : 0,
-      nworkers :0 
+      nworkers :1 
     }
   },
   created(){

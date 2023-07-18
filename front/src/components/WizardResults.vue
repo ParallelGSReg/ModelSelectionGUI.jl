@@ -4,28 +4,31 @@
       <div class="modal-body" id="modal">
         <div class="spinner-border mySpinner" role="status"></div>
           <br>
-        <span class="sr-only">Model Selection Job is until Running...</span>
+        <span class="sr-only">Model Selection Job is until Running...</span><br>
+        <span class="sr-only"><b>{{this.status}}</b></span>
       </div>
     </div>
 
     <div v-else>
       <h2>Results</h2>
+      <p v-if="this.hasTests()"><b>INFORMATION: </b>**the results in the table in parentheses correspond to the tests**</p>
       <div id="allsubsterRegressionSection">
         <h3>All subset regression</h3>
         <BaseTableCovar :results="this.results['allsubsetregression']"></BaseTableCovar>
       </div> 
       <div id="kfoldCrossValidationSection" v-if="isSetKcrossValidation">
-        <h3>Cross validation</h3>
-        <h4>Average</h4>
+        <h3>Cross validation Average</h3>
         <BaseTableCovar :results="this.results['crossvalidation']['average']"></BaseTableCovar>
-        <h4>Median</h4>
+        <h3>Cross validation Median</h3>
         <BaseTableCovar :results="this.results['crossvalidation']['median']"></BaseTableCovar>
       </div> 
       <br>
-      <button type="button" class="btn btn-dark" @click="downloadallSubsetRegression">All subset regression</button>
-      <button type="button" class="btn btn-dark" @click="downloadText">Summary text</button>
-      <button v-if='isSetKcrossValidation' type="button" class="btn btn-dark" @click="downloadCrossValidation">Cross validation</button>
-    
+      <h2>Downloads</h2>
+      <div id="buttonContainer">
+      <button type="button" class="btn btn-dark" @click="downloadallSubsetRegression">All subset regression CSV</button>
+      <button type="button" class="btn btn-dark" @click="downloadText">Summary TXT</button>
+      <button v-if='isSetKcrossValidation' type="button" class="btn btn-dark" @click="downloadCrossValidation">Cross validation CSV</button>
+      </div>
     </div>
   
   </div>
@@ -43,13 +46,15 @@ import BaseTableCovar from './BaseComponent/BaseTableCovar.vue';
 
 
 
+
 export default {
   components:{
     BaseTableCovar
   },
   data(){
     return{
-      results : {}
+      results : {},
+      status: ""
     }
   },
   setup(){
@@ -58,9 +63,14 @@ export default {
   watch(
       () => webSocketStore.message,
       (newMessage) => {
-        console.log(webSocketStore.getPercentageOfJob())
-        if(webSocketStore.getPercentageOfJob()["progress"] == 100){
-          instance.proxy.checkstatus()
+        try {
+          let progress  = webSocketStore.getPercentageOfJob()["data"]["progress"]
+          let message  = webSocketStore.getPercentageOfJob()["message"]
+          if(instance.proxy.finish(progress,message)){
+            instance.proxy.checkstatus()
+          }
+          instance.proxy.status = message + " " + progress
+        }catch (error) {
         }
       }
     );
@@ -74,6 +84,15 @@ export default {
     }
   },
   methods:{
+    hasTests(){
+     return useModelSelectionStore().hasTest()
+    },
+    finish(progress,message){
+      if(useModelSelectionStore().job["kfoldcrossvalidation"]){
+        return (message == this.$requestMsg.WS_CROSSVALIDATION_MSG_PROGRESS) && (progress == 100)
+      }
+      return (message == this.$requestMsg.WS_ALLSUBSETREGRESSION_MSG_PROGRESS) && (progress == 100)
+    },
     checkstatus(){
       const modelSelectionStore = useModelSelectionStore();
       axios.get(this.$constants.API.host + this.$constants.API.paths.status + "/" + 
@@ -112,10 +131,21 @@ export default {
       document.body.removeChild(link);
       URL.revokeObjectURL(href);
     }
-    }
-  }
+}
+}
 </script>
 <style>
+
+#buttonContainer{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+button{
+  width: inherit;
+  margin-left: 0.3rem;
+  margin-right: 0.3rem;
+}
 
 .loadingJob{
   text-align: center;

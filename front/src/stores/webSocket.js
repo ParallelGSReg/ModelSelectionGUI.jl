@@ -9,7 +9,13 @@ export const useWebSocketStore = defineStore('webSocket',{
             this.message = message;
         },
         getPercentageOfJob(){
-            return JSON.parse(this.message)["data"]
+            let data;
+            try {
+            data = JSON.parse(this.message)
+            } catch (error) {
+                data = this.message
+            }
+            return data
         }
     }
 })

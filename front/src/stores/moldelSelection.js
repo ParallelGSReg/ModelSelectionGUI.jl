@@ -76,6 +76,15 @@ export const useModelSelectionStore = defineStore('moldelSelection',{
   getDatanames(){
     return toRaw(this.datanames)
   },
+  getCriteria(){
+    return toRaw(this.job.criteria)
+  },
+  hasCriteria(){
+    return toRaw(this.job.criteria).length > 0
+  },
+  hasTest(){
+    return (this.job.ttest) || (this.job.ztest)
+  },
   getJsonToSend(){
     let jobRequest = {}
     let myJob= toRaw(this.job)

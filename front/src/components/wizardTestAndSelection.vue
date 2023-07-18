@@ -7,14 +7,14 @@
            <Multiselect class="select" id="criteriaSelect" :multiple="true" v-model="criteriaVariable" :options="criteriaOptions" placeholder="criteria" ></Multiselect>
           <div class="col">
               <div class="check form-check form-switch">
-                  <input class="form-check-input" type="checkbox" id="ttestCheck" >
+                  <input class="form-check-input" type="checkbox" id="ttestCheck" :disabled="this.disabledTtest()">
                   <label class="form-check-label" for="ttestCheck"> Include ttest </label>
               </div>
           </div>  
         </div>
         <div class="second-col">
                 <div class="check form-check form-switch">
-                  <input class="form-check-input" type="checkbox" id="ztestCheck" >
+                  <input class="form-check-input" type="checkbox" id="ztestCheck" :disabled="this.disabledZtest()">
                   <label class="form-check-label" for="ztestCheck"> Include ztest </label>
                 </div>
             <div class="col">
@@ -58,6 +58,12 @@ setup(){
     );
 },
 methods:{
+    disabledTtest(){
+      return useModelSelectionStore().job.estimator == "logit"
+    },
+    disabledZtest(){
+      return useModelSelectionStore().job.estimator == "ols"
+    },
     nextButton(){
       const modelSelectionStore = useModelSelectionStore()
       let ttest = document.getElementById("ttestCheck").checked

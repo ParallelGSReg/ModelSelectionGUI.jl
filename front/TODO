@@ -1,6 +1,5 @@
 !   Result Page:
     *   show all the result information
-    *   check correctly way to get the last message of WS
     *   show progress of the job (web Socket Result)
     *   correct Styles of tables
 

@@ -34,10 +34,7 @@
                 <Multiselect class="select" id= "fe_lagSelect" v-model="feLag" :options="expVars" placeholder="Select  fe_lag"></Multiselect>
               </div>  
             </div> 
-              <div class="third-col">
-                <label for="interactionSelect">interaction</label>
-                <Multiselect class="select" id= "interactionSelect" v-model="interaction" :options="expVars" placeholder="Select interaction"></Multiselect>
-            </div> 
+              <BaseMultiSelectPairs id="interaction" :selectedItems="interaction"></BaseMultiSelectPairs>
         </div>
         <br>
         <h3> Preliminary selection and Post selection settings</h3>
@@ -81,19 +78,19 @@
 import Multiselect from 'vue-multiselect'
 import {useModelSelectionStore} from '../stores/moldelSelection'
 import { watch,getCurrentInstance } from 'vue';
-
+import BaseMultiSelectPairs from './BaseComponent/BaseMultiSelectPairs.vue';
 
 export default {
-  components: { Multiselect },
+  components: { Multiselect,BaseMultiSelectPairs },
   data(){
     return{
       feSqr: null,
       feLog: null,
       feInv: null,
       feLag: null,
-      interaction: null,
       preliminaryselection:null,
       seasonaladjustment: [],
+      interaction : [],
       expVars : [],
       preliminaryselectionOption: this.$constants['PRELIMINARY_SELECTION'],
     }
@@ -115,6 +112,7 @@ export default {
     },
     nextButton(){
         const modelSelectionStore = useModelSelectionStore();
+        console.log(this.interaction)
         if((this.seasonaladjustment.length > 0) && (modelSelectionStore.job.time == null)){
           modelSelectionStore.errors = this.$errors.TIME_VARIABLE_REQUIRED_FOR_SEASONALADJUSTMENT
           return false

@@ -31,6 +31,9 @@ dependencies:
   vue3-form-wizard:
     specifier: ^0.2.1
     version: 0.2.1
+  vue3-tags-input:
+    specifier: ^1.0.12
+    version: 1.0.12(vue@3.2.47)
 
 devDependencies:
   '@vitejs/plugin-vue':
@@ -812,6 +815,11 @@ packages:
       slice-ansi: 5.0.0
       string-width: 5.1.2
     dev: true
+
+  /click-outside-vue3@4.0.1:
+    resolution: {integrity: sha512-sbplNecrup5oGqA3o4bo8XmvHRT6q9fvw21Z67aDbTqB9M6LF7CuYLTlLvNtOgKU6W3zst5H5zJuEh4auqA34g==}
+    engines: {node: '>=6'}
+    dev: false
 
   /color-convert@2.0.1:
     resolution: {integrity: sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==}
@@ -2534,6 +2542,16 @@ packages:
 
   /vue3-form-wizard@0.2.1:
     resolution: {integrity: sha512-BpTEw5DWH0kNDuBB3aablT2jcH9iPBHxgdQ59Ve06XfaEwhqae47xXx1wRdC04E6CLZxHiTWHh3Xy/oNGGdObA==}
+    dev: false
+
+  /vue3-tags-input@1.0.12(vue@3.2.47):
+    resolution: {integrity: sha512-s5rG+1W3M8+be0nd9H1nv/8WLjJOO6pShgVz8ALAqOiz3tDH5QhGrDH6fzD14ZjJNRWSa3bRBSXQwHEXffPQ6g==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      vue: ^3.0.5
+    dependencies:
+      click-outside-vue3: 4.0.1
+      vue: 3.2.47
     dev: false
 
   /vue@3.2.47:
