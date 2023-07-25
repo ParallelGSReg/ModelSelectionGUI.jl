@@ -1,0 +1,10 @@
+!   Result Page:
+    *   show all the result information
+    *   show progress of the job (web Socket Result)
+    *   correct Styles of tables
+
+-   check what happend when remove variables from multiselect expVars and fixedVariables.
+-   check warning that occours when ref the components to call next function
+-   check styles
+-   add informationData (request: server-info) to the footer
+-   Correct components names (acording to step label)
