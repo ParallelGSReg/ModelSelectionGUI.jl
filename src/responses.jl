@@ -209,11 +209,12 @@ function estimators_response(estimators::Dict{Symbol, Dict{Symbol, Any}})
     response = Vector{Dict{Symbol, Any}}()
     CRITERIA = ModelSelection.AllSubsetRegression.CRITERIA
     METHOD = ModelSelection.AllSubsetRegression.METHOD
-    for estimator in estimators
-        estimator_dict = Dict{Any, Any}()
-        estimator_dict[NAME] = estimator
-        estimator_dict[CRITERIA] = estimators[estimator][CRITERIA]
-        estimator_dict[METHOD] = estimators[estimator][METHOD]
+    for (estimator, values) in estimators
+        estimator_dict = Dict{Any, Any}(
+            NAME => estimator,
+            CRITERIA => values[CRITERIA],
+            METHOD => values[METHOD],
+        )
         push!(response, estimator_dict)
     end
     return Genie.Renderer.Json.json(response)
