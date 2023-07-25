@@ -237,6 +237,20 @@ Symbol representing an API message. Used as a key in various data structures thr
 const MSG = :msg
 
 """
+    NAME
+
+Symbol representing a name. Used as a key in various data structures throughout the application.
+"""
+const NAME = :name
+
+"""
+    ERROR 
+
+Symbol representing an error. Used as a key in various data structures throughout the application.
+"""
+const ERROR = :error
+
+"""
     ALLSUBSETREGRESSION
 
 Symbol representing the All Subset Regression result type. Used as a key in various data structures throughout the application.

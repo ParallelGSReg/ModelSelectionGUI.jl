@@ -15,4 +15,5 @@ ModelSelectionGUI.server_info_response(ncores::Int64, nworkers::Int64, model_sel
 ModelSelectionGUI.upload_response(filename::String, filehash::String, datanames::Array{String,1}, nobs::Int64)
 ModelSelectionGUI.job_info_response(job::ModelSelectionJob)
 ModelSelectionGUI.job_results_response(job::ModelSelectionJob, resulttype::Symbol)
+ModelSelectionGUI.estimators_response(estimators::Dict{Symbol, Dict{Symbol, Any}})
 ```

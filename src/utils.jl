@@ -165,8 +165,43 @@ function get_parameters(raw_payload::Dict{String,Any})
     for (key, value) in raw_payload
         parameters[Symbol(key)] = value
     end
-    if :fixedvariables in keys(parameters)
-        parameters[:fixedvariables] = [Symbol(x) for x in parameters[:fixedvariables]]
+    for key in [:preliminaryselection, :method] 
+        if key in keys(parameters)
+            parameters[key] = Symbol(parameters[key])
+        end
+    end
+    for key in [:time, :panel] 
+        if key in keys(parameters)
+            if isa(parameters[key], String)
+                parameters[key] = Symbol(parameters[key])
+            else
+                parameters[key] = [Symbol(x) for x in parameters[key]]
+            end
+        end
+    end
+    for key in [:fixedvariables, :criteria, :seasonaladjustment] 
+        if key in keys(parameters)
+            parameters[key] = [Symbol(x) for x in parameters[key]]
+        end
+    end
+    for key in [:interaction] 
+        if key in keys(parameters)
+            interactions = Vector{Tuple{Symbol,Symbol}}()
+            for interaction in parameters[key]
+                interaction_tuple = (Symbol(interaction[1]), Symbol(interaction[2]))
+                push!(interactions, interaction_tuple)
+            end
+            parameters[key] = interactions
+        end
+    end
+    for key in [:fe_lag] 
+        if key in keys(parameters)
+            fe_lag = Dict{Symbol,Int64}()
+            for lag in keys(parameters[key])
+                fe_lag[lag] = Int64(parameters[key][lag])
+            end
+            parameters[key] = fe_lag
+        end
     end
     return parameters
 end

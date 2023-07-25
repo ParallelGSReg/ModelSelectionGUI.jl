@@ -14,6 +14,7 @@ Pages = ["views.md"]
 ModelSelectionGUI.home_view()
 ModelSelectionGUI.docs_view()
 ModelSelectionGUI.server_info_view()
+ModelSelectionGUI.estimators_view()
 ModelSelectionGUI.upload_file_view()
 ModelSelectionGUI.job_enqueue_view()
 ModelSelectionGUI.job_info_view()

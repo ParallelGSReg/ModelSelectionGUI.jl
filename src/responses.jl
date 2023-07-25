@@ -184,3 +184,37 @@ function job_results_response(job::ModelSelectionJob, resulttype::Symbol)
     )
     return HTTP.Response(200, headers, body = body)
 end
+
+"""
+    estimators_response(estimators::Dict{Symbol, Dict{Symbol, Any}})
+
+Create a response dictionary containing estimators. This function takes a dictionary `estimators` as input, where the keys are symbols representing the names of estimators, and the values are dictionaries containing information about each estimator.
+
+# Parameters
+- `estimators::Dict{Symbol, Dict{Symbol, Any}}`: A dictionary of estimators.
+
+# Returns
+- `HTTP.Response`: A HTTP response object.
+
+# Example
+```julia
+estimators = const ESTIMATORS = Dict(
+    "OLS" => Dict("name" => "Ordinary Least Squares"),
+    "Logit" => Dict("name" => "Logistic Regression"),
+)
+estimators_response(estimators)
+```
+"""
+function estimators_response(estimators::Dict{Symbol, Dict{Symbol, Any}})
+    response = Vector{Dict{Symbol, Any}}()
+    CRITERIA = ModelSelection.AllSubsetRegression.CRITERIA
+    METHOD = ModelSelection.AllSubsetRegression.METHOD
+    for estimator in estimators
+        estimator_dict = Dict{Any, Any}()
+        estimator_dict[NAME] = estimator
+        estimator_dict[CRITERIA] = estimators[estimator][CRITERIA]
+        estimator_dict[METHOD] = estimators[estimator][METHOD]
+        push!(response, estimator_dict)
+    end
+    return Genie.Renderer.Json.json(response)
+end

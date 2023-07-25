@@ -101,7 +101,7 @@
         stop()
     end
 
-    @safetestset "GET /job/:id" begin
+    @safetestset "GET /jobs/:id" begin
         using Dates, HTTP, JSON
         using ModelSelectionGUI
         using ModelSelectionGUI: ModelSelectionJob
@@ -111,7 +111,7 @@
 
         DATA_FILENAME = joinpath(dirname(@__FILE__), "data.csv")
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5ace"
-        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)"
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/jobs/$(id)"
 
         filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f671"
         filename = DATA_FILENAME
@@ -174,7 +174,7 @@
         @test body[MSG] == msg
 
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5acd"
-        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)"
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/jobs/$(id)"
         @test_throws HTTP.Exceptions.StatusError HTTP.get(url; connect_timeout = 60)
 
         ModelSelectionGUI.clear_pending_queue()
@@ -182,7 +182,7 @@
         ModelSelectionGUI.clear_finished_queue()
         stop()
     end
-    @safetestset "GET /job/:id/results/summary" begin
+    @safetestset "GET /jobs/:id/results/summary" begin
         using CSV, DataFrames, Dates, HTTP, JSON
         using ModelSelectionGUI, ModelSelection
         using ModelSelectionGUI: ModelSelectionJob
@@ -192,7 +192,7 @@
 
         DATA_FILENAME = joinpath(dirname(@__FILE__), "data.csv")
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5ace"
-        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/summary"
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/jobs/$(id)/results/summary"
 
         filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f671"
         filename = DATA_FILENAME
@@ -221,11 +221,11 @@
         @test response.status == 200
         @test Dict(response.headers)["Content-Type"] == ModelSelectionGUI.PLAIN_MIME
 
-        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/nothing"
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/jobs/$(id)/results/nothing"
         @test_throws HTTP.Exceptions.StatusError HTTP.get(url; connect_timeout = 60)
 
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5acd"
-        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/summary"
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/jobs/$(id)/results/summary"
         @test_throws HTTP.Exceptions.StatusError HTTP.get(url; connect_timeout = 60)
 
         ModelSelectionGUI.clear_pending_queue()
@@ -233,7 +233,7 @@
         ModelSelectionGUI.clear_finished_queue()
         stop()
     end
-    @safetestset "GET /job/:id/results/allsubsetregression" begin
+    @safetestset "GET /jobs/:id/results/allsubsetregression" begin
         using CSV, DataFrames, Dates, HTTP, JSON
         using ModelSelectionGUI, ModelSelection
         using ModelSelectionGUI: ModelSelectionJob
@@ -243,7 +243,7 @@
 
         DATA_FILENAME = joinpath(dirname(@__FILE__), "data.csv")
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5ace"
-        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/allsubsetregression"
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/jobs/$(id)/results/allsubsetregression"
 
         filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f671"
         filename = DATA_FILENAME
@@ -272,11 +272,11 @@
         @test response.status == 200
         @test Dict(response.headers)["Content-Type"] == ModelSelectionGUI.CSV_MIME
 
-        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/nothing"
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/jobs/$(id)/results/nothing"
         @test_throws HTTP.Exceptions.StatusError HTTP.get(url; connect_timeout = 60)
 
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5acd"
-        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/allsubsetregression"
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/jobs/$(id)/results/allsubsetregression"
         @test_throws HTTP.Exceptions.StatusError HTTP.get(url; connect_timeout = 60)
 
         ModelSelectionGUI.clear_pending_queue()
@@ -284,7 +284,7 @@
         ModelSelectionGUI.clear_finished_queue()
         stop()
     end
-    @safetestset "GET /job/:id/results/crossvalidation" begin
+    @safetestset "GET /jobs/:id/results/crossvalidation" begin
         using DataFrames, Dates, CSV, HTTP, JSON
         using ModelSelectionGUI, ModelSelection
         using ModelSelectionGUI: ModelSelectionJob
@@ -294,7 +294,7 @@
 
         DATA_FILENAME = joinpath(dirname(@__FILE__), "data.csv")
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5ace"
-        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/crossvalidation"
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/jobs/$(id)/results/crossvalidation"
 
         filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f671"
         filename = DATA_FILENAME
@@ -323,11 +323,11 @@
         @test response.status == 200
         @test Dict(response.headers)["Content-Type"] == ModelSelectionGUI.CSV_MIME
 
-        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/nothing"
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/jobs/$(id)/results/nothing"
         @test_throws HTTP.Exceptions.StatusError HTTP.get(url; connect_timeout = 60)
 
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5acd"
-        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/crossvalidation"
+        url = "http://$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/jobs/$(id)/results/crossvalidation"
         @test_throws HTTP.Exceptions.StatusError HTTP.get(url; connect_timeout = 60)
 
         ModelSelectionGUI.clear_pending_queue()

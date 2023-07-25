@@ -59,6 +59,22 @@ function server_info_view()
 end
 
 """
+    estimators_view()
+
+Get a view of all available estimators. This function returns a view of all available estimators from the ModelSelection.AllSubsetRegression module.
+
+# Returns
+- `response::String`: A JSON string representation of the estimators.
+
+# Returns
+- `HTTP.Response`: A JSON response with the server information.
+"""
+function estimators_view()
+    estimators = ModelSelection.AllSubsetRegression.ESTIMATORS
+    return estimators_response(estimators)
+end
+
+"""
     upload_file_view()
 
 Uploads a CSV file to the server. Upon successful upload, the server will process the uploaded file for further operations.

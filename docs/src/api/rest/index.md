@@ -43,6 +43,63 @@ JSON response:
 }
 ```
 
+## Estimators
+Retrieves all available estimators from the ModelSelection.AllSubsetRegression module and the related information.
+
+### Request
+
+- URL: `/estimators`
+- Method: `GET`
+
+### Response
+
+- Status Code: `200 (OK)`
+- Content-Type: `application/json` 
+- Body:
+  - `array`:
+    - `name`: The name of the estimator.
+    - `criteria`: The criteria information.
+      - `available`: The available criteria.
+      - `default`: The default criteria.
+    - `method`: The method information.
+      - `available`: The available methods.
+      - `default`: The default methods.
+
+### Example
+
+cURL request:
+```bash
+curl "http://127.0.0.1:8000/estimators"
+```
+
+JSON response:
+```json
+[
+    {
+        "name": "ols",
+        "criteria": {
+            "available": ["aic", "aicc", "bic", ":cp", "r2adj", "rmse", "rmseout", "sse"],
+            "default": ["r2adj"]
+        },
+        "method": {
+            "available": ["qr_64", "qr_32", "qr_16", "cho_64", "cho_32", "cho_16", "svd_64", "svd_32", "svd_16"],
+            "default": ["qr_32"]
+        },
+    },
+    {
+        "name": "logit",
+        "criteria": {
+            "available": ["aic", "aicc", "bic", "r2adj", "rmseout", "sse"],
+            "default": ["r2adj"]
+        },
+        "method": {
+            "available": ["cho_64", "cho_32", "cho_16"],
+            "default": ["cho_32"]
+        },
+    }
+]
+```
+
 ## File upload
 Uploads a CSV file to the server. Upon successful upload, the server will process the uploaded file for further operations.
 
@@ -187,7 +244,7 @@ Retrieves the info of a model selection job. If the job is finished, it also inc
 
 cURL request:
 ```bash
-curl "http://127.0.0.1:8000/job/99e36de3-4c47-4285-873d-7f92ed0c42ea"
+curl "http://127.0.0.1:8000/jobs/99e36de3-4c47-4285-873d-7f92ed0c42ea"
 ```
 
 JSON response:
@@ -229,7 +286,7 @@ Retrieves the result file of a specific type for a model selection job.
 
 ### Request
 
-- URL: `/job/:id/results/:type`
+- URL: `/jobs/:id/results/:type`
 - Method: `GET`
 - Query parameters:
   - `id`: The unique identifier (UUID) of the model selection job.

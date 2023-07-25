@@ -103,7 +103,7 @@
         charset = "utf-8"
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5ace"
         filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f671"
-        url = "$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)"
+        url = "$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/jobs/$(id)"
         filename = DATA_FILENAME
         tempfile = DATA_FILENAME
         estimator = :ols
@@ -204,7 +204,7 @@
         DATA_FILENAME = joinpath(dirname(@__FILE__), "data.csv")
         id = "83ecac9e-678d-4c80-9314-0ae4a67d5ace"
         filehash = "adbc7420-1597-4b1b-a798-fafd9ee5f671"
-        url = "$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/job/$(id)/results/summary"
+        url = "$(ModelSelectionGUI.SERVER_HOST):$(ModelSelectionGUI.SERVER_PORT)/jobs/$(id)/results/summary"
         filename = DATA_FILENAME
         tempfile = DATA_FILENAME
         estimator = :ols

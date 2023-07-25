@@ -79,3 +79,24 @@ This constant is a string template for error messages indicating that a job does
 It's typically used when you're trying to request a result by its type from a job and the job does not have a result of that type.
 """
 const JOB_HAS_NOT_RESULTTYPE = "The job does not have a result of type "
+
+"""
+    JOB_STARTING
+
+Constant representing the message indicating that the job has started.
+"""
+const JOB_STARTING = "The job has started"
+
+"""
+    JOB_FINISHED
+
+Constant representing the message indicating that the job has finished.
+"""
+const JOB_FINISHED = "The job has finished"
+
+"""
+    JOB_FAILED
+
+Constant representing the message indicating that the job has failed.
+"""
+const JOB_FAILED = "The job has failed"

@@ -19,13 +19,13 @@ ModelSelectionGUI.finished_task_condition
 ModelSelectionGUI.current_job
 ModelSelectionGUI.interrupted_task
 ModelSelectionGUI.add_pending_job(job::ModelSelectionJob)
+ModelSelectionGUI.get_job_file(filehash::String)
 ModelSelectionGUI.consume_pending_jobs()
 ModelSelectionGUI.consume_pending_job()
 ModelSelectionGUI.run_job(job::ModelSelectionJob)
 ModelSelectionGUI.get_pending_queue_length()
 ModelSelectionGUI.add_job_file(filehash::String, tempfile::String, filename::String)
-ModelSelectionGUI.get_job_file(filehash::String)
-ModelSelectionGUI.job_notify(message::String, data::Union{Dict{Any,Any},Nothing} = nothing)
+ModelSelectionGUI.job_notify(message::String, data::Union{Any,Nothing} = nothing)
 ModelSelectionGUI.get_job(queue::Vector{ModelSelectionJob}, id::String)
 ModelSelectionGUI.get_job(id::String)
 ModelSelectionGUI.set_current_job(job::ModelSelectionJob)

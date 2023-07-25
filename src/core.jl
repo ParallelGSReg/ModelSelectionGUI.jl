@@ -58,10 +58,11 @@ function start(;
     route("/", home_view)
     route("/docs", docs_view)
     route("/server-info", server_info_view, method = GET)
+    route("/estimators", estimators_view, method = GET)
     route("/upload-file", upload_file_view, method = POST)
     route("/job-enqueue/:filehash", job_enqueue_view, method = POST)
-    route("/job/:id", job_info_view, method = GET)
-    route("/job/:id/results/:resulttype", job_results_view, method = GET)
+    route("/jobs/:id", job_info_view, method = GET)
+    route("/jobs/:id/results/:resulttype", job_results_view, method = GET)
     Router.channel(
         "/$(string(DEFAULT_WS_CHANNEL))/$(Genie.config.webchannels_subscribe_channel)",
         websocket_channel_view,

@@ -24,6 +24,7 @@ ModelSelectionGUI.FILEHASH
 ModelSelectionGUI.FILENAME
 ModelSelectionGUI.ID
 ModelSelectionGUI.MESSAGE
+ModelSelectionGUI.NAME
 ModelSelectionGUI.PARAMETERS
 ModelSelectionGUI.TEMP_FILENAME
 ModelSelectionGUI.NCORES
@@ -45,6 +46,7 @@ ModelSelectionGUI.TIME_ENQUEUED
 ModelSelectionGUI.TIME_STARTED
 ModelSelectionGUI.TIME_FINISHED
 ModelSelectionGUI.MSG
+ModelSelectionGUI.ERROR
 ModelSelectionGUI.ALLSUBSETREGRESSION
 ModelSelectionGUI.CROSSVALIDATION
 ModelSelectionGUI.SUMMARY

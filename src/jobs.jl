@@ -154,6 +154,8 @@ run_job(job)
 ```
 """
 function run_job(job::ModelSelectionJob)
+    job_notify(JOB_STARTING, Dict(ERROR => false))
+
     global finished_queue
     global current_job
     current_job = job
@@ -170,13 +172,14 @@ function run_job(job::ModelSelectionJob)
         )
         job.status = FINISHED
     catch e
-        bt = backtrace()
         job.status = FAILED
-        job.msg = sprint(showerror, e, bt)
+        job.msg = e.msg
+        job_notify(JOB_FAILED, Dict(MSG => e.msg, ERROR => true))
     end
     job.time_finished = now()
     current_job = nothing
     push!(finished_queue, job)
+    job_notify(JOB_FINISHED, Dict(MSG => e.msg, ERROR => false))
 end
 
 """
@@ -267,7 +270,7 @@ job_notify("message", Dict("data" => "data"))
 ```
 """
 function job_notify(message::String, data::Union{Any,Nothing} = nothing)
-    msg = Dict(ID => get_current_job(), MESSAGE => message, DATA => data)
+    msg = Dict(ID => get_current_job().id, MESSAGE => message, DATA => data)
     Genie.WebChannels.broadcast(string(DEFAULT_WS_CHANNEL), JSON.json(msg))
 end
 
