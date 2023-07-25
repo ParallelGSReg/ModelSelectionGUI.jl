@@ -68,11 +68,21 @@ export default {
       'AIC' : 'aic',
     },
     'METHODS': [
-      'fast',
-      'precise'
+      'qr_64',
+      'cho_64',
+      "svd_64",
+      "qr_32",
+      "cho_32",
+      "svd_32",
+      "qr_16",
+      "cho_16",
+      "svd_16"
     ],
-    //soon we should add these options and take out quickly and accurately
-    //"qr_64", "cho_64", "svd_64", "qr_32", "cho_32", "svd_32", "qr_16", "cho_16", "svd_16"
+    'METHODS_LOGIT': [
+      'cho_64',
+      'cho_32',
+      'cho_16',
+    ],
     'PRELIMINARY_SELECTION':[
       'lasso'
     ],
