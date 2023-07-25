@@ -4,18 +4,24 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'src/**'
+      - 'Project.toml'
   pull_request:
     branches:
       - main
+    paths:
+      - 'src/**'
+      - 'Project.toml'
 
 jobs:
-  build-test:
+  build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         julia-version:
           - '1.6.7'
-          - '1.9'
+          - 'nightly'
         julia-arch: 
           - x64
         os: 
@@ -31,4 +37,5 @@ jobs:
         with:
           version: ${{ matrix.julia-version }}
           arch: ${{ matrix.julia-arch }}
+      - uses: julia-actions/cache@v1
       - uses: julia-actions/julia-buildpkg@v1

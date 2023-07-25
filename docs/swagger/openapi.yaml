@@ -35,6 +35,20 @@ paths:
               schema:
                 $ref: '#/components/schemas/ServerInfo'
 
+  /estimators:
+    get:
+      tags:
+        - jobs
+      summary: Retrieves all available estimators
+      description: Retrieves all available estimators from the ModelSelection.AllSubsetRegression module and the related information.
+      responses:
+        '200':
+          description: Available estimators
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Estimator'
+
   /upload-file:
     post:
       tags:
@@ -86,7 +100,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/BasicJobInfo'
 
-  /job/{id}:
+  /jobs/{id}:
     get:
       tags:
         - jobs
@@ -109,7 +123,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/JobInfo'
 
-  /job/{id}/results/{type}:
+  /jobs/{id}/results/{type}:
     get:
       tags:
         - jobs
@@ -210,6 +224,45 @@ components:
           format: int64
           example: 0
           description: The number of jobs currently in the queue
+    Estimator:
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+            example: logit
+            description: The name of the estimator
+          criteria:
+            type: object
+            properties: 
+              available: 
+                type: array
+                items:
+                  type: string
+                description: The available criteria
+                example: ["aic", "aicc", "bic", "r2adj", "rmseout", "sse"]
+              default:
+                type: array
+                items:
+                  type: string
+                description: The default criteria
+                example: ["r2adj"]
+          method:
+            type: object
+            properties: 
+              available: 
+                type: array
+                items:
+                  type: string
+                description: The available methods
+                example: ["cho_64", "cho_32", "cho_16"]
+              default:
+                type: array
+                items:
+                  type: string
+                description: The default methods.
+                example: ["cho_32"]
     FileInfo:
       type: object
       properties:
@@ -288,7 +341,7 @@ components:
         parameters:
           type: object
           description: The parameters used for model selection, including any additional parameters specified in the request
-          example: {"ttest": "true"}
+          example: {"ttest": true}
     JobInfo:
       allOf:
         - $ref: '#/components/schemas/BasicJobInfo'
