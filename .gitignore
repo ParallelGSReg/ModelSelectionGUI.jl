@@ -26,7 +26,6 @@ Manifest.toml
 .env*
 !.env.template
 *.csv
-*.json
 !docs/swagger/*.json
 
 #---for vue--
