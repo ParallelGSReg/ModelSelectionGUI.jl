@@ -1,0 +1,50 @@
+name: Docker image
+
+on:
+  push:
+    branches:
+      - main
+  create:
+    tags:
+      - "*"
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Get current time
+        uses: josStorer/get-current-time@v2
+        id: current-time
+        with:
+          format: DD-MM-YYYY
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set Tags
+        id: set_tag
+        run: echo "::set-output name=tag::v1.0.0"
+
+      - name: Get registry
+        id: registry
+        run: |
+          echo "registry=ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]' >> $GITHUB_OUTPUT
+
+      - name: UGets value
+        run: |
+          echo "The value is ${{ steps.registry.outputs.registry }}"
+
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: |
+            ${{ steps.registry.outputs.registry }}:latest

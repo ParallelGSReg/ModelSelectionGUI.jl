@@ -1,18 +1,19 @@
-struct BadRequestException <: Exception
-    message::String
-    info::String
-    code::Int
-    ex::Union{Nothing,Exception}
-end
+"""
+    bad_request_exception(message)
 
-BadRequestException(message::String) = BadRequestException(message, "", 400, nothing)
-BadRequestException(message::String, code::Int) =
-    BadRequestException(message, "", code, nothing)
-BadRequestException(message::String, info::String, code::Int) =
-    BadRequestException(message, info, code, nothing)
-Base.show(io::IO, ex::BadRequestException) =
-    print(io, "BadRequestException: $(ex.code) - $(ex.info) - $(ex.message)")
+Creates an HTTP response with a 400 (Bad Request) status code.
 
+# Parameters
+- `message::String`: The message to be sent in the HTTP response.
+
+# Returns
+- `HTTP.Response`: An HTTP response with a status code of 400 and the provided message.
+
+# Example
+```julia
+bad_request_exception("Invalid request parameters.")
+```
+"""
 function bad_request_exception(message)
     html(message, status = 400)
 end

@@ -25,6 +25,7 @@ Manifest.toml
 
 .env*
 !.env.template
+!.env.variables
 *.csv
 !docs/swagger/*.json
 
@@ -58,3 +59,8 @@ coverage
 *.sln
 *.sw?
 !test/*.csv
+docs/dev/
+docs/build/
+docs/build-pdf/
+docs/site/
+docs/src/release-notes.md

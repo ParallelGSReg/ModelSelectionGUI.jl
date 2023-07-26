@@ -1,15 +1,17 @@
-## Websockets
+# Websockets
 
-[Return to main documentation](../README.md)
+It is possible to have a continuous status on the execution of a job using web sockets.
 
 ## How to stablish a connection
 
-- URL: `ws://localhost:8080` (please change the port for the one that is in your configuration)
+- URL: `ws://127.0.0.1:8080`
 - Channel: `sync`
 
-Example connection in JS:
+### Example
+
 ```javascript
-const ws = new WebSocket("ws://localhost:8000");
+// JavaScript
+const ws = new WebSocket("ws://127.0.0.1:8000");
 const msg = {
     channel: "sync",
     message: "subscribe",
@@ -17,6 +19,9 @@ const msg = {
 };
 ws.send(JSON.stringify(msg));
 ```
+
+!!! note
+    Please change the host and port for the one that is [in your configuration](../../configuration.md).
 
 ## Receive information
 
@@ -37,8 +42,10 @@ Example JSON message:
 }
 ```
 
-Example of how tho receive the messages from the server:
+### Example
+
 ```javascript
+// JavaScript
 ws.onmessage = (event) => {
   console.log(event.data);
 }

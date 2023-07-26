@@ -9,23 +9,79 @@ using Genie.Renderer,
     Genie.WebChannels
 using CSV, DataFrames, Distributed, UUIDs
 using HTTP
+using SwagUI
 
+swagger_options = Options()
+swagger_options.show_explorer = false
+swagger_document = JSON.parsefile(SWAGGER_DOCUMENT_FILE)
+frontend_file = read(FRONTEND_FILE, String)
+
+"""
+    home_view()
+
+The function handles the home page view. Returns a simple HTML string "ModelSelectionGUI".
+
+# Returns
+- `HTTP.Response`: A simple HTML string "ModelSelectionGUI".
+"""
 function home_view()
-    html("ModelSelectionGUI")
+    html(frontend_file)
 end
 
+"""
+    docs_view()
 
+The functions render the Swagger UI documentation of the API from the `swagger_document` data.
+
+# Returns
+- `HTTP.Response`: A page with the swagger documentation.
+"""
+function docs_view()
+    render_swagger(swagger_document, options = swagger_options)
+end
+
+"""
+    server_info_view()
+
+Returns information about the server.
+
+# Returns
+- `HTTP.Response`: A JSON response with the server information.
+"""
 function server_info_view()
     return server_info_response(
         Sys.CPU_THREADS,
         nworkers(),
         string(MODEL_SELECTION_VER),
         string(VERSION),
-        get_jobs_queue_length(),
+        get_pending_queue_length(),
     )
 end
 
+"""
+    estimators_view()
 
+Get a view of all available estimators. This function returns a view of all available estimators from the ModelSelection.AllSubsetRegression module.
+
+# Returns
+- `response::String`: A JSON string representation of the estimators.
+
+# Returns
+- `HTTP.Response`: A JSON response with the server information.
+"""
+function estimators_view()
+    estimators = ModelSelection.AllSubsetRegression.ESTIMATORS
+    return estimators_response(estimators)
+end
+
+"""
+    upload_file_view()
+
+Uploads a CSV file to the server. Upon successful upload, the server will process the uploaded file for further operations.
+
+# Returns
+- `HTTP.Response`: A JSON response with information about the saved file.
+"""
 function upload_file_view()
     if !infilespayload(:data)
         return bad_request_exception(FILE_NOT_SENT)
@@ -57,13 +113,22 @@ function upload_file_view()
     return upload_response(filename, filehash, names(data), size(data, 1))
 end
 
+"""
+    job_enqueue_view()
 
+Enqueues a model selection job for the specified file. The task will be executed after the previously queued tasks have finished.
+
+# Returns
+- `HTTP.Response`: A JSON response with information about the created job.
+"""
 function job_enqueue_view()
     filehash = get_request_filehash(params)
     file = get_job_file(filehash)
 
     if file === nothing
-        return bad_request_exception(@sprintf("The filehash '%s' is not valid", filehash))  # FIXME: Move to constant FILEHASH_NOT_VALID
+        return bad_request_exception(
+            FILEHASH_NOT_VALID[1] * filehash * FILEHASH_NOT_VALID[2],
+        )
     end
 
     if !isfile(file[TEMP_FILENAME])
@@ -81,38 +146,57 @@ function job_enqueue_view()
     end
 
     parameters = get_parameters(payload)
+    estimator = Symbol(parameters[ESTIMATOR])
+    equation = parameters[EQUATION]
+    delete!(parameters, ESTIMATOR)
+    delete!(parameters, EQUATION)
 
     job = ModelSelectionJob(
         String(file[FILENAME]),
         String(file[TEMP_FILENAME]),
         String(filehash),
+        estimator,
+        equation,
         parameters,
     )
-    enqueue_job(job)
+    add_pending_job(job)
 
     return job_info_response(job)
 end
 
+"""
+    job_info_view()
 
+Returns the info of a model selection job. If the job is finished, it also includes the summary of a model selection job.
+
+# Returns
+- `HTTP.Response`: A JSON response with information about the selected job.
+"""
 function job_info_view()
     global jobs_finished
     id = get_request_job_id(params)
     job = get_job(id)
     if job === nothing
-        return bad_request_exception(@sprintf("The job with id '%s' does not exists", id))  # FIXME: Move to constant MISSING_JOB_ID
+        return bad_request_exception(MISSING_JOB_ID[1] * id * MISSING_JOB_ID[2])
     end
     return job_info_response(job)
 end
 
+"""
+job_results_view()
 
+Returns the result file of a specific type for a model selection job.
+
+# Returns
+- `HTTP.Response`: A text file with the selected result.
+"""
 function job_results_view()
     global jobs_finished
     id = get_request_job_id(params)
-    job = get_job_finished(id)
+    job = get_finished_job(id)
     if job === nothing
-        return bad_request_exception(@sprintf("The job with id '%s' does not exists", id))  # FIXME: Move to constant MISSING_JOB_ID
+        return bad_request_exception(MISSING_JOB_ID[1] * id * MISSING_JOB_ID[2])
     end
-
     resulttype = try
         Symbol(params(:resulttype))
     catch
@@ -121,79 +205,25 @@ function job_results_view()
 
     if !(resulttype in AVAILABLE_RESULTS_TYPES)
         return bad_request_exception(
-            @sprintf(
-                "The result type '%s' is not valid. [Available result types: %s]",
-                resulttype,
-                join(AVAILABLE_RESULTS_TYPES, ", ")
-            )
-        )  # FIXME: Move to constant INVALID_RESULT_TYPE
-    end
-
-    if resulttype == SUMMARY
-        io_buffer = IOBuffer()
-        outputstr = ""
-        for result in job.modelselection_data.results
-            if typeof(result) == ModelSelection.CrossValidation.CrossValidationResult
-                outputstr =
-                    outputstr * ModelSelection.CrossValidation.to_string(
-                        job.modelselection_data,
-                        result,
-                    )
-            elseif typeof(result) ==
-                   ModelSelection.AllSubsetRegression.AllSubsetRegressionResult
-                outputstr =
-                    outputstr * ModelSelection.AllSubsetRegression.to_string(
-                        job.modelselection_data,
-                        result,
-                    )
-            end
-        end
-        println(io_buffer, outputstr)
-        body = String(take!(io_buffer))
-        filename = get_txt_filename(job.filename)
-        headers = Dict(
-            "Content-Type" => "text/plain",
-            "Content-Disposition" => "attachment; filename=$filename",
+            INVALID_RESULT_TYPE[1] *
+            string(resulttype) *
+            INVALID_RESULT_TYPE[2] *
+            join(AVAILABLE_RESULTS_TYPES, ", "),
         )
-        return HTTP.Response(200, headers, body = body)
     end
 
-    data = nothing
-    if resulttype == ALLSUBSETREGRESSION
-        for result in job.modelselection_data.results
-            if typeof(result) ==
-               ModelSelection.AllSubsetRegression.AllSubsetRegressionResult
-                filename = get_csv_filename(job.filename, result)
-                data = get_csv_from_result(filename, result)
-                break
-            end
-        end
-    elseif resulttype == CROSSVALIDATION
-        for result in job.modelselection_data.results
-            if typeof(result) == ModelSelection.CrossValidation.CrossValidationResult
-                filename = get_csv_filename(job.filename, result)
-                data = get_csv_from_result(filename, result)
-                break
-            end
-        end
-    end
-
-    if data === nothing
-        return bad_request_exception(
-            @sprintf("The job does not have a result of type %s", resulttype)
-        )  # FIXME: Move to constant JOB_HAS_NOT_RESULTTYPE
-    end
-
-    body = data[DATA]
-    filename = data[FILENAME]
-    headers = Dict(
-        "Content-Type" => "text/csv",
-        "Content-Disposition" => "attachment; filename=$filename",
-    )
-    return HTTP.Response(200, headers, body = body)
+    return job_results_response(job, resulttype)
 end
 
+"""
+    websocket_channel_view()
 
+The function handles the view for WebSocket channel subscriptions. 
+It subscribes the client to the default WebSocket channel and returns a confirmation string.
+
+# Returns
+- `String`: A confirmation string.
+"""
 function websocket_channel_view()
     WebChannels.subscribe(Genie.Requests.wsclient(), string(DEFAULT_WS_CHANNEL))
     return "Subscription: OK"
