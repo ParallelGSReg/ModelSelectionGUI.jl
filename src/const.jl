@@ -317,4 +317,4 @@ const SWAGGER_DOCUMENT_FILE = "./docs/swagger/swagger.json"
     FRONTEND_FILE
 The file path of the frontend HTML file.
 """
-const FRONTEND_FILE = "./frontend/index.html"
+const FRONTEND_FILE = "./frontend/dist/index.html"

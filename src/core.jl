@@ -61,7 +61,6 @@ function start(;
     Genie.config.cors_headers["Access-Control-Allow-Methods"] ="GET,POST,PUT,DELETE,OPTIONS" 
     Genie.config.cors_allowed_origins = ["*"]
 
-
     route("/", home_view)
     route("/docs", docs_view)
     route("/server-info", server_info_view, method = GET)
@@ -77,7 +76,7 @@ function start(;
     if !no_task
         start_task()
     end
-    up(server_port, async = true)
+    up(server_port, async = true, server_handle_static_files=true)
     if open_documentation || open_client
         create_application()
         sleep(3)
