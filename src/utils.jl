@@ -203,6 +203,15 @@ function get_parameters(raw_payload::Dict{String,Any})
             parameters[key] = fe_lag
         end
     end
+    if :criteria in keys(parameters)
+        parameters[:criteria] = [Symbol(x) for x in parameters[:criteria]]
+    end
+    if :seasonaladjustment in keys(parameters)
+        parameters[:seasonaladjustment] = [Symbol(x) for x in parameters[:seasonaladjustment]]
+    end
+    #agregar las demas opciones con variebles quizas conviene hacer una constante
+    #con las variables y las que esten (que se enviaron por json) hace el parceo
+    #criteria 
     return parameters
 end
 
