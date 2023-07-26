@@ -1,6 +1,6 @@
 {
-    "name": "global-search-regression",
-    "version": "0.0.0",
+    "name": "model-selection-gui",
+    "version": "0.9.0",
     "private": true,
     "scripts": {
         "dev": "vite",
