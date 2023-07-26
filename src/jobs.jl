@@ -154,15 +154,14 @@ run_job(job)
 ```
 """
 function run_job(job::ModelSelectionJob)
-    job_notify(JOB_STARTING, Dict(ERROR => false))
-
     global finished_queue
     global current_job
     current_job = job
+    job_notify(JOB_STARTING, Dict(ERROR => false))
     job.time_started = now()
     job.status = RUNNING
+    data = CSV.read(job.tempfile, DataFrame)
     try
-        data = CSV.read(job.tempfile, DataFrame)
         job.modelselection_data = gsr(
             job.estimator,
             job.equation,
@@ -173,13 +172,17 @@ function run_job(job::ModelSelectionJob)
         job.status = FINISHED
     catch e
         job.status = FAILED
-        job.msg = e.msg
-        job_notify(JOB_FAILED, Dict(MSG => e.msg, ERROR => true))
+        try
+            job.msg = e.msg
+        catch
+            job.msg = "Unknown error"
+        end
+        job_notify(JOB_FAILED, Dict(MSG => job.msg, ERROR => true))
     end
     job.time_finished = now()
-    current_job = nothing
     push!(finished_queue, job)
-    job_notify(JOB_FINISHED, Dict(MSG => e.msg, ERROR => false))
+    job_notify(JOB_FINISHED, Dict(ERROR => false))
+    current_job = nothing
 end
 
 """

@@ -53,7 +53,7 @@ This package is licensed under the [MIT License](LICENSE).
 
 
 [build-main-img]: https://github.com/ParallelGSReg/ModelSelectionGUI.jl/actions/workflows/build.yaml/badge.svg?branch=main
-[build-main-url]: https://github.com/ParallelGSReg/ModelSelectionGUI.jl/actions/workflows/build.yaml
+[build-main-url]: https://github.com/ParallelGSReg/ModelSelectionGUI.jl/pkgs/container/modelselectiongui.jl
 
 [test-main-img]: https://github.com/ParallelGSReg/ModelSelectionGUI.jl/actions/workflows/test.yaml/badge.svg?branch=main
 [test-main-url]: https://github.com/ParallelGSReg/ModelSelectionGUI.jl/actions/workflows/test.yaml

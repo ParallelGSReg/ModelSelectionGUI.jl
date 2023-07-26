@@ -3,6 +3,6 @@
         using ModelSelectionGUI
 
         response = ModelSelectionGUI.bad_request_exception("msg")
-
+        @test response.status == 400
     end
 end

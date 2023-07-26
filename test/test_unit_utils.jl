@@ -45,7 +45,9 @@
         csv_filename = "data_allsubsetregression.csv"
         filename = "data.csv"
         result = ModelSelection.AllSubsetRegression.AllSubsetRegressionResult(
+            :ols,
             [:a, :b, :c],
+            :qr_32,
             nothing,
             nothing,
             [:r2adj],
@@ -53,7 +55,6 @@
             false,
             false,
         )
-
         @test csv_filename == ModelSelectionGUI.get_csv_filename(filename, result)
     end
 

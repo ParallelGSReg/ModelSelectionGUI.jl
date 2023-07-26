@@ -151,8 +151,7 @@
         @test ModelSelectionGUI.current_job === nothing
         @test ModelSelectionGUI.get_current_job() === nothing
 
-        job =
-            ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
+        job = ModelSelectionJob(filename, tempfile, filehash, estimator, equation, parameters)
         ModelSelectionGUI.run_job(job)
         job.status == ModelSelectionGUI.FINISHED
         @test length(ModelSelectionGUI.finished_queue) == 1

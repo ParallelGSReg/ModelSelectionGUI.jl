@@ -25,4 +25,5 @@ ModelSelectionGUI.JOB_HAS_NOT_RESULTTYPE
 ModelSelectionGUI.JOB_STARTING
 ModelSelectionGUI.JOB_FINISHED
 ModelSelectionGUI.JOB_FAILED
+ModelSelectionGUI.INVALID_PARAMETER
 ```

@@ -100,3 +100,10 @@ const JOB_FINISHED = "The job has finished"
 Constant representing the message indicating that the job has failed.
 """
 const JOB_FAILED = "The job has failed"
+
+"""
+    INVALID_PARAMETER
+
+This constant is used when a parameter, which is required for a particular calculation or operation, was not valid.
+"""
+const INVALID_PARAMETER = "A parameter is not valid"
