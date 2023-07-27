@@ -56,5 +56,5 @@ ModelSelectionGUI.RESULTS
 ModelSelectionGUI.CSV_MIME
 ModelSelectionGUI.PLAIN_MIME
 ModelSelectionGUI.SWAGGER_DOCUMENT_FILE
-ModelSelectionGUI.FRONTEND_FILE
+ModelSelectionGUI.FRONTEND_INDEX
 ```

@@ -5,7 +5,7 @@ export default {
         'server_info': '/server-info',
         'load_database': '/upload-file',
         'run': '/job-enqueue/',
-        'status' : '/job',
+        'status' : '/jobs',
         'results_summary': '/results/summary',
         'results_allsubsetregression': '/results/allsubsetregression',
         'results_crossvalidation': '/results/crossvalidation'

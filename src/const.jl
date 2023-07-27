@@ -314,7 +314,8 @@ The file path of the Swagger document.
 const SWAGGER_DOCUMENT_FILE = "./docs/swagger/swagger.json"
 
 """
-    FRONTEND_FILE
+    FRONTEND_INDEX
+
 The file path of the frontend HTML file.
 """
-const FRONTEND_FILE = "./public/index.html"
+const FRONTEND_INDEX = "./public/index.html"

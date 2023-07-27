@@ -14,24 +14,24 @@ using SwagUI
 swagger_options = Options()
 swagger_options.show_explorer = false
 swagger_document = JSON.parsefile(SWAGGER_DOCUMENT_FILE)
-frontend_file = read(FRONTEND_FILE, String)
 
 """
-    home_view()
+home_view()
 
 The function handles the home page view. Returns a simple HTML string "ModelSelectionGUI".
-
+    
 # Returns
 - `HTTP.Response`: A simple HTML string "ModelSelectionGUI".
 """
 function home_view()
+    frontend_file = read(FRONTEND_INDEX, String)
     html(frontend_file)
 end
-
+    
 """
     docs_view()
-
-The functions render the Swagger UI documentation of the API from the `swagger_document` data.
+    
+    The functions render the Swagger UI documentation of the API from the `swagger_document` data.
 
 # Returns
 - `HTTP.Response`: A page with the swagger documentation.
